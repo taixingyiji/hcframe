@@ -17,6 +17,9 @@
         <module>hcframe-base</module>
         <module>hcframe-user</module>
         <module>storage</module>
+        <module>hcframe-activiti</module>
+        <module>hcframe-es</module>
+        <module>hcframe-starter</module>
     </modules>
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -25,15 +28,4 @@
     <dependencies>
 
     </dependencies>
-    <build>
-<!--        <plugins>-->
-<!--            <plugin>-->
-<!--                <groupId>org.springframework.boot</groupId>-->
-<!--                <artifactId>spring-boot-maven-plugin</artifactId>-->
-<!--                <configuration>-->
-<!--                    <includeSystemScope>true</includeSystemScope>-->
-<!--                </configuration>-->
-<!--            </plugin>-->
-<!--        </plugins>-->
-    </build>
 </project>

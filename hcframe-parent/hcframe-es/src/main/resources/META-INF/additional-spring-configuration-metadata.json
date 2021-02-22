@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "spring.data.cluster-nodes",
+      "type": "java.lang.String",
+      "description": "Description for spring.data.cluster-nodes."
+  }
+] }

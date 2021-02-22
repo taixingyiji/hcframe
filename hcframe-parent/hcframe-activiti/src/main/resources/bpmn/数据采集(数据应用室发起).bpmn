@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:tns="http://www.activiti.org/test" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" expressionLanguage="http://www.w3.org/1999/XPath" id="m1597912603209" name="" targetNamespace="http://www.activiti.org/test" typeLanguage="http://www.w3.org/2001/XMLSchema">
+  <process id="gather-use" isClosed="false" isExecutable="true" name="采集审批业务流程" processType="None">
+    <startEvent id="startevent1" name="Start"/>
+    <userTask activiti:assignee="${processCreator}" activiti:exclusive="true" id="startTask" name="采集申请">
+      <extensionElements>
+        <activiti:taskListener event="create" expression="${gatherCreateListener.createStartTask(task)}"/>
+      </extensionElements>
+    </userTask>
+    <userTask activiti:exclusive="true" id="dgoTask" name="数据采集室科长审批">
+      <extensionElements>
+        <activiti:taskListener event="create" expression="${gatherCreateListener.createDgoTask(task)}"/>
+      </extensionElements>
+    </userTask>
+    <userTask activiti:exclusive="true" id="dmacTask" name="数据管理与分析中心主任审批">
+      <extensionElements>
+        <activiti:taskListener event="create" expression="${gatherCreateListener.createDmacTask(task)}"/>
+      </extensionElements>
+    </userTask>
+    <endEvent id="endevent1" name="End"/>
+    <sequenceFlow id="flow1" sourceRef="startevent1" targetRef="startTask"/>
+    <exclusiveGateway gatewayDirection="Unspecified" id="exclusivegateway1" name="Exclusive Gateway"/>
+    <sequenceFlow id="flow4" name="通过" sourceRef="exclusivegateway1" targetRef="dmacTask">
+      <conditionExpression xsi:type="tFormalExpression">
+        <![CDATA[${taskFlowType==1}]]>
+      </conditionExpression>
+    </sequenceFlow>
+    <exclusiveGateway gatewayDirection="Unspecified" id="exclusivegateway2" name="Exclusive Gateway"/>
+    <sequenceFlow id="flow5" sourceRef="dgoTask" targetRef="exclusivegateway1"/>
+    <sequenceFlow id="flow6" sourceRef="dmacTask" targetRef="exclusivegateway2"/>
+    <sequenceFlow id="flow7" name="不通过" sourceRef="exclusivegateway2" targetRef="dgoTask">
+      <conditionExpression xsi:type="tFormalExpression">
+        <![CDATA[${taskFlowType==0}]]>
+      </conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow8" name="通过" sourceRef="exclusivegateway2" targetRef="oaTask">
+      <conditionExpression xsi:type="tFormalExpression">
+        <![CDATA[${taskFlowType==1}]]>
+      </conditionExpression>
+    </sequenceFlow>
+    <exclusiveGateway gatewayDirection="Unspecified" id="exclusivegateway3" name="Exclusive Gateway"/>
+    <sequenceFlow id="flow9" sourceRef="oaTask" targetRef="exclusivegateway3"/>
+    <sequenceFlow id="flow10" name="不通过" sourceRef="exclusivegateway3" targetRef="dmacTask">
+      <conditionExpression xsi:type="tFormalExpression">
+        <![CDATA[${taskFlowType==0}]]>
+      </conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow11" name="通过" sourceRef="exclusivegateway3" targetRef="endTask">
+      <conditionExpression xsi:type="tFormalExpression">
+        <![CDATA[${taskFlowType==1}]]>
+      </conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow12" sourceRef="endTask" targetRef="endevent1"/>
+    <serviceTask activiti:exclusive="true" activiti:expression="${gatherOAService.execute(task)}" id="oaTask" name="接入OA系统进行保管部、文保院和分管副馆长、馆长审批"/>
+    <userTask activiti:exclusive="true" activiti:skipExpression="${processCreatorPosition=='科长'}" id="daoTask" name="数据应用室科长审批">
+      <extensionElements>
+        <activiti:taskListener event="create" expression="${gatherCreateListener.createDaoTask(task)}"/>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="flow22" name="不通过" sourceRef="exclusivegateway1" targetRef="daoTask">
+      <conditionExpression xsi:type="tFormalExpression">
+        <![CDATA[${taskFlowType==0}]]>
+      </conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow23" sourceRef="startTask" targetRef="daoTask"/>
+    <sequenceFlow id="flow25" name="不通过" sourceRef="exclusivegateway4" targetRef="startTask">
+      <conditionExpression xsi:type="tFormalExpression">
+        <![CDATA[${taskFlowType==0}]]>
+      </conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flow26" name="通过" sourceRef="exclusivegateway4" targetRef="dgoTask">
+      <conditionExpression xsi:type="tFormalExpression">
+        <![CDATA[${taskFlowType==1}]]>
+      </conditionExpression>
+    </sequenceFlow>
+    <serviceTask activiti:exclusive="true" activiti:expression="${gatherArchiveService.execute(task)}" id="endTask" name="归档"/>
+    <exclusiveGateway gatewayDirection="Unspecified" id="exclusivegateway4" name="Exclusive Gateway"/>
+    <sequenceFlow id="flow27" sourceRef="daoTask" targetRef="exclusivegateway4"/>
+  </process>
+  <bpmndi:BPMNDiagram documentation="background=#292D3E;count=1;horizontalcount=1;orientation=0;width=842.4;height=1195.2;imageableWidth=832.4;imageableHeight=1185.2;imageableX=5.0;imageableY=5.0" id="Diagram-_1" name="New Diagram">
+    <bpmndi:BPMNPlane bpmnElement="gather-use">
+      <bpmndi:BPMNShape bpmnElement="startevent1" id="Shape-startevent1">
+        <omgdc:Bounds height="32.0" width="32.0" x="10.0" y="260.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="startTask" id="Shape-startTask">
+        <omgdc:Bounds height="71.0" width="105.0" x="90.0" y="242.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="71.0" width="105.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="dgoTask" id="Shape-dgoTask">
+        <omgdc:Bounds height="71.0" width="105.0" x="407.0" y="242.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="71.0" width="105.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="dmacTask" id="Shape-dmacTask">
+        <omgdc:Bounds height="71.0" width="121.0" x="577.0" y="242.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="71.0" width="121.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endevent1" id="Shape-endevent1">
+        <omgdc:Bounds height="32.0" width="32.0" x="1160.0" y="260.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway1" id="Shape-exclusivegateway1" isMarkerVisible="false">
+        <omgdc:Bounds height="32.0" width="32.0" x="439.0" y="148.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway2" id="Shape-exclusivegateway2" isMarkerVisible="false">
+        <omgdc:Bounds height="32.0" width="32.0" x="617.0" y="360.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway3" id="Shape-exclusivegateway3" isMarkerVisible="false">
+        <omgdc:Bounds height="32.0" width="32.0" x="843.0" y="148.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="oaTask" id="Shape-oaTask">
+        <omgdc:Bounds height="71.0" width="221.0" x="753.0" y="242.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="71.0" width="221.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="daoTask" id="Shape-daoTask">
+        <omgdc:Bounds height="71.0" width="105.0" x="247.0" y="242.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="71.0" width="105.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="endTask" id="Shape-endTask">
+        <omgdc:Bounds height="71.0" width="105.0" x="1000.0" y="242.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="71.0" width="105.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="exclusivegateway4" id="Shape-exclusivegateway4" isMarkerVisible="false">
+        <omgdc:Bounds height="32.0" width="32.0" x="279.0" y="360.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="flow25" id="BPMNEdge_flow25" sourceElement="exclusivegateway4" targetElement="startTask">
+        <omgdi:waypoint x="282.0" y="379.0"/>
+        <omgdi:waypoint x="142.0" y="379.0"/>
+        <omgdi:waypoint x="142.0" y="313.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="16.0" width="48.0" x="181.0" y="386.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow26" id="BPMNEdge_flow26" sourceElement="exclusivegateway4" targetElement="dgoTask">
+        <omgdi:waypoint x="307.0" y="380.0"/>
+        <omgdi:waypoint x="459.0" y="380.0"/>
+        <omgdi:waypoint x="459.0" y="313.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="16.0" width="32.0" x="350.0" y="385.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow27" id="BPMNEdge_flow27" sourceElement="daoTask" targetElement="exclusivegateway4">
+        <omgdi:waypoint x="295.0" y="313.0"/>
+        <omgdi:waypoint x="295.0" y="360.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="-1.0" width="-1.0" x="-1.0" y="-1.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow1" id="BPMNEdge_flow1" sourceElement="startevent1" targetElement="startTask">
+        <omgdi:waypoint x="42.0" y="276.0"/>
+        <omgdi:waypoint x="90.0" y="277.5"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="-1.0" width="-1.0" x="-1.0" y="-1.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4" sourceElement="exclusivegateway1" targetElement="dmacTask">
+        <omgdi:waypoint x="468.0" y="167.0"/>
+        <omgdi:waypoint x="637.0" y="167.0"/>
+        <omgdi:waypoint x="637.0" y="242.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="16.0" width="32.0" x="508.0" y="149.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow5" id="BPMNEdge_flow5" sourceElement="dgoTask" targetElement="exclusivegateway1">
+        <omgdi:waypoint x="455.0" y="242.0"/>
+        <omgdi:waypoint x="455.0" y="180.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="-1.0" width="-1.0" x="-1.0" y="-1.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow6" id="BPMNEdge_flow6" sourceElement="dmacTask" targetElement="exclusivegateway2">
+        <omgdi:waypoint x="633.0" y="313.0"/>
+        <omgdi:waypoint x="633.0" y="360.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="-1.0" width="-1.0" x="-1.0" y="-1.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow7" id="BPMNEdge_flow7" sourceElement="exclusivegateway2" targetElement="dgoTask">
+        <omgdi:waypoint x="620.0" y="379.0"/>
+        <omgdi:waypoint x="459.0" y="379.0"/>
+        <omgdi:waypoint x="459.0" y="313.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="16.0" width="48.0" x="518.0" y="386.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow8" id="BPMNEdge_flow8" sourceElement="exclusivegateway2" targetElement="oaTask">
+        <omgdi:waypoint x="646.0" y="379.0"/>
+        <omgdi:waypoint x="863.0" y="379.0"/>
+        <omgdi:waypoint x="863.0" y="313.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="16.0" width="32.0" x="705.0" y="386.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow22" id="BPMNEdge_flow22" sourceElement="exclusivegateway1" targetElement="daoTask">
+        <omgdi:waypoint x="442.0" y="167.0"/>
+        <omgdi:waypoint x="299.0" y="167.0"/>
+        <omgdi:waypoint x="299.0" y="242.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="16.0" width="48.0" x="361.0" y="149.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow9" id="BPMNEdge_flow9" sourceElement="oaTask" targetElement="exclusivegateway3">
+        <omgdi:waypoint x="859.0" y="242.0"/>
+        <omgdi:waypoint x="859.0" y="180.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="-1.0" width="-1.0" x="-1.0" y="-1.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow23" id="BPMNEdge_flow23" sourceElement="startTask" targetElement="daoTask">
+        <omgdi:waypoint x="195.0" y="277.5"/>
+        <omgdi:waypoint x="247.0" y="277.5"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="-1.0" width="-1.0" x="-1.0" y="-1.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow10" id="BPMNEdge_flow10" sourceElement="exclusivegateway3" targetElement="dmacTask">
+        <omgdi:waypoint x="847.0" y="168.0"/>
+        <omgdi:waypoint x="637.0" y="168.0"/>
+        <omgdi:waypoint x="637.0" y="242.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="16.0" width="48.0" x="757.0" y="147.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow11" id="BPMNEdge_flow11" sourceElement="exclusivegateway3" targetElement="endTask">
+        <omgdi:waypoint x="872.0" y="167.0"/>
+        <omgdi:waypoint x="1052.0" y="167.0"/>
+        <omgdi:waypoint x="1052.0" y="242.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="16.0" width="32.0" x="925.0" y="148.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="flow12" id="BPMNEdge_flow12" sourceElement="endTask" targetElement="endevent1">
+        <omgdi:waypoint x="1105.0" y="277.5"/>
+        <omgdi:waypoint x="1160.0" y="276.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="-1.0" width="-1.0" x="-1.0" y="-1.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
