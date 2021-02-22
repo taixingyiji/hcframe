@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hcframe.base.module.tableconfig.dao.OsSysFieldDao">
+  <resultMap id="BaseResultMap" type="com.hcframe.base.module.tableconfig.entity.OsSysField">
+    <result column="FIELD_ID" jdbcType="INTEGER" property="fieldId" />
+    <result column="FIELD_NAME" jdbcType="VARCHAR" property="fieldName" />
+    <result column="NAME_CN" jdbcType="VARCHAR" property="nameCn" />
+    <result column="JAVA_TYPE" jdbcType="VARCHAR" property="javaType" />
+    <result column="WEB_TYPE" jdbcType="VARCHAR" property="webType" />
+    <result column="NOT_NULL" jdbcType="VARCHAR" property="notNull" />
+    <result column="IS_CHANGE" jdbcType="VARCHAR" property="isChange" />
+    <result column="IS_HEAD" jdbcType="VARCHAR" property="isHead" />
+    <result column="IS_FK" jdbcType="INTEGER" property="isFk" />
+    <result column="IS_FORM" jdbcType="INTEGER" property="isForm" />
+    <result column="IS_BATCH" jdbcType="INTEGER" property="isBatch" />
+    <result column="FK_TABLE" jdbcType="VARCHAR" property="fkTable" />
+    <result column="LOGIC" jdbcType="VARCHAR" property="logic" />
+    <result column="SIGN" jdbcType="VARCHAR" property="sign" />
+    <result column="IS_SEARCH" jdbcType="VARCHAR" property="isSearch" />
+    <collection property="selectList" resultMap="com.hcframe.base.module.tableconfig.dao.OsSysSelectDao.OsSysSelectMap"/>
+  </resultMap>
+    <select id="getTableId" resultType="java.lang.Integer">
+      SELECT DISTINCT TABLE_ID
+      FROM OS_SYS_FIELD
+      WHERE FIELD_ID IN (${ids});
+    </select>
+</mapper>

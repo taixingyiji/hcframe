@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+	<title>集成用户工作平台</title>
+	<meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">     
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="expires" content="0">    
+	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+	<meta http-equiv="description" content="This is my page">
+    
+	<!-- Styles -->
+    <link href="/casAssets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">    
+    <link href="/casAssets/plugins/scrollbar/jquery.mCustomScrollbar.css" rel="stylesheet">
+  	<link href="/casAssets/plugins/bootstrap-table/css/bootstrap-table.css" rel="stylesheet">
+  	<link href="/css/common.css" rel="stylesheet">	
+</head>
+<body id="bodyDiv" style="background-image:url(/casAssets/images/casBackBody.png);background-repeat:no-repeat;background-size:100% 100%;">
+<div id='Loading' style="position:absolute;z-index:1000;top:0px;left:0px;width:100%;height:100%;background:#ffffff;text-align:center;"></div> 
+<div class="containerCas" style="width:900px;margin:0px auto;padding:20px 0px;">
+	<div style="color:#fff;padding-bottom:10px;">中国科技期刊重点项目管理数字平台</div>
+	<div style="margin:0px 0px 0px 0px;">
+          <ul id="bookTab" class="nav nav-tabs" role="tablist" style="width:178px;background-color:#fff;border-bottom:none;position:relative;left:-0.5px;top:-0.5px;">
+			   <li role="presentation" class="active"><a href="#kjqkInfo1" aria-controls="kjqkInfo1" role="tab" data-toggle="tab">中国科协主管科技期刊</a></li>
+			</ul>
+			<div class="tab-content" style="background-color:#fff;padding:10px;width:1024px;">
+			   <div role="tabpanel" class="tab-pane active" id="scInfo1">
+					<table id="kjqkInfo1Tg" data-toggle="table" data-height="350" data-page-size="10" data-page-list=[10,20,30,40] data-pagination="false" data-striped="true">
+						<thead style="">
+						        <tr>
+						        	<th data-field="kjqk_id" data-align="center">序号</th>
+						            <th data-field="kjqk_name" data-align="center">期刊名称</th>
+									<th data-field="kjqk_affi" data-align="center">主办单位</th>
+						        </tr>
+					        </thead>
+					</table>
+			   </div>
+			</div>                        
+     </div>	
+     <div style="color:#fff;padding:10px 0px;">全国学会个人会员管理系统</div>
+	<div style="margin:0px 0px 0px 0px;">
+          <ul id="bookTab" class="nav nav-tabs" role="tablist" style="width:360px;background-color:#fff;border-bottom:none;position:relative;left:-0.5px;top:0px;">
+			   <li role="presentation" class="active"><a href="#xhInfo2" aria-controls="xhInfo2" role="tab" data-toggle="tab">全国学会信息</a></li>
+			   <li role="presentation"><a href="#personInfo2" aria-controls="personInfo2" role="tab" data-toggle="tab">个人会员信息</a></li>	
+			   <li role="presentation"><a href="#unitInfo2" aria-controls="unitInfo2" role="tab" data-toggle="tab">单位会员信息</a></li>	    
+			</ul>
+			<div class="tab-content" style="background-color:#fff;padding:10px;width:1024px;">
+			   <div role="tabpanel" class="tab-pane active" id="xhInfo2">
+					<table id="xhInfo2Tg"></table>
+			   </div>
+			   <div role="tabpanel" class="tab-pane" id="personInfo2">
+					<table id="personInfo2Tg" data-toggle="table" data-height="350" data-page-size="5" data-page-list=[5,10,15,20] data-pagination="false" data-striped="true">
+						<thead>
+						        <tr>
+						            <th data-field="hy_id" data-align="center">序号</th>
+									<th data-field="hy_name" data-align="center">姓名（用户名）</th>
+									<th data-field="hy_xh" data-align="center">所属学会</th>
+									<th data-field="hy_fh" data-align="center">专业委员会或分会</th>
+									<th data-field="hy_dd" data-align="center">所属地区</th>
+						        </tr>
+					        </thead>
+					</table>
+			   </div>
+			   <div role="tabpanel" class="tab-pane" id="unitInfo2">
+					<table id="unitInfo2Tg" data-toggle="table" data-height="350" data-page-size="5" data-page-list=[5,10,15,20] data-pagination="false" data-striped="true">
+						<thead>
+						        <tr>
+						            <th data-field="dw_id" data-align="center">序号</th>
+									<th data-field="dw_name" data-align="center">单位名称（用户名）</th>
+									<th data-field="dw_xh" data-align="center">所属学会</th>
+									<th data-field="dw_fh" data-align="center">专业委员会或分会</th>
+									<th data-field="dw_dd" data-align="center">所属地区</th>
+						        </tr>
+					        </thead>
+					</table>
+			   </div>
+			</div>                        
+     </div> 
+</div>
+<div id="bottomDiv" style="height:120px;color:#fff;border-top:1px solid #8a808c;">
+	<div id="linkDiv" style="clear:both;height:60px;width:70%;margin:0px auto;border-bottom:1px solid #8a808c;">
+		<div style="float:left;width:16px;margin:10px 50px 0px 0px;font-size:16px;">链接</div>
+		<div id="allLink" style="float:left;margin:10px 00px 0px 0px;">
+			<div>
+				<span><a>中国科学技术协会</a></span>
+				<span><a>国家发展和改革委员会</a></span>
+				<span><a>中国科学院</a></span>
+				<span><a>中华人民共和国民政部</a></span>
+			</div>
+			<div>
+				<span><a>中华人民共和国教育部</a></span>
+				<span><a>中华人民共和国科学技术部</a></span>
+				<span><a>中国工程院</a></span>
+				<span><a>国家自然科学基金委员会</a></span>
+			</div>
+		</div>
+	</div>
+	<div style="clear:both;height:60px;width:70%;margin:0px auto;">
+		<div style="float:left;font-size:16px;margin:20px 0px 0px 0px;">中国科协学会服务中心</div>
+		<div style="float:right;font-size:12px;">
+			<div style="text-align:right;margin:10px 0px 10px 0px;">
+				<span>首页</span>
+				<span>|</span>
+				<span>关于我们</span>
+			</div>
+			<div>
+				<span>版权所有 © 中国科协学会服务中心</span>
+				<span>京ICP备10024610号</span>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- <footer id="footerid" class="bs-docs-footer"></footer> -->
+
+<!-- js -->
+	<script src="/casAssets/plugins/jquery/jquery-3.1.0.min.js"></script>
+    <script src="/casAssets/plugins/bootstrap/js/bootstrap.js"></script>
+    <script src="/casAssets/plugins/bootstrap-table/js/bootstrap-table.js"></script>
+    <script src="/casAssets/plugins/bootstrap-table/js/bootstrap-table-export.js"></script>
+	<script src="/casAssets/plugins/bootstrap-table/js/bootstrap-table-zh-CN.js"></script>	
+	<script src="/casAssets/plugins/scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+	<style type="text/css">
+		.containerCas .fixed-table-container thead th,.containerCas .fixed-table-container tbody td{border-left:none;}
+		.containerCas .table-striped>tbody>tr:nth-of-type(odd) {background-color:#f0f7fc;}
+		.containerCas .fixed-table-header thead{color:#3f8fdd;}
+		.containerCas .nav-tabs li{background-color:#0078d7;}
+		.containerCas .nav-tabs li a{color:#fff;}
+		.containerCas .nav-tabs li.active{background-color:#fff;border-bottom:none;}
+		.containerCas .nav-tabs li.active a{color:#000;border-bottom:none;}
+		.containerCas .nav>li>a:hover {text-decoration:none;background-color:unset;}
+		.containerCas .nav-tabs>li>a:hover {border-color:unset;}
+		.containerCas .nav-tabs>li{border:1px solid #38445B;}
+		 #bottomDiv a{color:#fff;}
+		 #allLink span{padding-right:20px;}
+	</style>
+	<script type="text/javascript">
+	$(document).ready(function(){
+		//遮罩移除 
+    	function closes() {  
+            $("#Loading").fadeOut('normal', function () {  
+                $(this).remove();  
+            });  
+        }
+        var pc;   
+        if(pc) clearTimeout(pc);  
+        pc = setTimeout(closes,1);	
+        
+        var wh = $(window).height();
+        //$(".containerCas").height(wh-180);
+        setTableYScroll("#bodyDiv");
+               
+	    //测试静态数据
+        $("#kjqkInfo1Tg").bootstrapTable('load',kjqkdata);
+	    // 全国学会数据
+       loadCastInstitutes();
+	    // 个人会员数据
+        $("#personInfo2Tg").bootstrapTable('load',persondata);
+	    // 单位会员数据
+        $("#unitInfo2Tg").bootstrapTable('load',unitdata);
+	});	//ready() end
+	// 加载全国学会数据
+	function loadCastInstitutes() {
+		console.log('load Cast Institutes');
+		var url = "/cast/institutes";
+		 $("#xhInfo2Tg").bootstrapTable({
+			method:'GET',
+	        dataType:'json',
+	        contentType: "application/x-www-form-urlencoded",
+	        cache: false,
+	        striped: true,                              //是否显示行间隔色
+	        sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+	        url:url,
+	        showColumns:true,
+	        pagination:true,
+	        queryParams : queryParams,
+	        pageNumber:1,                       //初始化加载第一页，默认第一页
+	        pageSize: 10,                       //每页的记录行数（*）
+	        pageList: [10, 20, 40, 100],        //可供选择的每页的行数（*）
+	        uniqueId: "id",                     //每一行的唯一标识，一般为主键列
+	        showExport: true,                    
+	        exportDataType: 'all',
+	        responseHandler: responseHandler,
+	        columns : [{
+				checkbox:true
+			},{
+				field : 'code',
+				title : '代码',				
+				align : 'center'
+			},{
+				field : 'name',
+				title : '学会名称',				
+				align : 'center'
+			},{
+				field : 'address',
+				title : '学会地址',				
+				align : 'center'
+			},{
+				field : 'telephone',
+				title : '联系电话',				
+				align : 'center'
+			},{
+				field : 'faRen',
+				title : '法人',				
+				align : 'center'
+			},{
+				field : 'liShi',
+				title : '理事长',				
+				align : 'center'
+			},{
+				field : 'miShu',
+				title : '秘书长',				
+				align : 'center'
+			},
+			]
+		 });
+		 console.log('finish.');
+	}
+	
+	function queryParams(params) {
+		console.log(params);
+	    var param = {
+	        page : this.pageNumber - 1,
+	        size : this.pageSize,
+	        sort:'name,ASC',
+	    }
+	    console.log(param);
+	    return param;
+	} 
+	
+	function responseHandler(response) {
+		console.log(response);
+	    if (response) {
+	        return {
+	            "rows" : response.content,
+	            "total" : response.totalElements,
+	        };
+	    } else {
+	        return {
+	            "rows" : [],
+	            "total" : 0
+	        };
+	    }
+	}
+	
+	//测试表格数据
+	var kjqkdata = [{"kjqk_id":"1","kjqk_name":"兵器材料科学与工程","kjqk_affi":"中国兵工学会，中国兵器工业集团第五二研究所"},
+		{"kjqk_id":"2","kjqk_name":"病毒学报","kjqk_affi":"中国微生物学会"},
+		{"kjqk_id":"3","kjqk_name":"测绘学报","kjqk_affi":"中国测绘地理信息学会"},
+		{"kjqk_id":"4","kjqk_name":"茶叶科学","kjqk_affi":"中国茶叶学会"},
+		{"kjqk_id":"5","kjqk_name":"城市发展研究","kjqk_affi":"中国城市科学研究会"},
+		{"kjqk_id":"6","kjqk_name":"地质论评","kjqk_affi":"中国地质学会"},
+		{"kjqk_id":"7","kjqk_name":"地质学报","kjqk_affi":"中国地质学会"},
+		{"kjqk_id":"8","kjqk_name":"动物营养学报","kjqk_affi":"中国畜牧兽医学会"},
+		{"kjqk_id":"9","kjqk_name":"纺织学报","kjqk_affi":"中国纺织工程学会"},
+		{"kjqk_id":"10","kjqk_name":"分子科学学报","kjqk_affi":"中国化学会，东北师范大学"},
+		{"kjqk_id":"11","kjqk_name":"硅酸盐学报","kjqk_affi":"中国硅酸盐学会"},
+		{"kjqk_id":"12","kjqk_name":"海洋渔业","kjqk_affi":"中国水产学会，中国水产科学研究院东海水产研究所，中国科技出版传媒股份有限公司"},
+		{"kjqk_id":"13","kjqk_name":"航空学报","kjqk_affi":"中国航空学会，北京航空航天大学"},
+		{"kjqk_id":"14","kjqk_name":"化学物理学报（英文版）","kjqk_affi":"中国物理学会"},
+		{"kjqk_id":"15","kjqk_name":"健康世界","kjqk_affi":"中华医学会"},
+		{"kjqk_id":"16","kjqk_name":"解剖学报","kjqk_affi":"中国解剖学会"},
+		{"kjqk_id":"17","kjqk_name":"矿床地质","kjqk_affi":"中国地质学会矿床地质专业委员会，中国地质科学院矿产资源研究所"},
+		{"kjqk_id":"18","kjqk_name":"力学学报（英文版）","kjqk_affi":"中国力学学会，中国科学院力学研究所"},
+		{"kjqk_id":"19","kjqk_name":"密码学报","kjqk_affi":"中国密码学会，科学普及出版社（中国科学技术出版社）"},
+		{"kjqk_id":"20","kjqk_name":"模式识别与人工智能","kjqk_affi":"中国自动化学会，国家智能计算机研究开发中心，中国科学院合肥智能机械研究所"},
+		{"kjqk_id":"21","kjqk_name":"贫困所致传染病（英文）","kjqk_affi":"中华医学会"},
+		{"kjqk_id":"22","kjqk_name":"气象学报（英文版）","kjqk_affi":"中国气象学会"},
+		{"kjqk_id":"23","kjqk_name":"生殖与避孕杂志（英文）","kjqk_affi":"中华医学会"},
+		{"kjqk_id":"24","kjqk_name":"石油研究（英文版）","kjqk_affi":"中国石油学会、石油工业出版社有限公司"},
+		{"kjqk_id":"25","kjqk_name":"世界耳鼻咽喉头颈外科杂志（英文版）","kjqk_affi":"中华医学会"},
+		{"kjqk_id":"26","kjqk_name":"世界中西医结合杂志","kjqk_affi":"中华中医药学会"},
+		{"kjqk_id":"27","kjqk_name":"数理天地（初中）","kjqk_affi":"中国优选法统筹法与经济数学研究会"},
+		{"kjqk_id":"28","kjqk_name":"数理天地（高中）","kjqk_affi":"中国优选法统筹法与经济数学研究会"},
+		{"kjqk_id":"29","kjqk_name":"数码影像时代","kjqk_affi":"中国科学技术投资有限公司"},
+		{"kjqk_id":"30","kjqk_name":"水产学报","kjqk_affi":"中国水产学会"}];
+	var persondata = [{"hy_id":"1","hy_xh":"W05-中国微循环学会","hy_fh":"总会","hy_dd":"北京","hy_name":"杨小杰(yangxiaojie)"},
+		{"hy_id":"2","hy_xh":"I01-中国自然辩证法研究会","hy_fh":"总会","hy_dd":"北京","hy_name":"苏杰(sujieqi)"},
+		{"hy_id":"3","hy_xh":"W02-中国农业历史学会","hy_fh":"总会","hy_dd":"北京","hy_name":"张苏(sususu)"},
+		{"hy_id":"4","hy_xh":"W15-中国生物多样性保护与绿色发展基金会","hy_fh":"总会","hy_dd":"","hy_name":"任事平(zhgfxjxh)"},
+		{"hy_id":"5","hy_xh":"E10-中国工程热物理学会","hy_fh":"总会","hy_dd":"北京","hy_name":"吕敬华(qwerty)"},
+		{"hy_id":"6","hy_xh":"E16-中国计量测试学会","hy_fh":"总会","hy_dd":"北京","hy_name":"徐雷(E16_adm)"},
+		{"hy_id":"7","hy_xh":"W08-中国经济科技开发国际交流协会","hy_fh":"总会","hy_dd":"","hy_name":"胡思森(63173409)"},
+		{"hy_id":"8","hy_xh":"I03-中国技术经济学会","hy_fh":"总会","hy_dd":"北京","hy_name":"中国技术经济学会秘书处(leejing)"},
+		{"hy_id":"9","hy_xh":"M12-中国针灸学会","hy_fh":"总会","hy_dd":"北京","hy_name":"易文军(caamywj)"},
+		{"hy_id":"10","hy_xh":"E20-中国计算机学会","hy_fh":"总会","hy_dd":"北京","hy_name":"秦爱梅(522516)"},
+		{"hy_id":"11","hy_xh":"P03-中国自然科学博物馆协会","hy_fh":"","hy_dd":"北京","hy_name":"suhua(abcabc)"},
+		{"hy_id":"12","hy_xh":"S08-中国气象学会","hy_fh":"总会","hy_dd":"北京","hy_name":"管理员(S08_adm)"},
+		{"hy_id":"13","hy_xh":"I05-中国未来研究会","hy_fh":"总会","hy_dd":"北京","hy_name":"王锦(huajun)"},
+		{"hy_id":"14","hy_xh":"E64-中国消防协会","hy_fh":"总会","hy_dd":"北京","hy_name":"施策(shishi)"},
+		{"hy_id":"15","hy_xh":"E10-中国工程热物理学会","hy_fh":"总会","hy_dd":"北京","hy_name":"韩海波(E10_adm)"}];
+	var unitdata = [{"dw_id":"1","dw_xh":"I03-中国技术经济学会","dw_fh":"总会","dw_dd":"","dw_name":"中国技术经济学会秘书处(leejing)"},
+		{"dw_id":"2","dw_xh":"M13-中国防痨协会","dw_fh":"总会","dw_dd":"","dw_name":"中国防痨协会(M13_adm)"},
+		{"dw_id":"3","dw_xh":"S04-中国光学学会","dw_fh":"总会","dw_dd":"","dw_name":"中国光学学会(S04_adm)"},
+		{"dw_id":"4","dw_xh":"S12-中国地球物理学会","dw_fh":"总会","dw_dd":"","dw_name":"中国地球物理学会(S12_adm)"},
+		{"dw_id":"5","dw_xh":"S22-中国生物化学与分子生物学会","dw_fh":"总会","dw_dd":"","dw_name":"中国生物化学与分子生物学会(S22_adm)"},
+		{"dw_id":"6","dw_xh":"S38-中国环境诱变剂学会","dw_fh":"总会","dw_dd":"","dw_name":"中国环境诱变剂学会(S38_adm)"},
+		{"dw_id":"7","dw_xh":"E28-中国航空学会","dw_fh":"","dw_dd":"","dw_name":"中国航空学会组织工作部(E28_adm)"},
+		{"dw_id":"8","dw_xh":"S30-中国自然资源学会","dw_fh":"总会","dw_dd":"","dw_name":"中国自然资源学会(admins30)"},
+		{"dw_id":"9","dw_xh":"M14-中国麻风防治协会","dw_fh":"总会","dw_dd":"黑龙江","dw_name":"黑龙江皮防所(heilongjiangmx)"},
+		{"dw_id":"10","dw_xh":"W01-中国认知科学学会","dw_fh":"总会","dw_dd":"","dw_name":"中国认知科学学会秘书处(W01_adm)"}];
+	
+	function setTableYScroll(dom){
+	  	$(dom).addClass("content");		
+	  	$(dom).mCustomScrollbar({
+	  		axis:"y",
+	  		/* scrollButtons:{enable:true}, */
+	  		theme:"minimal-dark"/* ,
+	  		scrollbarPosition:"outside" */
+	  	});
+	  }	
+	</script>
+</body>
+</html>

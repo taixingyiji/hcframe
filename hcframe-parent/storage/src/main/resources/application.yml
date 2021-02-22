@@ -1,0 +1,35 @@
+server:
+  port: 8094
+spring:
+  application:
+    name: storage
+  # jpa properties
+  jpa:
+    database: mysql
+    show-sql: true
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+  profiles:
+    active: iscas
+  # json date properties
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  servlet:
+    # file upload properties
+    multipart:
+      enabled: true
+      max-file-size: 4096MB
+      max-request-size: 50MB
+# logging properties
+logging:
+  config: classpath:logback.xml
+info:
+  author: 袁涛

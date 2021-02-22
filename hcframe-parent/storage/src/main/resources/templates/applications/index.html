@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="Access-Control-Allow-Origin" content="*">
+  <title>应用系统管理</title>
+  <!-- Tell the browser to be responsive to screen width -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Element UI -->
+  <link rel="stylesheet" href="/webjars/element-ui/lib/theme-chalk/index.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="/webjars/font-awesome/css/font-awesome.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="/webjars/ionicons/css/ionicons.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/css/adminlte.min.css">
+</head>
+<body class="hold-transition sidebar-mini">
+
+<!-- Site wrapper -->
+<div class="wrapper">
+
+  <!-- Navbar -->
+  <div th:replace="fragments/navbar :: navbar"></div>
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+  <div th:replace="fragments/sidebar :: sidebar"></div>
+
+  <!-- Content Wrapper. Contains page content -->
+  <div id="content" th:fragment="content" class="content-wrapper">
+  
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>应用系统管理</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="/">主页</a></li>
+              <li class="breadcrumb-item active">应用系统管理</li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+
+      <!-- Default box -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">应用系统列表</h3>
+
+          <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-widget="collapse" data-toggle="tooltip" title="最小化">
+              <i class="fa fa-minus"></i></button>
+            <button type="button" class="btn btn-tool" data-widget="remove" data-toggle="tooltip" title="关闭">
+              <i class="fa fa-times"></i></button>
+          </div>
+        </div>
+        <div class="card-body">
+        	<el-input @keyup.enter.native="getApplicationList" style="width: 200px;" class="filter-item" placeholder="应用系统名称" v-model="query_applications.name"></el-input>
+        	<el-button class="filter-item" type="primary" icon="el-icon-search" @click="getApplicationList">查询</el-button>
+        	<el-button class="filter-item" style="margin-left: 10px;" @click="handleCreateApplication" type="primary" icon="el-icon-edit">新增</el-button>
+        	<el-alert :title="title" :type="type" v-if="showMessage"></el-alert>
+          	<el-table :data="applications" style="width: 100%">
+      			<el-table-column prop="name" label="应用系统名称" width="180"></el-table-column>
+      			<el-table-column prop="description" label="应用系统描述" width="180"></el-table-column>
+      			<el-table-column prop="url" label="应用系统访问地址" width="360"></el-table-column>
+      			<el-table-column prop="rank" label="排序编号" width="180"></el-table-column>
+      			<el-table-column prop="createTime" label="创建时间" width="180"></el-table-column>
+      			<el-table-column prop="modifiedTime" label="修改时间" :formatter="dateFormat"></el-table-column>
+      			<el-table-column fixed="right" label="操作" width="240">
+			      <template slot-scope="scope">
+			        <el-button @click="handleQueryApplication(scope.row)" type="text" size="small">查看</el-button>
+			        <el-button @click="handleEnterApplication(scope.row)" type="text" size="small">访问</el-button>
+			        <el-button @click="handleQueryApplicationModule(scope.row)" type="text" size="small">查看模块</el-button>
+			        <el-button @click="handleUpdateApplication(scope.row)" type="text" size="small">编辑</el-button>
+			        <el-button @click="handleDeleteApplication(scope.row)" type="text" size="small">删除</el-button>
+			      </template>
+			    </el-table-column>
+    		</el-table>
+        </div>
+        <!-- /.card-body -->
+        <div class="card-footer">
+          <el-pagination layout="prev, pager, next" :total="total_applications" :size="query_applications.size" @current-change="handleCurrentChangeApplication"></el-pagination>
+        </div>
+        <!-- /.card-footer-->
+      </div>
+      <!-- /.card -->
+      <el-dialog :title="applicationTextMap[applicationDialogStatus]" :visible.sync="applicationDialogFormVisible">
+  		<el-form :model="application" :disabled="applicationDialogDisabled">
+  			<el-form-item label="应用系统名称" label-width="120px">
+      			<el-input v-model="application.name" auto-complete="off"></el-input>
+    		</el-form-item>
+    		<el-form-item label="应用系统描述" label-width="120px">
+    			<el-input v-model="application.description" auto-complete="off"></el-input>
+    		</el-form-item>
+    		<el-form-item label="应用系统访问地址" label-width="120px">
+    			<el-input v-model="application.url" auto-complete="off"></el-input>
+    		</el-form-item>
+    		<el-form-item label="排序编号" label-width="120px">
+      			<el-input-number v-model="application.rank" :min="1" :max="100" label="排序编号"></el-input-number>
+    		</el-form-item>
+  		</el-form>
+  		<div slot="footer" class="dialog-footer">
+    		<el-button @click="applicationDialogFormVisible = false">取 消</el-button>
+    		<el-button type="primary" @click="handleApplicationDialog">确 定</el-button>
+  		</div>
+	 </el-dialog>
+	 
+    <!-- module -->  
+	<div class="card">
+        <div class="card-header">
+          <h3 class="card-title">{{application.name}}模块列表</h3>
+
+          <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-widget="collapse" data-toggle="tooltip" title="最小化">
+              <i class="fa fa-minus"></i></button>
+            <button type="button" class="btn btn-tool" data-widget="remove" data-toggle="tooltip" title="关闭">
+              <i class="fa fa-times"></i></button>
+          </div>
+        </div>
+        <div class="card-body">
+        	<el-input @keyup.enter.native="getModuleList" style="width: 200px;" class="filter-item" placeholder="模块名称" v-model="query_modules.name"></el-input>
+        	<el-button class="filter-item" type="primary" icon="el-icon-search" @click="getModuleList">查询</el-button>
+        	<el-button class="filter-item" style="margin-left: 10px;" @click="handleCreateModule" type="primary" icon="el-icon-edit">新增</el-button>
+          	<el-table :data="modules" style="width: 100%">
+      			<el-table-column prop="name" label="模块名称" width="180"></el-table-column>
+      			<el-table-column prop="description" label="模块描述" width="180"></el-table-column>
+      			<el-table-column prop="url" label="模块访问地址" width="180"></el-table-column>
+      			<el-table-column prop="rank" label="排序编号" width="180"></el-table-column>
+      			<el-table-column prop="createTime" label="创建时间" width="180"></el-table-column>
+      			<el-table-column prop="modifiedTime" label="修改时间" :formatter="dateFormat"></el-table-column>
+      			<el-table-column fixed="right" label="操作" width="180">
+			      <template slot-scope="scope">
+			        <el-button @click="handleQueryModule(scope.row)" type="text" size="small">查看</el-button>
+			        <el-button @click="handleEnterModule(scope.row)" type="text" size="small">访问</el-button>
+			        <el-button @click="handleUpdateModule(scope.row)" type="text" size="small">编辑</el-button>
+			        <el-button @click="handleDeleteModule(scope.row)" type="text" size="small">删除</el-button>
+			      </template>
+			    </el-table-column>
+    		</el-table>
+        </div>
+        <!-- /.card-body -->
+        <div class="card-footer">
+          <el-pagination layout="prev, pager, next" :total="total_modules" :size="query_modules.size" @current-change="handleCurrentChangeModule"></el-pagination>
+        </div>
+        <!-- /.card-footer-->
+      </div>
+      <!-- /.card -->
+      <el-dialog :title="moduleTextMap[moduleDialogStatus]" :visible.sync="moduleDialogFormVisible">
+  		<el-form :model="module" :disabled="moduleDialogDisabled">
+  			<el-form-item label="模块名称" label-width="120px">
+      			<el-input v-model="module.name" auto-complete="off"></el-input>
+    		</el-form-item>
+    		<el-form-item label="模块描述" label-width="120px">
+    			<el-input v-model="module.description" auto-complete="off"></el-input>
+    		</el-form-item>
+    		<el-form-item label="模块访问地址" label-width="120px">
+    			<el-input v-model="module.url" auto-complete="off"></el-input>
+    		</el-form-item>
+    		<el-form-item label="排序编号" label-width="120px">
+      			<el-input-number v-model="module.rank" :min="1" :max="100" label="排序编号"></el-input-number>
+    		</el-form-item>
+  		</el-form>
+  		<div slot="footer" class="dialog-footer">
+    		<el-button @click="moduleDialogFormVisible = false">取 消</el-button>
+    		<el-button type="primary" @click="handleModuleDialog">确 定</el-button>
+  		</div>
+	 </el-dialog>
+    </section>
+    
+    <!-- /.content -->
+</div>
+  
+  <!-- /.content-wrapper -->
+
+  <div th:replace="fragments/footer :: footer"></div>
+
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+    <!-- Control sidebar content goes here -->
+  </aside>
+  <!-- /.control-sidebar -->
+  
+  
+</div>
+<!-- ./wrapper -->
+<!-- login other application -->
+<!--<iframe id="iframe0" name="iframe0" frameborder="0" src="/login/kjst" style="width: 0;height:0;display:none;" scrolling="auto"></iframe>-->
+<iframe id="iframe1" name="iframe1" frameborder="0" src="/login/kjqk" style="width: 0;height:0;" scrolling="auto"></iframe>
+<iframe id="iframe2" name="iframe2" frameborder="0" src="/login/cxqd" style="width: 0;height:0;" scrolling="auto"></iframe>
+<iframe id="iframe3" name="iframe3" frameborder="0" src="/login/grhy" style="width: 0;height:0;" scrolling="auto"></iframe>
+<!--<iframe id="iframe4" name="iframe4" frameborder="0" src="/login/njsw" style="width: 0;height:0;" scrolling="auto"></iframe>-->
+<iframe id="iframe5" name="iframe5" frameborder="0" src="/login/njbc" style="width: 0;height:0;" scrolling="auto"></iframe>
+</body>
+<!-- jQuery -->
+<script type="text/javascript" src="/webjars/jquery/dist/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script type="text/javascript" src="/webjars/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<!-- VUE 2 -->
+<script type="text/javascript" src="/webjars/vue/vue.js"></script>
+<script type="text/javascript" src="/webjars/vue-resource/dist/vue-resource.js"></script>
+<!-- Element UI -->
+<script type="text/javascript" src="/webjars/element-ui/lib/index.js"></script>
+<!-- FastClick -->
+<script type="text/javascript" src="/webjars/fastclick/fastclick.js"></script>
+<!-- AdminLTE App -->
+<script src="/js/adminlte.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="/js/demo.js"></script>
+<script src="/js/applications/index.js"></script>
+
+</html>

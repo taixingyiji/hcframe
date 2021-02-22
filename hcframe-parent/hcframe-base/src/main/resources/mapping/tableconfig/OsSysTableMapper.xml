@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hcframe.base.module.tableconfig.dao.OsSysTableMapper">
+    <resultMap id="BaseResultMap" type="com.hcframe.base.module.tableconfig.entity.OsSysTable">
+        <result column="table_id" jdbcType="INTEGER" property="tableId"/>
+        <result column="table_name" jdbcType="VARCHAR" property="tableName"/>
+        <result column="table_alias" jdbcType="VARCHAR" property="tableAlias"/>
+        <result column="table_pk" jdbcType="VARCHAR" property="tablePk"/>
+        <result column="table_content" jdbcType="VARCHAR" property="tableContent"/>
+        <collection property="fieldList" resultMap="com.hcframe.base.module.tableconfig.dao.OsSysFieldDao.BaseResultMap">
+        </collection>
+    </resultMap>
+
+    <select id="getTableAllInfo" resultMap="BaseResultMap">
+        select *
+        from OS_SYS_TABLE
+                 left join OS_SYS_FIELD on OS_SYS_TABLE.TABLE_ID = OS_SYS_FIELD.TABLE_ID
+                 left join OS_SYS_SELECT on OS_SYS_FIELD.FIELD_ID = OS_SYS_SELECT.FIELD_ID
+        where OS_SYS_TABLE.TABLE_ALIAS = #{typeName} order by OS_SYS_FIELD.FIELD_ID
+    </select>
+
+</mapper>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+<meta charset="UTF-8">
+<title>登录年检事务工作平台</title>
+</head>
+<body>
+	<form action="http://nj.zgxhw.org.cn:8090/zzc/loginHandle.jsp" id="loginForm" method="post">
+		<input type="text" value="用户登录"  name="btn" />
+		<input type="text" value="zjjg"  name="aUser" />
+		<input type="password" value="000000"  name="aPsw" />
+	</form>
+</body>
+<!-- jQuery -->
+<script type="text/javascript" src="/webjars/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript">
+$(function(){
+	$("#loginForm").submit();
+});
+</script>
+</html>

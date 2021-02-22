@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hcframe.base.module.tableconfig.dao.OsSysSelectDao">
+
+    <resultMap type="com.hcframe.base.module.tableconfig.entity.OsSysSelect" id="OsSysSelectMap">
+        <result property="selectId" column="SELECT_ID" jdbcType="INTEGER"/>
+        <result property="selectKey" column="SELECT_KEY" jdbcType="VARCHAR"/>
+        <result property="selectValue" column="SELECT_VALUE" jdbcType="VARCHAR"/>
+        <result property="selectType" column="SELECT_TYPE" jdbcType="INTEGER"/>
+        <result property="fieldId" column="FIELD_ID" jdbcType="INTEGER"/>
+    </resultMap>
+
+
+</mapper>

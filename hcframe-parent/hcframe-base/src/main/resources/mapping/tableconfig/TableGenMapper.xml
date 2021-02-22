@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hcframe.base.module.tableconfig.dao.TableGenMapper">
+    <resultMap type="com.hcframe.base.module.tableconfig.entity.TableInfo" id="tableInfo">
+        <result property="tableName" column="TABLE_NAME" jdbcType="VARCHAR"/>
+        <result property="tableComment" column="TABLE_COMMENT" jdbcType="VARCHAR"/>
+    </resultMap>
+    <resultMap type="com.hcframe.base.module.tableconfig.entity.FieldInfo" id="fieldInfo">
+        <result property="columnName" column="COLUMN_NAME" jdbcType="VARCHAR"/>
+        <result property="dataType" column="DATA_TYPE" jdbcType="VARCHAR"/>
+        <result property="columnKey" column="COLUMN_KEY" jdbcType="INTEGER"/>
+        <result property="columnComment" column="COLUMN_COMMENT" jdbcType="VARCHAR"/>
+    </resultMap>
+    <select id="getMysqlTableList" resultMap="tableInfo">
+        select TABLE_NAME, TABLE_COMMENT
+        from information_schema.tables
+        where table_schema = #{schema}
+        and table_name not like '%os_sys%'
+        <if test="tableInfo.tableName!=null and tableInfo.tableName!=''">
+            and table_name = #{tableInfo.tableName}
+        </if>
+        <if test="tableInfo.tableComment!=null and tableInfo.tableComment!=''">
+            and table_comment = #{tableInfo.tableComment}
+        </if>
+    </select>
+    <select id="getOracleTableList" resultMap="tableInfo">
+        select TABLE_NAME, COMMENTS TABLE_COMMENT
+        from USER_TAB_COMMENTS
+        where TABLE_NAME not LIKE '%os_sys%'
+        <if test="tableInfo.tableName!=null and tableInfo.tableName!=''">
+            and TABLE_NAME = #{tableInfo.tableName}
+        </if>
+        <if test="tableInfo.tableComment!=null and tableInfo.tableComment!=''">
+            and COMMENTS = #{tableInfo.tableComment}
+        </if>
+    </select>
+    <select id="getMysqlFieldList" resultMap="fieldInfo">
+        SELECT COLUMN_NAME,
+               DATA_TYPE,
+               (
+                   IF
+                       (COLUMN_KEY = 'PRI', 1, 0)) as COLUMN_KEY,
+               COLUMN_COMMENT
+        FROM information_schema.COLUMNS
+        where table_name = #{tableName}
+          and table_schema = #{schema}
+    </select>
+    <select id="getOracleFieldList" resultMap="fieldInfo">
+        SELECT utc.COLUMN_NAME,
+               utc.DATA_TYPE,
+               ucc.COMMENTS COLUMN_COMMENT,
+               nvl2(
+                       (
+                           SELECT CONSTRAINT_TYPE
+                           FROM USER_CONS_COLUMNS A,
+                                USER_CONSTRAINTS B
+                           WHERE A.CONSTRAINT_NAME = B.CONSTRAINT_NAME
+                             AND B.CONSTRAINT_TYPE = 'P'
+                             AND A.TABLE_NAME = #{tableName}
+                             AND A.COLUMN_NAME = ucc.COLUMN_NAME
+                       ),
+                       1,
+                       0
+                   ) AS     COLUMN_KEY
+        FROM user_tab_columns utc
+                 LEFT JOIN user_col_comments ucc ON utc.COLUMN_NAME = ucc.COLUMN_NAME
+        WHERE utc.TABLE_NAME = #{tableName}
+          AND ucc.TABLE_NAME = #{tableName}
+    </select>
+    <select id="getOraclePrimaryKey" resultType="java.lang.String">
+        SELECT COLUMN_NAME
+        FROM USER_CONS_COLUMNS A,
+             USER_CONSTRAINTS B
+        WHERE A.CONSTRAINT_NAME = B.CONSTRAINT_NAME
+          AND B.CONSTRAINT_TYPE = 'P'
+          AND A.TABLE_NAME = #{tableName}
+    </select>
+    <select id="getMysqlPrimaryKey" resultType="java.lang.String">
+        SELECT COLUMN_NAME
+        FROM information_schema.COLUMNS
+        where table_name = #{tableName}
+          and table_schema = #{schema}
+          and COLUMN_KEY = 'PRI'
+    </select>
+</mapper>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hcframe.base.module.datasource.dao.DatasourceTypeDao">
+
+    <resultMap type="com.hcframe.base.module.datasource.entity.DatasourceType" id="DatasourceTypeMap">
+        <result property="typeId" column="type_id" jdbcType="INTEGER"/>
+        <result property="typeKey" column="type_key" jdbcType="VARCHAR"/>
+        <result property="typeValue" column="type_value" jdbcType="VARCHAR"/>
+        <result property="driver" column="driver" jdbcType="VARCHAR"/>
+    </resultMap>
+</mapper>

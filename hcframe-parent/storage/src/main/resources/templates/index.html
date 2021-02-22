@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="Responsive Admin Dashboard Template">
+        <meta name="keywords" content="admin,dashboard">
+        <meta name="author" content="stacks">
+        <!-- The above 6 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+        <!-- Title -->
+        <title>集成用户工作平台</title>
+	
+    <!-- Styles -->
+    <link href="/casAssets/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/common.css" rel="stylesheet">       
+</head>
+<!-- <body style="background-image:url(casAssets/images/casBack.png);"> -->
+<body>
+<!-- Page Container -->
+<div id="logoNav" style="height:80px;background-image:url(/casAssets/images/casBackNav.png);background-repeat:no-repeat;background-size:100% 100%;">
+	<nav class="navbar navbar-default" style="height:80px;margin-bottom:0px;background-color:rgba(255,255,255,0.2);border:none;">
+	  <div class="container-fluid" style="height:100%;padding:0px;">
+	    <!-- Brand and toggle get grouped for better mobile display -->
+	    <!-- Collect the nav links, forms, and other content for toggling -->
+	    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" style="height:100%;padding:0px;">
+	      <ul class="nav navbar-nav" style="cursor:pointer;">
+	        <li class="logoToIndex" style="padding:12px 0px 0px 50px;" title="中国科协学会服务中心"><img alt="" src="/img/casLogo.png"></li>
+	        <li class="logoToIndex" style="padding: 20px 0px 0px 17px;" title="中国科协学会服务中心"><img alt="" src="/img/casTitle.png"></li>
+	        <li class="navli activeLi" style="width:100px;margin-left:70px;text-align:center;"><a class="srcVal" id="main" href="#" style="color:#fff;">首页</a></li>
+			<li class="navli" style="width:100px;text-align:center;"><a class="srcVal" id="data" href="#" style="color:#fff;">数据</a></li>
+			<li style="width:100px;text-align:center;"><a class="srcVal" th:href="@{/logout/cas}" style="color:#fff;">注销</a></li>	        
+	      </ul>	      
+	    </div><!-- /.navbar-collapse -->
+	  </div><!-- /.container-fluid -->
+	</nav>
+</div>
+<div class="page-container">   
+    <!-- Page Content -->
+    <!-- <div class="page-content">  -->       
+    	<iframe id="iframe" name="iframe" src="/main" frameborder="0"></iframe>
+    <!-- </div> --><!-- /Page Content -->
+</div><!-- /Page Container --> 
+<!-- Javascripts -->
+<!-- jQuery -->
+<script type="text/javascript" src="/webjars/jquery/dist/jquery.min.js"></script>
+<style type="text/css">
+#logoNav li{height:78px;}
+#logoNav .navbar-nav>li>a{padding:15px;line-height:48px;}
+#logoNav .activeLi{background-color:#d2dade;}
+</style>
+<script type="text/javascript">
+    $(document).ready(function(){
+        var wh = $(window).height();
+        /* $("body").height(wh); */
+        $(".page-container").height(wh-84);
+        $("#iframe").height($(".page-container").height());
+        $("#iframe").width($(".page-container").width());
+        
+        $(".navli").click(function(){
+        	$(".navli").removeClass("activeLi");
+        	$(this).addClass("activeLi");
+        	var casAIdStr = $($(this).find("a")).attr("id");
+        	$("#iframe").attr("src", casAIdStr);
+        });
+        //点击logo进入主页
+        $(".logoToIndex").click(function(){
+        	$("#iframe").attr("src","/main");
+        });
+       
+    });  
+</script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+	<title>快速注册</title>
+	<!-- 引入样式 -->
+	<link rel="stylesheet" href="/webjars/element-ui/lib/theme-chalk/index.css">
+	<!-- Font Awesome -->
+  	<link rel="stylesheet" href="/webjars/font-awesome/css/font-awesome.css">
+  	<!-- Ionicons -->
+  	<link rel="stylesheet" href="/webjars/ionicons/css/ionicons.min.css">
+  	<!-- Theme style -->
+  	<link rel="stylesheet" href="/css/adminlte.min.css">
+</head>
+<body class="hold-transition register-page">
+<div id="register-app" class="register-box">
+  <div class="register-logo">
+    <a href="/"><b>后台管理</b>系统</a>
+  </div>
+
+  <div class="card">
+    <div class="card-body register-card-body">
+      <p class="login-box-msg">快速注册新用户</p>
+	  <el-alert :title="title" :type="type" v-if="showMessage"></el-alert>
+      <form action="#" method="post" :model="registerForm">
+        <div class="form-group has-feedback">
+          <input type="text" class="form-control" placeholder="请输入登录账号" v-model="registerForm.userName">
+          <span class="fa fa-user form-control-feedback"></span>
+        </div>
+        <div class="form-group has-feedback">
+          <input type="email" class="form-control" placeholder="请输入邮箱" v-model="registerForm.email">
+          <span class="fa fa-envelope form-control-feedback"></span>
+        </div>
+        <div class="form-group has-feedback">
+          <input type="password" class="form-control" placeholder="请输入密码" v-model="registerForm.password">
+          <span class="fa fa-lock form-control-feedback"></span>
+        </div>
+        <div class="form-group has-feedback">
+          <input type="password" class="form-control" placeholder="请再次输入密码" v-model="password2">
+          <span class="fa fa-lock form-control-feedback"></span>
+        </div>
+        <div class="row">
+          <div class="col-8">
+            <div class="checkbox icheck">
+              <label>
+                <input type="checkbox"> 我同意 <a href="#">协议</a>
+              </label>
+            </div>
+          </div>
+          <!-- /.col -->
+          <div class="col-4">
+            <el-button class="btn btn-primary btn-block btn-flat" @click.native.prevent="handleRegister">注册</el-button>
+          </div>
+          <!-- /.col -->
+        </div>
+      </form>
+
+      <div class="social-auth-links text-center">
+        <p>- 或 -</p>
+        <a href="#" class="btn btn-block btn-primary">
+          <i class="fa fa-facebook mr-2"></i>
+          Facebook登录
+        </a>
+        <a href="#" class="btn btn-block btn-danger">
+          <i class="fa fa-google-plus mr-2"></i>
+          Google+登录
+        </a>
+      </div>
+
+      <a href="/auth/users/login" class="text-center">已有账户</a>
+    </div>
+    <!-- /.form-box -->
+  </div><!-- /.card -->
+</div>
+	
+</body>
+<!-- import Vue before Element -->
+<!-- jQuery -->
+<script type="text/javascript" src="/webjars/jquery/dist/jquery.min.js"></script>
+<!-- Bootstrap 4 -->
+<script type="text/javascript" src="/webjars/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script type="text/javascript" src="/webjars/vue/vue.js"></script>
+<script type="text/javascript" src="/webjars/vue-resource/dist/vue-resource.js"></script>
+<!-- import JavaScript -->
+<script type="text/javascript" src="/webjars/element-ui/lib/index.js"></script>
+<script type="text/javascript" src="/js/users/register.js"></script>
+</html>

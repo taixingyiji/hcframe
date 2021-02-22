@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hcframe.base.module.datasource.dao.DatasourceConfigDao">
+    <resultMap type="com.hcframe.base.module.datasource.entity.DatasourceConfig" id="DatasourceConfigMap">
+        <result property="datasourceId" column="datasource_id" jdbcType="INTEGER"/>
+        <result property="driverClassName" column="driver_class_name" jdbcType="VARCHAR"/>
+        <result property="url" column="url" jdbcType="VARCHAR"/>
+        <result property="username" column="username" jdbcType="VARCHAR"/>
+        <result property="password" column="password" jdbcType="VARCHAR"/>
+        <result property="commonAlias" column="common_alias" jdbcType="VARCHAR"/>
+        <result property="commonType" column="common_type" jdbcType="VARCHAR"/>
+        <result property="sysEnabled" column="sys_enabled" jdbcType="INTEGER"/>
+        <result property="isDefault" column="is_default" jdbcType="INTEGER"/>
+        <result property="schemaName" column="schema_name" jdbcType="VARCHAR"/>
+        <result property="sysDescription" column="sys_description" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <select id="getCount" resultType="java.lang.Integer">
+        select count(0) from datasource_config
+    </select>
+</mapper>

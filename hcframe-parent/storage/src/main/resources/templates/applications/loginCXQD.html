@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+<meta charset="UTF-8">
+<title>登录中国科协学会服务中心创新发展云平台</title>
+</head>
+<body>
+	<form action="http://cq.castscs.org.cn:8080/zgkxjsxh/login.shtml" id="loginForm" method="post">
+		<input type="text" value=""  name="validateCode" />
+		<input type="text" value="demo"  name="username" />
+		<input type="password" value="demo"  name="password" />
+	</form>
+</body>
+<!-- jQuery -->
+<script type="text/javascript" src="/webjars/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript">
+$(function(){
+	$("#loginForm").submit();
+});
+</script>
+</html>

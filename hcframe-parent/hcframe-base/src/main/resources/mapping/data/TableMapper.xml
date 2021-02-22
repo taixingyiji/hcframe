@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hcframe.base.module.data.dao.TableMapper">
+    <select id="findAllTables" resultType="map">
+        select *
+        FROM ${tableName}
+    </select>
+    <select id="findByEqual" resultType="map" parameterType="map">
+        select *
+        FROM ${tableName}
+        <where>
+            <foreach collection="info.keys"
+                     separator=" and "
+                     item="key">
+                <if test="info[key]!=null and info[key]!=''">
+                    <bind name="value" value="info[key]"/>
+                    ${key}=#{value}
+                </if>
+            </foreach>
+        </where>
+    </select>
+
+    <select id="findByLike" resultType="map" parameterType="map">
+        select *
+        FROM ${tableName}
+        <where>
+            <foreach collection="info.keys"
+                     separator=" and "
+                     item="key">
+                <if test="info[key]!=null and info[key]!=''">
+                    <bind name="value" value="'%' + info[key] + '%'"/>
+                    #{key} like #{value}
+                </if>
+            </foreach>
+        </where>
+    </select>
+
+    <delete id="deleteByPrimary">
+        DELETE FROM ${tableName} WHERE ${pkName} in
+        <foreach collection="ids"
+                 open="("
+                 close=")"
+                 separator=","
+                 item="item">
+            ${item}
+        </foreach>
+    </delete>
+    <delete id="deleteByWhere">
+        DELETE
+        FROM ${tableName} ${sql}
+    </delete>
+
+    <insert id="saveInfo" parameterType="map" useGeneratedKeys="true" keyProperty="info.id" keyColumn="id">
+        INSERT INTO ${tableName}
+        <foreach collection="info" open="(" close=")" separator="," item="value" index="key">
+            <if test="info[key]!=null and info[key]!=''">
+                ${key}
+            </if>
+        </foreach>
+        VALUES
+        <foreach collection="info" open="(" close=")" separator="," item="value" index="key">
+            <if test="info[key]!=null and info[key]!=''">
+                ${value}
+            </if>
+        </foreach>
+    </insert>
+
+    <insert id="saveInfoWithNull" parameterType="map" useGeneratedKeys="true" keyProperty="info.id" keyColumn="id">
+        INSERT INTO ${tableName}
+        <foreach collection="info.keys" open="(" close=")" separator="," item="key" index="index">
+            ${key}
+        </foreach>
+        VALUES
+        <foreach collection="info.entrySet()" open="(" close=")" separator="," index="key" item="value">
+            #{value}
+        </foreach>
+    </insert>
+    <insert id="saveInfoWithOracle" parameterType="map" >
+        INSERT INTO ${tableName}
+        <foreach collection="info.keys" open="(" close=")" separator="," item="key" index="index">
+            ${key}
+        </foreach>
+        VALUES
+        <foreach collection="info.entrySet()" open="(" close=")" separator="," index="key" item="value">
+            #{value}
+        </foreach>
+    </insert>
+    <insert id="createSequence">
+        CREATE
+            SEQUENCE ${tableName}_seq
+        MINVALUE 1
+        NOMAXVALUE
+        START
+            WITH ${lastId}
+        INCREMENT BY 1
+        NOCACHE
+    </insert>
+
+    <update id="updateInfo" parameterType="map" useGeneratedKeys="true" keyProperty="info.id" keyColumn="id">
+        update ${tableName}
+        <set>
+            <foreach collection="info" separator="," item="value" index="key">
+                #{key} = #{value}
+            </foreach>
+        </set>
+        where id = #{info.id}
+    </update>
+    <update id="updateInfoWithNull" parameterType="map" useGeneratedKeys="true" keyProperty="info.id" keyColumn="id">
+        update ${tableName}
+        <set>
+            <foreach collection="info.keys" separator="," item="key" index="index">
+                <if test="key!='id'">
+                    #{key} = #{info[key]}
+                </if>
+            </foreach>
+        </set>
+        where id = #{info.id}
+    </update>
+
+    <update id="updateByWhere" parameterType="map" useGeneratedKeys="true" keyProperty="info.id" keyColumn="id">
+        update ${tableName}
+        <set>
+            <foreach collection="info" separator="," item="value" index="key">
+                ${key} = #{value}
+            </foreach>
+        </set>
+        ${sql}
+    </update>
+
+    <update id="updateByWhereWithNull" parameterType="map" useGeneratedKeys="true" keyProperty="info.id" keyColumn="id">
+        update ${tableName}
+        <set>
+            <foreach collection="info.keys" separator="," item="key" index="index">
+                <if test="key!='id'">
+                    #{key} = #{info[key]}
+                </if>
+            </foreach>
+        </set>
+        where ${sql}
+    </update>
+
+    <select id="useSql" resultType="map">
+        ${sql}
+    </select>
+    <select id="getListNoPage" resultType="java.util.Map">
+        select * from ${typeName}
+        where 1=1
+        <foreach collection="info" separator="," item="value" index="key">
+            and ${key} = #{value}
+        </foreach>
+    </select>
+    <select id="findAllTablesWithField" resultType="java.util.Map">
+        select ${fields}
+        FROM ${tableName}
+    </select>
+    <select id="useSqlByTest" resultType="java.lang.Object">
+        ${sql}
+    </select>
+
+    <select id="userSqlByOne" resultType="java.util.Map">
+        ${sql}
+    </select>
+    <select id="getSequence" resultType="java.lang.Object">
+        select ${tableName}_seq.nextval
+        from dual
+    </select>
+</mapper>

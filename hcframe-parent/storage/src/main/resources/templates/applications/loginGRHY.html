@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+<meta charset="UTF-8">
+<title>登录中国科协所属学会个人会员管理系统</title>
+</head>
+<body>
+	<form action="http://app01.cast.org.cn:7001/cast/manage/loginHandle.jsp" id="loginForm">
+		<input type="text" value="admin"  name="aUser" />
+		<input type="password" value="62194554"  name="aPsw" />
+	</form>
+</body>
+<!-- jQuery -->
+<script type="text/javascript" src="/webjars/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript">
+$(function(){
+	$("#loginForm").submit();
+});
+</script>
+</html>

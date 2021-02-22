@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hcframe.base.module.auth.dao.OsSysMenuDao">
+
+    <resultMap id="BaseResultMap" type="com.hcframe.base.module.auth.entity.OsSysMenu">
+        <!--@Table OS_SYS_MENU-->
+        <result property="menuId" column="MENU_ID" jdbcType="INTEGER"/>
+        <result property="menuName" column="MENU_NAME" jdbcType="VARCHAR"/>
+        <result property="parentId" column="PARENT_ID" jdbcType="INTEGER"/>
+        <result property="orderNum" column="ORDER_NUM" jdbcType="INTEGER"/>
+        <result property="path" column="PATH" jdbcType="VARCHAR"/>
+        <result property="component" column="COMPONENT" jdbcType="VARCHAR"/>
+        <result property="isFrame" column="IS_FRAME" jdbcType="INTEGER"/>
+        <result property="isCache" column="IS_CACHE" jdbcType="INTEGER"/>
+        <result property="menuType" column="MENU_TYPE" jdbcType="VARCHAR"/>
+        <result property="visible" column="VISIBLE" jdbcType="VARCHAR"/>
+        <result property="status" column="MENU_STATUS" jdbcType="VARCHAR"/>
+        <result property="perms" column="PERMS" jdbcType="VARCHAR"/>
+        <result property="icon" column="ICON" jdbcType="VARCHAR"/>
+        <result property="createTime" column="CREATE_TIME" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="UPDATE_TIME" jdbcType="TIMESTAMP"/>
+        <result property="remark" column="REMARK" jdbcType="VARCHAR"/>
+        <result property="alwaysShow" column="AlWAYSSHOW" jdbcType="VARCHAR"/>
+        <result property="affix" column="AFFIX" jdbcType="VARCHAR"/>
+        <result property="breadcrumb" column="BREADCRUMB" jdbcType="VARCHAR"/>
+    </resultMap>
+    <select id="selectMenu" resultMap="BaseResultMap">
+        SELECT
+            OS_SYS_MENU.MENU_ID,
+            OS_SYS_MENU.MENU_NAME,
+            OS_SYS_MENU.PARENT_ID,
+            OS_SYS_MENU.PATH,
+            OS_SYS_MENU.COMPONENT,
+            OS_SYS_MENU.IS_CACHE,
+            OS_SYS_MENU.VISIBLE,
+            OS_SYS_MENU.IS_FRAME,
+            OS_SYS_MENU.MENU_TYPE,
+            OS_SYS_MENU.ORDER_NUM,
+            OS_SYS_MENU.MENU_STATUS,
+            OS_SYS_MENU.PERMS,
+            OS_SYS_MENU.AFFIX,
+            OS_SYS_MENU.BREADCRUMB,
+            OS_SYS_MENU.AlWAYSSHOW,
+            OS_SYS_MENU.REMARK,
+            OS_SYS_MENU.UPDATE_TIME,
+            OS_SYS_MENU.CREATE_TIME,
+            OS_SYS_MENU.ICON
+        FROM
+            OS_SYS_MENU
+        WHERE
+            MENU_STATUS = 1 AND
+            MENU_TYPE IN ('C','M')
+        ORDER BY
+            OS_SYS_MENU.PARENT_ID ASC,
+            OS_SYS_MENU.ORDER_NUM ASC
+    </select>
+</mapper>

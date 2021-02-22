@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+<meta charset="UTF-8">
+<title>登录科技社团信息平台</title>
+</head>
+<body>
+	<form action="http://kjst.castscs.org.cn:8080/ashx/Common/Login.ashx" id="loginForm">
+		<input type="text" value="Login"  name="type" id="type"/>
+		<input type="text" th:value="${username}"  name="UserName" id="UserName"/>
+		<input type="password" th:value="${password}"  name="Pwd" id="Pwd"/>
+	</form>
+</body>
+<!-- jQuery -->
+<script type="text/javascript" src="/webjars/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript">
+$(function(){
+	$("#loginForm").submit();
+});
+</script>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<!-- 引入样式 -->
+<link rel="stylesheet" href="/webjars/element-ui/lib/theme-chalk/index.css">
+<style>
+  .uploader-example {
+    width: 880px;
+    padding: 15px;
+    margin: 40px auto 0;
+    font-size: 12px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .4);
+  }
+  .uploader-example .uploader-btn {
+    margin-right: 4px;
+  }
+  .uploader-example .uploader-list {
+    max-height: 440px;
+    overflow: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+</style>
+<title>首页</title>
+</head>
+<body>
+	<div id="app">
+    <el-button @click="visible = true">Button</el-button>
+    <el-dialog :visible.sync="visible" title="Hello world">
+      <p>Try Element</p>
+    </el-dialog>
+    <uploader :options="options" :file-status-text="statusText" class="uploader-example" ref="uploader" @file-complete="fileComplete" @complete="complete"></uploader>
+  </div>
+
+</body>
+<!-- import Vue before Element -->
+  <script type="text/javascript" src="/webjars/vue/vue.js"></script>
+  <!-- import JavaScript -->
+  <script type="text/javascript" src="/webjars/element-ui/lib/index.js"></script>
+  <script type="text/javascript" src="/js/vue-uploader.js"></script>
+  <script>
+    new Vue({
+      el: '#app',
+      data: function() {
+        return { 
+        	visible: false,
+        	options: {
+                target: '//localhost:3000/upload', // '//jsonplaceholder.typicode.com/posts/',
+                testChunks: false
+              },
+              attrs: {
+                accept: 'image/*'
+              },
+              statusText: {
+                success: '成功了',
+                error: '出错了',
+                uploading: '上传中',
+                paused: '暂停中',
+                waiting: '等待中'
+              }
+        }
+      },
+      methods: {
+          complete () {
+            console.log('complete', arguments)
+          },
+          fileComplete () {
+            console.log('file complete', arguments)
+          }
+        },
+        mounted () {
+          this.$nextTick(() => {
+            window.uploader = this.$refs.uploader.uploader
+          })
+        }
+    })
+  </script>
+
+</html>

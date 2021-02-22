@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title>
+			文件上传
+		</title>
+		<!-- Tell the browser to be responsive to screen width -->
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- Element UI -->
+		<link rel="stylesheet" href="/webjars/element-ui/lib/theme-chalk/index.css">
+		<!-- Font Awesome -->
+		<link rel="stylesheet" href="/webjars/font-awesome/css/font-awesome.css">
+		<!-- Ionicons -->
+		<link rel="stylesheet" href="/webjars/ionicons/css/ionicons.min.css">
+		<!-- Theme style -->
+		<link rel="stylesheet" href="/css/adminlte.min.css">
+	</head>
+	<body class="hold-transition sidebar-mini">
+		<!-- Site wrapper -->
+		<div class="wrapper">
+			<!-- Navbar -->
+			<div th:replace="fragments/navbar :: navbar">
+			</div>
+			<!-- /.navbar -->
+			<!-- Main Sidebar Container -->
+			<div th:replace="fragments/sidebar :: sidebar">
+			</div>
+			<!-- Content Wrapper. Contains page content -->
+			<div id="content" th:fragment="content" class="content-wrapper">
+				<!-- Content Header (Page header) -->
+				<section class="content-header">
+					<div class="container-fluid">
+						<div class="row mb-2">
+							<div class="col-sm-6">
+								<h1>文件上传</h1>
+							</div>
+							<div class="col-sm-6">
+								<ol class="breadcrumb float-sm-right">
+									<li class="breadcrumb-item">
+										<a href="/">
+											主页
+										</a>
+									</li>
+									<li class="breadcrumb-item active">
+										文件上传
+									</li>
+								</ol>
+							</div>
+						</div>
+					</div>
+					<!-- /.container-fluid -->
+				</section>
+				<!-- Main content -->
+				<section class="content">
+					<div class="container-fluid">
+						<div class="row">
+							<!-- left column -->
+							<div class="col-md-6">
+								<!-- Default box -->
+								<div class="card">
+									<div class="card-header">
+										<h3 class="card-title">
+											文件上传
+										</h3>
+										<div class="card-tools">
+											<button type="button" class="btn btn-tool" data-widget="collapse" data-toggle="tooltip"
+											title="最小化">
+												<i class="fa fa-minus">
+												</i>
+											</button>
+											<button type="button" class="btn btn-tool" data-widget="remove" data-toggle="tooltip"
+											title="关闭">
+												<i class="fa fa-times">
+												</i>
+											</button>
+										</div>
+									</div>
+									<div class="card-body">
+										<el-input style="width: 200px;" class="filter-item" placeholder="逻辑存储区" v-model="bucketName"></el-input>
+										<el-upload
+ 												class="upload-demo"
+ 												action="/files"
+ 												:on-preview="handlePreview"
+ 												:on-remove="handleRemove"
+ 												:before-upload="beforeUpload"
+ 												:data="{bucket_name:bucketName}"
+ 												multiple
+ 												:limit="10"
+ 												:on-exceed="handleExceed"
+ 												:on-success="handleSuccess"
+ 												:on-error="handleError"
+ 												:file-list="fileList">
+ 												<el-button size="small" type="primary">点击上传</el-button>
+											<div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+										</el-upload>
+									</div>
+									<!-- /.card-body -->
+        							<div class="card-footer"></div>
+        							<!-- /.card-footer-->
+								</div>
+								<!-- /.card -->
+							</div>
+						</div>
+					</div>
+				</section>
+				<!-- /.content -->
+			</div>
+			<!-- /.content-wrapper -->
+			<div th:replace="fragments/footer :: footer">
+			</div>
+			<!-- Control Sidebar -->
+			<aside class="control-sidebar control-sidebar-dark">
+				<!-- Control sidebar content goes here -->
+			</aside>
+			<!-- /.control-sidebar -->
+		</div>
+		<!-- ./wrapper -->
+	</body>
+	<!-- jQuery -->
+	<script type="text/javascript" src="/webjars/jquery/dist/jquery.min.js">
+	</script>
+	<!-- Bootstrap 4 -->
+	<script type="text/javascript" src="/webjars/bootstrap/dist/js/bootstrap.bundle.min.js">
+	</script>
+	<!-- VUE 2 -->
+	<script type="text/javascript" src="/webjars/vue/vue.js">
+	</script>
+	<script type="text/javascript" src="/webjars/vue-resource/dist/vue-resource.js">
+	</script>
+	<!-- Element UI -->
+	<script type="text/javascript" src="/webjars/element-ui/lib/index.js">
+	</script>
+	<!-- FastClick -->
+	<script type="text/javascript" src="/webjars/fastclick/fastclick.js">
+	</script>
+	<!-- AdminLTE App -->
+	<script src="/js/adminlte.min.js">
+	</script>
+	<!-- AdminLTE for demo purposes -->
+	<script src="/js/demo.js">
+	</script>
+	<script src="/js/files/elupload.js">
+	</script>
+
+</html>

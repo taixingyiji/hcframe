@@ -1,0 +1,25 @@
+# data source properties
+#spring.datasource.driverClassName=dm.jdbc.driver.DmDriver
+#spring.datasource.url=jdbc\:dm\://192.168.100.179\:5236/STORAGE?useUnicode=true&characterEncoding=UTF-8
+#spring.datasource.username=STORAGE
+#spring.datasource.password=123456789
+spring:
+  # data source properties
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/storage?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&useSSL=false
+    username: root
+    password: root
+    dbcp2:
+      test-on-borrow: true
+      test-on-return: true
+      test-while-idle: true
+      time-between-eviction-runs-millis: 1800000
+      num-tests-per-eviction-run: 3
+      min-evictable-idle-time-millis: 1800000
+      validation-query: SELECT 1
+  servlet:
+    # file upload properties
+    multipart:
+      location: /Volumes/DATA/upload
+
