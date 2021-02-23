@@ -5,7 +5,7 @@
 ## backend
 **/target
 **/logs
-**/log
+/log
 
 ## front
 **/*.lock
