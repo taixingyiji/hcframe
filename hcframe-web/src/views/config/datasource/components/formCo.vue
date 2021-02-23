@@ -76,6 +76,7 @@
             :key="item.typeKey"
             :label="item.typeKey"
             :value="item.typeKey"
+            v-if="item===1"
           />
         </el-select>
         <el-popover

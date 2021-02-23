@@ -96,6 +96,7 @@
     "eslint-plugin-standard": "^4.0.1",
     "eslint-plugin-vue": "^6.2.2",
     "fibers": "^4.0.2",
+    "husky": "^5.1.1",
     "jest": "^25.5.4",
     "lint-staged": "^10.2.2",
     "sass": "^1.26.5",
@@ -115,6 +116,11 @@
   },
   "gitHooks": {
     "pre-commit": "lint-staged"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   },
   "keywords": [
     "vue",
