@@ -11,4 +11,5 @@ public class FrameConfig {
     private Boolean isRedisLogin = false;
     private Integer loginTimeout = 4;
     private Boolean showControllerLog = true;
+    private Boolean MultiDataSource = true;
 }

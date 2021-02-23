@@ -1,5 +1,7 @@
 package com.hcframe.base.module.datasource.aop;
 
+import com.hcframe.base.common.config.FrameConfig;
+import com.hcframe.base.common.utils.RedisUtil;
 import com.hcframe.base.module.datasource.dao.DatasourceConfigDao;
 import com.hcframe.base.module.datasource.dynamic.DBContextHolder;
 import com.hcframe.base.module.datasource.utils.DataUnit;
@@ -29,6 +31,14 @@ import javax.servlet.http.HttpServletRequest;
 @Component
 public class DataSourceAop {
 
+    public static boolean isMulti;
+
+    // 通过yml文件获取host
+    @Autowired
+    public void setHost(FrameConfig config) {
+        DataSourceAop.isMulti = config.getMultiDataSource();
+    }
+
     @Autowired
     DatasourceConfigDao datasourceConfigDao;
 
@@ -44,17 +54,21 @@ public class DataSourceAop {
     public void doBefore(JoinPoint joinPoint) {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
-        String key = request.getParameter("datasourceKey");
-        if (StringUtils.isBlank(key)) {
-            DBContextHolder.setDataSource(DataUnit.MASTER);
-        } else {
-            DBContextHolder.setDataSource(key);
+        if (isMulti) {
+            String key = request.getParameter("datasourceKey");
+            if (StringUtils.isBlank(key)) {
+                DBContextHolder.setDataSource(DataUnit.MASTER);
+            } else {
+                DBContextHolder.setDataSource(key);
+            }
         }
     }
 
     @After("log()")
     public void doAfter() {
-        DBContextHolder.clearDataSource();
+        if (isMulti) {
+            DBContextHolder.clearDataSource();
+        }
     }
 }
 

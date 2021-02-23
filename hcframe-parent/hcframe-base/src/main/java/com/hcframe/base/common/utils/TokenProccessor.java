@@ -1,6 +1,6 @@
 package com.hcframe.base.common.utils;
 
-import java.util.Random;
+import java.util.UUID;
 
 /**
  * 生成Token的工具类
@@ -21,7 +21,7 @@ public class TokenProccessor {
      * @return
      */
     public String makeToken() {
-        String token = (System.currentTimeMillis() + new Random().nextInt(999999999)) + "";
+        String token = System.currentTimeMillis() + UUID.randomUUID().toString();
         EncryptUtil encryptUtil = EncryptUtil.getInstance();
         String str = encryptUtil.MD5(token);
         str = str.replaceAll("/", "");

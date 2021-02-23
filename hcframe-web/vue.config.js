@@ -37,7 +37,7 @@ module.exports = {
       //     ['^' + process.env.VUE_APP_BASE_API]: ''
       //   }
       // }
-      '/common': {
+      '/config': {
         target: 'http://localhost:8080/',
         // target: 'http://192.168.43.42:8080/',
         // target: 'http://127.0.0.1:8080',

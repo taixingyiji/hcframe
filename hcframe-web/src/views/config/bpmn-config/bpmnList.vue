@@ -441,7 +441,7 @@ export default class extends Vue {
           }
           // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
           // @ts-ignore
-          await this.$router.push({ name: 'bpmnCreate', params: params })
+          await this.$router.push({ name: 'BpmnCreate', params: params })
           localStorage.setItem('bpmnLocalstorage', JSON.stringify(params))
         }
       }
@@ -455,7 +455,7 @@ export default class extends Vue {
     const { data } = await this.ActivitiApi.showBpmn(this.showBpmnParams)
     // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
     // @ts-ignore
-    await this.$router.push({ name: 'onlyViewBpmn', params: data })
+    await this.$router.push({ name: 'OnlyViewBpmn', params: data })
     localStorage.setItem('showData', JSON.stringify(data))
   }
 
@@ -478,7 +478,7 @@ export default class extends Vue {
     }
     // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
     // @ts-ignore
-    await this.$router.push({ name: 'bpmnCreate', params: params })
+    await this.$router.push({ name: 'BpmnCreate', params: params })
     localStorage.setItem('bpmnLocalstorage', JSON.stringify(params))
   }
 
