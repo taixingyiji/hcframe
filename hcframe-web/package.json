@@ -131,6 +131,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+http://taixingyiji.synology.me:1010/common-frame/common-web.git"
+    "url": "git+http://taixingyiji.synology.me:1010/common-frame/hcframe.git"
   }
 }
