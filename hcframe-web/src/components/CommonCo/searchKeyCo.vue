@@ -5,7 +5,6 @@
   >
     <el-form-item
       v-for="col in formKey"
-      v-if="col.search===1"
       :key="col.fieldName"
       :prop="col.fieldName"
     >
