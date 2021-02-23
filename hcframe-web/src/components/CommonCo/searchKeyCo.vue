@@ -7,6 +7,7 @@
       v-for="col in formKey"
       :key="col.fieldName"
       :prop="col.fieldName"
+      v-if="col===1"
     >
       <el-row
         v-if="col.isSearch===1 && col.webType !== 'el-date-picker' && col.webType!=='password'"
