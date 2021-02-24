@@ -30,5 +30,4 @@ public class ActivitiApplication {
     public static void main(String[] args) {
         SpringApplication.run(ActivitiApplication.class, args);
     }
-
 }

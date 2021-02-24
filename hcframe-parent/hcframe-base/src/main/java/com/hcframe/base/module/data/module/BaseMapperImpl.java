@@ -1,7 +1,9 @@
 package com.hcframe.base.module.data.module;
 
+import com.alibaba.druid.pool.DruidDataSource;
 import com.hcframe.base.common.WebPageInfo;
 import com.hcframe.base.common.utils.MyPageHelper;
+import com.hcframe.base.common.utils.SpringContextUtil;
 import com.hcframe.base.common.utils.StringUtils;
 import com.hcframe.base.module.data.dao.TableMapper;
 import com.hcframe.base.module.data.exception.BaseMapperException;
@@ -12,6 +14,7 @@ import com.hcframe.base.module.datasource.utils.DataSourceUtil;
 import com.hcframe.base.module.datasource.utils.DataUnit;
 import com.hcframe.base.module.tableconfig.entity.OsSysTable;
 import com.github.pagehelper.PageInfo;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +28,9 @@ public class BaseMapperImpl implements BaseMapper {
 
     final TableMapper tableMapper;
 
+    @Value("${spring.datasource.druid.driver-class-name}")
+    public String dataType;
+
     public BaseMapperImpl(TableMapper tableMapper) {
         this.tableMapper = tableMapper;
     }
@@ -33,15 +39,31 @@ public class BaseMapperImpl implements BaseMapper {
     @Transactional
     public  <E> int save(DataMap<E> dataMap) {
         String key;
-        key = DBContextHolder.getDataSource();
-        DatasourceConfig datasourceConfig = DataSourceUtil.get(key);
+        DatasourceConfig datasourceConfig = new DatasourceConfig();
+        try {
+            key = DBContextHolder.getDataSource();
+            datasourceConfig = DataSourceUtil.get(key);
+        } catch (Exception e) {
+            if (dataType.contains("oracle")) {
+                datasourceConfig.setCommonType(DataUnit.ORACLE);
+            }
+            if (dataType.contains("mysql")) {
+                datasourceConfig.setCommonType(DataUnit.MYSQL);
+            }
+            if (dataType.contains("DmDriver")) {
+                datasourceConfig.setCommonType(DataUnit.DAMENG);
+            }
+            if (dataType.contains("sqlite")) {
+                datasourceConfig.setCommonType(DataUnit.SQLITE);
+            }
+        }
         JudgesNull(dataMap.getData(), "data can not be null!");
         JudgesNull(dataMap.getTableName(), "tableName can not be null!");
         if (StringUtils.isEmpty(dataMap.getPkName())) {
             dataMap.setPkName("ID");
         }
         int i;
-        if (datasourceConfig.getCommonType().equals(DataUnit.ORACLE)||datasourceConfig.getCommonType().equals(DataUnit.DAMENG)) {
+        if (DataUnit.ORACLE.equals(datasourceConfig.getCommonType()) || DataUnit.DAMENG.equals(datasourceConfig.getCommonType())) {
             if (org.springframework.util.StringUtils.isEmpty(dataMap.get(dataMap.getPkName()))) {
                 Object id = getSequence(dataMap.getTableName(), dataMap.getPkName());
                 dataMap.toBuilder().add(dataMap.getPkName(), id);
@@ -64,8 +86,25 @@ public class BaseMapperImpl implements BaseMapper {
     public int save(String tableName, String pkName, Map<String, Object> data) {
         JudgesNull(tableName, "data can not be null!");
         JudgesNull(data, "tableName can not be null!");
-        String key = DBContextHolder.getDataSource();
-        DatasourceConfig datasourceConfig = DataSourceUtil.get(key);
+        String key;
+        DatasourceConfig datasourceConfig = new DatasourceConfig();
+        try {
+            key = DBContextHolder.getDataSource();
+            datasourceConfig = DataSourceUtil.get(key);
+        } catch (Exception e) {
+            if (dataType.contains("oracle")) {
+                datasourceConfig.setCommonType(DataUnit.ORACLE);
+            }
+            if (dataType.contains("mysql")) {
+                datasourceConfig.setCommonType(DataUnit.MYSQL);
+            }
+            if (dataType.contains("DmDriver")) {
+                datasourceConfig.setCommonType(DataUnit.DAMENG);
+            }
+            if (dataType.contains("sqlite")) {
+                datasourceConfig.setCommonType(DataUnit.SQLITE);
+            }
+        }
         if (StringUtils.isEmpty(pkName)) {
             pkName = "ID";
         }
@@ -89,8 +128,6 @@ public class BaseMapperImpl implements BaseMapper {
         DataMap<E> dataMap = DataMap.<E>builder().obj(e).build();
         int i = save(dataMap);
         dataMap.set(StringUtils.toCamelCase(dataMap.getPkName()),dataMap.getPkValue());
-        OsSysTable sysTable = (OsSysTable) dataMap.getObj();
-        System.out.println(sysTable.getTableId()+"++++++++++++");
         return i;
     }
 
