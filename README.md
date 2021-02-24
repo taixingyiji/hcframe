@@ -38,9 +38,4 @@ cd hcframe-parent/hcframe-base/
 ```   
 6.  执行``mvn install``
 7.  刷新其他项目maven依赖
-8. 进入starter目录
-```bash 
-cd ../hcframe-starter
-```
-9.  执行 ``mvn install``
-10.  刷新maven依赖
+8.  刷新maven依赖
