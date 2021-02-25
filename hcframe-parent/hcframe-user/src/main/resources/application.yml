@@ -5,6 +5,10 @@ server:
 pagehelper:
   auto-runtime-dialect: true
 spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 192.168.1.131:8848
   application:
     name: cloud-user
   # 缓存设置
