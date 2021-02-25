@@ -9,6 +9,7 @@ spring:
     nacos:
       discovery:
         server-addr: 192.168.1.131:8848
+        namespace: 2e9f0148-751e-4da2-83ec-cb00ffe0d83a
   application:
     name: cloud-user
   # 缓存设置
@@ -105,11 +106,6 @@ druid:
 #  allow: 127.0.0.1
   # Druid 拒绝访问的IP,默认不拒绝全部
 #  deny: 10.0.0.2
-
-eureka:
-  client:
-    service-url:
-      defaultZone: http://admin:123456@192.168.4.119:8081/eureka/
 feign:
   client:
     config:

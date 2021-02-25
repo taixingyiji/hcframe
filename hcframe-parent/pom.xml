@@ -20,6 +20,7 @@
         <module>hcframe-activiti</module>
         <module>hcframe-es</module>
         <module>hcframe-config</module>
+        <module>hcframe-gateway</module>
     </modules>
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
