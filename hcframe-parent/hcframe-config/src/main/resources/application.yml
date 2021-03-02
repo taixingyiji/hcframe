@@ -5,11 +5,6 @@ server:
 pagehelper:
   auto-runtime-dialect: true
 spring:
-  cloud:
-    nacos:
-      discovery:
-        server-addr: @config.server-addr@
-        namespace: 2e9f0148-751e-4da2-83ec-cb00ffe0d83a
   application:
     name: cloud-config
   # 缓存设置

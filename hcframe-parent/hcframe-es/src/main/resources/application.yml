@@ -107,9 +107,5 @@ druid:
 #  deny: 10.0.0.2
 # 是否开启controller日志监控
 show-controller-log: false
-eureka:
-  client:
-    service-url:
-      defaultZone: http://admin:123456@192.168.4.119:8080/eureka/
 
 

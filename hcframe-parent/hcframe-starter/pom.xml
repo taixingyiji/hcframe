@@ -13,8 +13,8 @@
     <packaging>pom</packaging>
     <modules>
         <module>hcframe-gateway-cas-starter</module>
-        <module>hcframe-nacos-starter</module>
         <module>hcframe-boot-starter</module>
+        <module>hcframe-cloud-starter</module>
     </modules>
 
     <properties>

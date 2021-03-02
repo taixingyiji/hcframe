@@ -63,6 +63,10 @@
             <version>1.18.8</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -134,7 +138,7 @@
         <profile>
             <id>test</id>
             <properties>
-                <profile.name>dev</profile.name>
+                <profile.name>test</profile.name>
                 <!--Nacos配置中心地址-->
                 <config.server-addr>192.168.1.131:8848</config.server-addr>
                 <!--Nacos配置中心命名空间,用于支持多环境.这里必须使用ID，不能使用名称,默认为空-->
