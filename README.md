@@ -21,7 +21,7 @@
 
 #### 安装教程
 
-1.  git拉去目录
+1.  git拉去项目
  
 2.  发布达梦数据库驱动包
 ```bash
@@ -32,10 +32,9 @@ mvn install:install-file -Dfile=lib/Dm7JdbcDriver18.jar -DgroupId=com.dm -Dartif
 mvn install:install-file -Dfile=lib/ojdbc6.jar -DgroupId=com.oracle -DartifactId=ojdbc6 -Dversion=11.2.0.4 -Dpackaging=jar
 ``` 
 4.  刷新maven依赖
-5.  进入基础包目录
+5.  进入目录
 ```bash 
-cd hcframe-parent/hcframe-base/ 
+cd hcframe-parent/ 
 ```   
 6.  执行``mvn install``
-7.  刷新其他项目maven依赖
-8.  刷新maven依赖
+7.  刷新maven依赖
