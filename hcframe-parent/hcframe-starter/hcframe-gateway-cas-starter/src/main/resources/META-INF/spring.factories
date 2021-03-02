@@ -1,0 +1,1 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.hcframe.gateway_cas_stater.config.GatewayCasConfig

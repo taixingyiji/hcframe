@@ -1,56 +1,31 @@
 server:
-  port: 8081
-  servlet:
-    context-path: /config
-pagehelper:
-  auto-runtime-dialect: true
+  port: 8084
 spring:
   cloud:
     nacos:
       discovery:
-        server-addr: @config.server-addr@
+        server-addr: 192.168.1.131:8848
         namespace: 2e9f0148-751e-4da2-83ec-cb00ffe0d83a
-  application:
-    name: cloud-config
-  # 缓存设置
-  cache:
-    # redis缓存
-#    type: redis
-#    redis:
-#      time-to-live: 1d
-#      use-key-prefix: true
-#      cache-null-values: true
-#      key-prefix: cache.
-    # ehcache缓存
-    type: ehcache
-    ehcache:
-      config: classpath:ehcache.xml
-  redis:
-    database: 0
-    host: 192.168.4.119
-    port: 6379
-    password:
-    lettuce:
-      pool:
-        # 连接池中的最大空闲连接 默认8
-        max-idle: 8
-        # 连接池中的最小空闲连接 默认0
-        min-idle: 0
-        # 连接池最大连接数 默认8 ，负数表示没有限制
-        max-active: 8
-        # 连接池最大阻塞等待时间（使用负值表示没有限制） 默认-1
-        max-wait: -1
-    timeout: 30000
-  mvc:
-    view:
-      prefix: classpath*:/templates/
-      suffix: .html
-    static-path-pattern: classpath*:/static/**
+    gateway:
+      discovery:
+        locator:
+          # 是否和服务注册与发现组件结合，设置为 true 后可以直接使用应用名称调用服务
+          enabled: true
+      routes:
+        - id: user
+          uri: lb://cloud-user
+          predicates:
+            - Path=/user/**
+        - id: config
+          uri: lb://cloud-config
+          predicates:
+            - Path=/config/**
   datasource:
     druid:
       # 配置sqlite文件路径，需要填写绝对路径，推荐将sqlite文件放入到服务器上，而非程序jar包或war包中
       driver-class-name: org.sqlite.JDBC
       url: jdbc:sqlite:/Volumes/DATA/ideaProject/common-frame/hcframe/hcframe-parent/hcframe-config/src/main/resources/datasource.db
+#      url: jdbc:sqlite:D:/nacos-server-1.4.1/datasource.db
       username:
       password:
       #使用Druid数据源
@@ -72,15 +47,31 @@ spring:
       filters: stat,slf4j
       # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
       connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
-mybatis:
-  mapper-locations: classpath*:mapping/**/*.xml
-  type-aliases-package: com.hcframe.**.entity
-  configuration:
-     # 开启Sql日志记录
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  # 若不使用redis需要注释掉此类信息
+  redis:
+    database: 0
+    host: 192.168.100.145
+    port: 6379
+    password: root
+    lettuce:
+      pool:
+        # 连接池中的最大空闲连接 默认8
+        max-idle: 8
+        # 连接池中的最小空闲连接 默认0
+        min-idle: 0
+        # 连接池最大连接数 默认8 ，负数表示没有限制
+        max-active: 8
+        # 连接池最大阻塞等待时间（使用负值表示没有限制） 默认-1
+        max-wait: -1
+    timeout: 30000
+eureka:
+  client:
+    service-url:
+#      defaultZone: http://admin:123456@tomcat1:8080/eureka/
+      defaultZone: http://admin:123456@192.168.4.119:8081/eureka/
 # 框架配置
 frame:
-# 是否开启redis 用户登录，若开启此项，需要配置redis节点及相关配置，若不开启，需要注释掉redis相关配置信息
+  # 是否开启redis 用户登录，若开启此项，需要配置redis节点及相关配置，若不开启，需要注释掉redis相关配置信息
   isRedisLogin: true
   # 用户登陆超时设置，单位为小时，此值不能为0
   loginTimeout: 4
@@ -103,7 +94,7 @@ druid:
   # Druid密码
   password: test
   # Druid 允许访问的IP,默认全部允许
-#  allow: 127.0.0.1
+  #  allow: 127.0.0.1
   # Druid 拒绝访问的IP,默认不拒绝全部
 #  deny: 10.0.0.2
 feign:
@@ -117,15 +108,8 @@ feign:
     enabled: true
   hystrix:
     enabled: true
-# 设置熔断器超时时间
-hystrix:
-  command:
-    default:
-      execution:
-        isolation:
-          thread:
-            timeoutInMilliseconds: 30000
-
-
-
-
+hcframe:
+  cas:
+    casServiceUrl: http://192.168.1.131:8080
+    serviceUrl: http://192.168.4.130:8084
+    clientContextPath: /

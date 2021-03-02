@@ -22,7 +22,6 @@
         <module>hcframe-config</module>
         <module>hcframe-gateway</module>
         <module>hcframe-starter</module>
-        <module>hcframe-gateway-cas-starter</module>
     </modules>
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -30,6 +29,7 @@
         <spring-alibaba.version>2.2.5.RELEASE</spring-alibaba.version>
         <spring-cloud.version>Hoxton.SR7</spring-cloud.version>
         <spring-boot.version>2.3.2.RELEASE</spring-boot.version>
+        <java.cas.client.version>3.5.0</java.cas.client.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -57,5 +57,108 @@
         </dependencies>
     </dependencyManagement>
     <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.8</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skipTests>true</skipTests>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <configuration>
+                    <nonFilteredFileExtensions>
+                        <nonFilteredFileExtension>woff</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>woff2</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>eot</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>ttf</nonFilteredFileExtension>
+                        <nonFilteredFileExtension>svg</nonFilteredFileExtension>
+                    </nonFilteredFileExtensions>
+                </configuration>
+            </plugin>
+        </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                    <include>**/*.json</include>
+                    <include>**/*.ftl</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <activation>
+                <!--默认激活配置-->
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <!--当前环境-->
+                <profile.name>dev</profile.name>
+                <!--Nacos配置中心地址-->
+                <config.server-addr>192.168.1.131:8848</config.server-addr>
+                <!--Nacos配置中心命名空间,用于支持多环境.这里必须使用ID，不能使用名称,默认为空-->
+                <config.namespace>2e9f0148-751e-4da2-83ec-cb00ffe0d83a</config.namespace>
+                <!--Nacos配置分组名称-->
+                <config.group>DEFAULT_GROUP</config.group>
+                <!--Nacos服务发现地址-->
+                <discovery.server-addr>192.168.1.131:8848</discovery.server-addr>
+            </properties>
+        </profile>
+        <profile>
+            <id>test</id>
+            <properties>
+                <profile.name>dev</profile.name>
+                <!--Nacos配置中心地址-->
+                <config.server-addr>192.168.1.131:8848</config.server-addr>
+                <!--Nacos配置中心命名空间,用于支持多环境.这里必须使用ID，不能使用名称,默认为空-->
+                <config.namespace>2e9f0148-751e-4da2-83ec-cb00ffe0d83a</config.namespace>
+                <!--Nacos配置分组名称-->
+                <config.group>DEFAULT_GROUP</config.group>
+                <!--Nacos服务发现地址-->
+                <discovery.server-addr>192.168.1.131:8848</discovery.server-addr>
+            </properties>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <!--当前环境-->
+                <profile.name>prod</profile.name>
+                <!--Nacos配置中心地址-->
+                <config.server-addr>127.0.0.1:8848</config.server-addr>
+                <!--Nacos配置中心命名空间,用于支持多环境.这里必须使用ID，不能使用名称,默认为空-->
+                <config.namespace></config.namespace>
+                <!--Nacos配置分组名称-->
+                <config.group>DEFAULT_GROUP</config.group>
+                <!--Nacos服务发现地址-->
+                <discovery.server-addr>127.0.0.1:8848</discovery.server-addr>
+            </properties>
+        </profile>
+    </profiles>
 </project>
