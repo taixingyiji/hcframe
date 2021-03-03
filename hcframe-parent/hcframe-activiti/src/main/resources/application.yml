@@ -86,10 +86,6 @@ server:
   port: 8081
   servlet:
     context-path: /activiti
-# 是否开启redis 用户登录，若开启此项，需要配置redis节点及相关配置，若不开启，需要注释掉redis相关配置信息
-isRedisLogin: false
-# 用户登陆超时设置，单位为小时，此值不能为0
-login-time-out: 4
 swagger:
   # 配置controller包路径
   path: com.hcframe.activiti.controller
@@ -119,9 +115,3 @@ druid:
   #  allow: 127.0.0.1
   # Druid 拒绝访问的IP,默认不拒绝全部
 #  deny: 10.0.0.2
-# 是否开启controller 日志显示
-show-controller-log: true
-eureka:
-  client:
-    service-url:
-      defaultZone: http://admin:123456@192.168.4.119:8081/eureka/
