@@ -8,11 +8,14 @@ import org.jasig.cas.client.validation.*;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
+import org.springframework.http.HttpCookie;
 import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 /**
  * @author lhc
@@ -50,12 +53,12 @@ public class CasValidGlobalFilter implements GlobalFilter, Ordered {
                 Assertion assertion;
                 try {
                     assertion = ticketValidator.validate(ticket, Utils.encodingUrl(request, true, true));
-
-                    Object authId = request.getCookies().get(casGatewayClientConfig.authKey);
+                    MultiValueMap<String, HttpCookie>cookieMultiValueMap =  request.getCookies();
+                    List<HttpCookie> authId = cookieMultiValueMap.get(casGatewayClientConfig.authKey);
                     if (authId == null) {
                         return chain.filter(exchange);
                     }
-                    dataStorage.setValue(authId.toString(), AuthGlobalFilter.CAS_ASSERTION_KEY, assertion);
+                    dataStorage.setValue(authId.get(0).getValue(), AuthGlobalFilter.CAS_ASSERTION_KEY, assertion);
                     return Utils.redirect(exchange, Utils.encodingUrl(request, true, true));
                 } catch (TicketValidationException e) {
                     e.printStackTrace();

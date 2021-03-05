@@ -2,6 +2,11 @@ server:
   port: 8081
   servlet:
     context-path: /config
+cas:
+  server-url-prefix: http://192.168.1.131:8080/cas
+  client-host-url: http://192.168.1.130:9527
+  validation-type: cas3
+  server-login-url: http://192.168.1.131:8080/cas/login
 pagehelper:
   auto-runtime-dialect: true
 spring:

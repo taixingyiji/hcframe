@@ -27,16 +27,6 @@ public class SimpleCORSFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-		/*String[] whiteList = {"http://fwh.castscs.org.cn", "http://localhost"};
-		HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-		String myOrigin = httpServletRequest.getHeader("origin");
-		boolean isValid = false;
-		for( String ip : whiteList ) {
-			if( myOrigin != null && myOrigin.equals(ip) ){
-				isValid = true;
-				break;
-			}
-		}*/
 		HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 		String myOrigin = httpServletRequest.getHeader("origin");
 		HttpServletResponse httpServletResponse = (HttpServletResponse) response;

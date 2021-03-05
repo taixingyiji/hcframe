@@ -3,6 +3,14 @@ server:
 spring:
   cloud:
     gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowCredentials: true
+            allowedOriginPatterns: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
+        add-to-simple-url-handler-mapping: true
       discovery:
         locator:
           # 是否和服务注册与发现组件结合，设置为 true 后可以直接使用应用名称调用服务
@@ -16,6 +24,8 @@ spring:
           uri: lb://cloud-config
           predicates:
             - Path=/config/**
+          filters:
+            - PreserveHostHeader
   datasource:
     druid:
       # 配置sqlite文件路径，需要填写绝对路径，推荐将sqlite文件放入到服务器上，而非程序jar包或war包中
@@ -46,9 +56,9 @@ spring:
   # 若不使用redis需要注释掉此类信息
   redis:
     database: 0
-    host: 192.168.100.145
+    host: 192.168.4.119
     port: 6379
-    password: root
+    password:
     lettuce:
       pool:
         # 连接池中的最大空闲连接 默认8
@@ -107,5 +117,6 @@ feign:
 hcframe:
   cas:
     casServiceUrl: http://192.168.1.131:8080
-    serviceUrl: http://192.168.4.130:8084
+    serviceUrl: http://192.168.1.130:9527
     clientContextPath: /
+

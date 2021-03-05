@@ -50,9 +50,9 @@ spring:
   # 若不使用redis需要注释掉此类信息
   redis:
     database: 0
-    host: 192.168.100.145
+    host: 192.168.4.119
     port: 6379
-    password: root
+    password:
     lettuce:
       pool:
         # 连接池中的最大空闲连接 默认8
@@ -111,5 +111,5 @@ feign:
 hcframe:
   cas:
     casServiceUrl: http://192.168.1.131:8080
-    serviceUrl: http://192.168.4.130:8084
+    serviceUrl: http://192.168.1.130:9527
     clientContextPath: /
