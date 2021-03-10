@@ -52,11 +52,11 @@ public class Utils {
 
     public static String encodingUrl(ServerHttpRequest request, boolean isEncode, boolean isTicket) {
         String url = request.getURI().toString();
-//        url = "http://" + request.getURI().getHost() + ":" + request.getURI().getPort() + request.getURI().getPath();
-        String query = request.getURI().getQuery();
-//        if (!StringUtils.isEmpty(query)) {
-//            url = url + QUESTION_MARK + query;
-//        }
+        url = "http://" + request.getURI().getHost() + ":" + request.getURI().getPort() + request.getURI().getPath();
+        String query = exceptTicket(request);
+        if (!StringUtils.isEmpty(query)) {
+            url = url + QUESTION_MARK + query;
+        }
         HttpHeaders headers = request.getHeaders();
         List<String> forwardedUrl = headers.get("x-forwarded-host");
         if (!StringUtils.isEmpty(forwardedUrl)) {
