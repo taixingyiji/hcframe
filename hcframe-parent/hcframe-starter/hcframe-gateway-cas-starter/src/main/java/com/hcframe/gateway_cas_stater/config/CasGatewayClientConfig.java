@@ -11,6 +11,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("hcframe.cas")
 public class CasGatewayClientConfig {
 
+    public Boolean enabled = true;
+
     public String casServiceUrl;
 
     public String serviceUrl;

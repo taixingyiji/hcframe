@@ -132,12 +132,22 @@
                 <config.namespace>2e9f0148-751e-4da2-83ec-cb00ffe0d83a</config.namespace>
                 <!--Nacos配置分组名称-->
                 <config.group>DEFAULT_GROUP</config.group>
-                <!--Nacos服务发现地址-->
+                <!-- Nacos服务发现地址-->
                 <discovery.server-addr>192.168.1.131:8848</discovery.server-addr>
+                <!-- redis 配置-->
                 <redis.database>0</redis.database>
                 <redis.host>192.168.4.119</redis.host>
                 <redis.port>6379</redis.port>
                 <redis.password/>
+                <!-- cas配置 -->
+                <cas.enabled>true</cas.enabled>
+                <cas.cas-service-url>http://192.168.1.131:8080</cas.cas-service-url>
+                <cas.cas-context-path>/cas</cas.cas-context-path>
+                <cas.white-url>^(.*(/logout?))|(/user/cas/url)$</cas.white-url>
+                <cas.service-url>http://192.168.1.130:9527</cas.service-url>
+                <cas.cookie-holder-pattern>com.hcframe.gateway.config.MyDataStorage</cas.cookie-holder-pattern>
+                <cas.login-url>/login</cas.login-url>
+                <cas.logout-url>/logout</cas.logout-url>
             </properties>
         </profile>
         <profile>
@@ -156,6 +166,15 @@
                 <redis.host>192.168.4.119</redis.host>
                 <redis.port>6379</redis.port>
                 <redis.password/>
+                <!-- cas配置 -->
+                <cas.enabled>true</cas.enabled>
+                <cas.cas-service-url>http://192.168.1.131:8080</cas.cas-service-url>
+                <cas.cas-context-path>/cas</cas.cas-context-path>
+                <cas.white-url>^(.*(/logout?))|(/user/cas/url)$</cas.white-url>
+                <cas.service-url>http://192.168.1.130:9527</cas.service-url>
+                <cas.cookie-holder-pattern>com.hcframe.gateway.config.MyDataStorage</cas.cookie-holder-pattern>
+                <cas.login-url>/login</cas.login-url>
+                <cas.logout-url>/logout</cas.logout-url>
             </properties>
         </profile>
         <profile>
@@ -175,6 +194,15 @@
                 <redis.host>192.168.4.119</redis.host>
                 <redis.port>6379</redis.port>
                 <redis.password/>
+                <!-- cas配置 -->
+                <cas.enabled>true</cas.enabled>
+                <cas.cas-service-url>http://192.168.1.131:8080</cas.cas-service-url>
+                <cas.cas-context-path>/cas</cas.cas-context-path>
+                <cas.white-url>^(.*(/logout?))|(/user/cas/url)$</cas.white-url>
+                <cas.service-url>http://192.168.1.130:9527</cas.service-url>
+                <cas.cookie-holder-pattern>com.hcframe.gateway.config.MyDataStorage</cas.cookie-holder-pattern>
+                <cas.login-url>/login</cas.login-url>
+                <cas.logout-url>/logout</cas.logout-url>
             </properties>
         </profile>
     </profiles>

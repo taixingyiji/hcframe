@@ -6,6 +6,7 @@ import com.hcframe.gateway_cas_stater.filter.CasValidGlobalFilter;
 import com.hcframe.gateway_cas_stater.filter.SimpleCORSFilter;
 import org.jasig.cas.client.util.ReflectUtils;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

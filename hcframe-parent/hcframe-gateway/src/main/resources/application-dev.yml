@@ -99,11 +99,4 @@ feign:
     enabled: true
   hystrix:
     enabled: true
-hcframe:
-  cas:
-    casServiceUrl: http://192.168.1.131:8080
-    serviceUrl: http://192.168.1.130:9527
-    clientContextPath: /
-    cookieHolderPattern: com.hcframe.gateway.config.MyDataStorage
-    white-url: "^(.*(/logout?))|(/user/cas/url)$"
 

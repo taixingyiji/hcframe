@@ -14,9 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.Map;
 
 @Controller
 @RequestMapping("cas")
@@ -58,14 +55,5 @@ public class CasController {
         cookie.setMaxAge(0);
         redisUtil.hdel("session", token);
         return ResultVO.getSuccess("http://192.168.1.131:8080/cas/logout");
-    }
-
-    @GetMapping("url")
-    @ResponseBody
-    public ResultVO<Map<String,String>> getCasUrl(){
-        Map<String,String> map=new HashMap<>(2);
-        map.put("cas", "http://192.168.1.131:8080/cas/login");
-        map.put("config", "http://192.168.1.130:8084/user/cas/valid");
-        return ResultVO.getSuccess(map);
     }
 }
