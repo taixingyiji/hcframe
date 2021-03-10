@@ -7,6 +7,7 @@
         <groupId>com.hcframe</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
+    <packaging>war</packaging>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>hcframe-user</artifactId>
@@ -49,6 +50,7 @@
         </dependency>
     </dependencies>
     <build>
+        <finalName>user</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

@@ -2,6 +2,7 @@ package com.hcframe.user.module.manage.controller;
 
 import com.hcframe.base.common.ResultVO;
 import com.hcframe.redis.RedisUtil;
+import net.unicon.cas.client.configuration.CasClientConfigurationProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -19,8 +20,17 @@ import java.net.URLDecoder;
 @RequestMapping("cas")
 public class CasController {
 
-    @Autowired
+    final
     RedisUtil redisUtil;
+
+    final
+    CasClientConfigurationProperties casClientConfigurationProperties;
+
+    public CasController(RedisUtil redisUtil, CasClientConfigurationProperties casClientConfigurationProperties) {
+        this.redisUtil = redisUtil;
+        this.casClientConfigurationProperties = casClientConfigurationProperties;
+    }
+
 
     @GetMapping("valid")
     public ResultVO<String> casValid(HttpServletResponse response, HttpServletRequest request,String webUrl) {
@@ -50,10 +60,12 @@ public class CasController {
 
     @GetMapping("/logout")
     @ResponseBody
-    public ResultVO<String> logout(HttpServletResponse response, @CookieValue("X-Access-Token") String token) {
+    public ResultVO<String> logout(HttpServletRequest request, @CookieValue("X-Access-Token") String token) {
         Cookie cookie = new Cookie("X-Access-Token", null);
         cookie.setMaxAge(0);
+        String headerToken = request.getHeader("X-Access-Token");
         redisUtil.hdel("session", token);
-        return ResultVO.getSuccess("http://192.168.1.131:8080/cas/logout");
+        redisUtil.hdel("session", headerToken);
+        return ResultVO.getSuccess(casClientConfigurationProperties.getServerUrlPrefix()+"/cas/logout");
     }
 }

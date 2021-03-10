@@ -60,14 +60,6 @@ eureka:
     service-url:
 #      defaultZone: http://admin:123456@tomcat1:8080/eureka/
       defaultZone: http://admin:123456@192.168.4.119:8081/eureka/
-# 框架配置
-frame:
-  # 是否开启redis 用户登录，若开启此项，需要配置redis节点及相关配置，若不开启，需要注释掉redis相关配置信息
-  isRedisLogin: true
-  # 用户登陆超时设置，单位为小时，此值不能为0
-  loginTimeout: 4
-  # 是否开启controller日志监控
-  showControllerLog: true
 # swagger配置
 swagger:
   # 配置controller包路径
