@@ -17,10 +17,7 @@ public class TestController {
     BaseMapper baseMapper;
 
     @GetMapping("/test")
-    public ResultVO<FtUser> getUser(HttpServletRequest request) {
-        System.out.println(request.getHeader("X-Access-Token"));
-        FtUser ftUser = (FtUser) SecurityUtils.getSubject().getPrincipal();
-        System.out.println("+++++++++"+ftUser.getUsername());
-        return ResultVO.getSuccess(ftUser);
+    public ResultVO<String> getUser(HttpServletRequest request) {
+        return ResultVO.getSuccess("token");
     }
 }

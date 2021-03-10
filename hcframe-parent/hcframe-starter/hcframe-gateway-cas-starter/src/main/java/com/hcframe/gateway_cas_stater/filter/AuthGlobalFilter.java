@@ -72,16 +72,26 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
         if (isWhiteList(request)) {
             return chain.filter(exchange);
         }
-        MultiValueMap<String, HttpCookie> cookieMultiValueMap = request.getCookies();
-        List<HttpCookie> authId = cookieMultiValueMap.get(casGatewayClientConfig.authKey);
-        if (StringUtils.isEmpty(authId)) {
-            String token = this.tokenProccessor.makeToken();
-            response.addCookie(ResponseCookie.from(casGatewayClientConfig.authKey, token).build());
-            HttpHeaders responseHeaders = response.getHeaders();
-            responseHeaders.set("X-Access-Token", token);
+        String token;
+        HttpHeaders requestHeaders = request.getHeaders();
+        List<String> tokens = requestHeaders.get(casGatewayClientConfig.authKey);
+        if (tokens != null && tokens.size()>0) {
+            token = tokens.get(0);
+        } else {
+            MultiValueMap<String, HttpCookie> cookieMultiValueMap = request.getCookies();
+            List<HttpCookie> authId = cookieMultiValueMap.get(casGatewayClientConfig.authKey);
+            if (StringUtils.isEmpty(authId)) {
+                token = this.tokenProccessor.makeToken();
+                response.addCookie(ResponseCookie.from(casGatewayClientConfig.authKey, token).build());
+                HttpHeaders responseHeaders = response.getHeaders();
+                responseHeaders.set(casGatewayClientConfig.authKey, token);
+            } else {
+                token = authId.get(0).getValue();
+            }
         }
-//        Assertion assertion = (Assertion) dataStorage.getValue(authId.get(0).getValue(), CAS_ASSERTION_KEY);
-        if (dataStorage.getValue(authId.get(0).getValue(), CAS_ASSERTION_KEY) != null) {
+
+        Assertion assertion = (Assertion) dataStorage.getValue(token, CAS_ASSERTION_KEY);
+        if (assertion != null) {
             return chain.filter(exchange);
         } else {
             String serviceUrl = Utils.encodingUrl(request, true, false);

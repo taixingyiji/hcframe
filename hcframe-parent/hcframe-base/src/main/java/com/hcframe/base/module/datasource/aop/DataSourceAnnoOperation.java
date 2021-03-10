@@ -1,9 +1,9 @@
 package com.hcframe.base.module.datasource.aop;
 
-import com.hcframe.base.common.utils.RedisUtil;
 import com.hcframe.base.module.datasource.annotation.DatasourceAnno;
 import com.hcframe.base.module.datasource.dynamic.DBContextHolder;
 import com.hcframe.base.module.shiro.dao.FtTokenDao;
+import com.hcframe.redis.RedisUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;

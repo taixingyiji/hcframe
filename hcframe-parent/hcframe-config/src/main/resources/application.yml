@@ -4,7 +4,7 @@ server:
     context-path: /config
 cas:
   server-url-prefix: http://192.168.1.131:8080/cas
-  client-host-url: http://192.168.1.130:9527
+  client-host-url: http://192.168.1.130:8081
   validation-type: cas3
   server-login-url: http://192.168.1.131:8080/cas/login
 pagehelper:

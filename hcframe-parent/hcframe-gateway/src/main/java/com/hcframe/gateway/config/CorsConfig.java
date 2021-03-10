@@ -16,7 +16,7 @@ public class CorsConfig {
         config.setAllowCredentials(true);
         config.addAllowedMethod("*");
         config.addAllowedOrigin("*");
-        config.addAllowedHeader("*");
+        config.addAllowedHeader("X-Access-Token");
         //设置预检请求的缓存时间（秒），在这个时间段里，对于相同的跨域请求不会再预检了
         config.setMaxAge(18000L);
         UrlBasedCorsConfigurationSource source=new UrlBasedCorsConfigurationSource(new PathPatternParser());

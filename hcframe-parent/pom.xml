@@ -134,6 +134,10 @@
                 <config.group>DEFAULT_GROUP</config.group>
                 <!--Nacos服务发现地址-->
                 <discovery.server-addr>192.168.1.131:8848</discovery.server-addr>
+                <redis.database>0</redis.database>
+                <redis.host>192.168.4.119</redis.host>
+                <redis.port>6379</redis.port>
+                <redis.password/>
             </properties>
         </profile>
         <profile>
@@ -148,6 +152,10 @@
                 <config.group>DEFAULT_GROUP</config.group>
                 <!--Nacos服务发现地址-->
                 <discovery.server-addr>192.168.1.131:8848</discovery.server-addr>
+                <redis.database>0</redis.database>
+                <redis.host>192.168.4.119</redis.host>
+                <redis.port>6379</redis.port>
+                <redis.password/>
             </properties>
         </profile>
         <profile>
@@ -163,6 +171,10 @@
                 <config.group>DEFAULT_GROUP</config.group>
                 <!--Nacos服务发现地址-->
                 <discovery.server-addr>127.0.0.1:8848</discovery.server-addr>
+                <redis.database>0</redis.database>
+                <redis.host>192.168.4.119</redis.host>
+                <redis.port>6379</redis.port>
+                <redis.password/>
             </properties>
         </profile>
     </profiles>

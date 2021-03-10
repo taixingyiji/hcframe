@@ -1,5 +1,6 @@
 package com.hcframe.config;
 
+import net.unicon.cas.client.configuration.EnableCasClient;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -18,6 +19,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableCaching
 @EnableDiscoveryClient
 @EnableFeignClients
+//@EnableCasClient
 @ComponentScan(basePackages = {"com.hcframe.**"})
 public class ConfigApplication {
     public static void main(String[] args) {

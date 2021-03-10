@@ -4,7 +4,7 @@ package com.hcframe.base.module.shiro;
 import com.hcframe.base.common.config.FrameConfig;
 import com.hcframe.base.module.shiro.service.ShiroService;
 import com.hcframe.base.module.shiro.service.SystemRealm;
-import com.hcframe.base.common.utils.RedisUtil;
+import com.hcframe.redis.RedisUtil;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;

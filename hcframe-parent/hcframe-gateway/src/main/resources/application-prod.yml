@@ -24,8 +24,7 @@ spring:
     druid:
       # 配置sqlite文件路径，需要填写绝对路径，推荐将sqlite文件放入到服务器上，而非程序jar包或war包中
       driver-class-name: org.sqlite.JDBC
-      url: jdbc:sqlite:/Volumes/DATA/ideaProject/common-frame/hcframe/hcframe-parent/hcframe-config/src/main/resources/datasource.db
-#      url: jdbc:sqlite:D:/nacos-server-1.4.1/datasource.db
+      url: jdbc:sqlite:D:/nacos-server-1.4.1/datasource.db
       username:
       password:
       #使用Druid数据源
@@ -113,3 +112,4 @@ hcframe:
     casServiceUrl: http://192.168.1.131:8080
     serviceUrl: http://192.168.1.130:9527
     clientContextPath: /
+    cookieHolderPattern: com.hcframe.gateway.config.MyDataStorage

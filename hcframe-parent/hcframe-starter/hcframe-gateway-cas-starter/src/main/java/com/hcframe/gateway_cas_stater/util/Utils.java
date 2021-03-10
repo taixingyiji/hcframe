@@ -17,6 +17,7 @@ import reactor.core.publisher.Mono;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class Utils {
@@ -29,17 +30,40 @@ public class Utils {
 
     public static String getParameter(ServerHttpRequest request, String parameter) {
         if (request.getQueryParams().containsKey(parameter)) {
-            return request.getQueryParams().getFirst(parameter);
+            List<String> list = request.getQueryParams().get(parameter);
+            return list.get(list.size()-1);
         }
         return null;
     }
 
+    public static String exceptTicket(ServerHttpRequest request) {
+        MultiValueMap<String, String> multiValueMap = request.getQueryParams();
+        StringBuilder stringBuffer = new StringBuilder();
+        for (MultiValueMap.Entry<String, List<String>> entry : multiValueMap.entrySet()) {
+            if (!"ticket".equals(entry.getKey())) {
+                stringBuffer.append(entry.getKey()).append("=").append(entry.getValue().get(0)).append("&");
+            }
+        }
+        if (stringBuffer.length() == 0) {
+            return "";
+        }
+        return stringBuffer.substring(0, stringBuffer.length() - 1);
+    }
+
     public static String encodingUrl(ServerHttpRequest request, boolean isEncode, boolean isTicket) {
         String url = request.getURI().toString();
+//        url = "http://" + request.getURI().getHost() + ":" + request.getURI().getPort() + request.getURI().getPath();
+        String query = request.getURI().getQuery();
+//        if (!StringUtils.isEmpty(query)) {
+//            url = url + QUESTION_MARK + query;
+//        }
         HttpHeaders headers = request.getHeaders();
         List<String> forwardedUrl = headers.get("x-forwarded-host");
         if (!StringUtils.isEmpty(forwardedUrl)) {
-            url = "http://" + forwardedUrl.get(0) + request.getURI().getPath() + QUESTION_MARK + request.getURI().getQuery();
+            url = "http://" + forwardedUrl.get(0) + request.getURI().getPath();
+            if (!StringUtils.isEmpty(query)) {
+                url = url + QUESTION_MARK + query;
+            }
         }
         if (isTicket) {
             if (url.contains(QUESTION_MARK)) {

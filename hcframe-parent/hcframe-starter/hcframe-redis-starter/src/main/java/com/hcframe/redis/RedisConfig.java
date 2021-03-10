@@ -1,4 +1,4 @@
-package com.hcframe.base.common.config;
+package com.hcframe.redis;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +22,7 @@ public class RedisConfig {
      * @param redisConnectionFactory
      * @return
      */
-    @Bean
+    @Bean("hcframeRedisTemplate")
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory){
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<String, Object>();
         redisTemplate.setKeySerializer(new StringRedisSerializer());

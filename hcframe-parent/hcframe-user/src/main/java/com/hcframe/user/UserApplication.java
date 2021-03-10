@@ -1,5 +1,6 @@
 package com.hcframe.user;
 
+import net.unicon.cas.client.configuration.EnableCasClient;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -10,6 +11,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import java.net.URLEncoder;
+
 @SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 @EnableSwagger2
@@ -17,8 +20,11 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableCaching
 @ComponentScan(basePackages = {"com.hcframe.**"})
 @EnableDiscoveryClient
+//@EnableCasClient
 public class UserApplication {
     public static void main(String[] args) {
         SpringApplication.run(UserApplication.class, args);
     }
+
+
 }
