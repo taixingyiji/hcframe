@@ -35,7 +35,7 @@ public class CasController {
                 }
             }
             webUrl = URLDecoder.decode(webUrl, "utf-8");
-            response.sendRedirect("http://"+webUrl+"/#/login?token=" + token + "&redirect=%2Fdashboard");
+            response.sendRedirect("http://"+webUrl+"/#/?token=" + token );
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -28,12 +28,11 @@ mybatis:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 hcframe:
   cas:
-    enabled: true
-    casServiceUrl: http://192.168.1.131:8080
-    clientContextPath: /
-    white-url: ^(.*(/logout?))|(/user/cas/url)$
-    cas-context-path: /cas
-    service-url: http://192.168.1.130:9527
-    cookie-holder-pattern: com.hcframe.gateway.config.MyDataStorage
-    login-url: /login
-    logout-url: /logout
+    white-url: @cas.white-url@
+    cas-context-path: @cas.cas-context-path@
+    service-url: @cas.service-url@
+    cookie-holder-pattern: @cas.cookie-holder-pattern@
+    login-url: @cas.login-url@
+    logout-url: @cas.logout-url@
+    cas-service-url: @cas.cas-service-url@
+    client-context-path: @cas.client-context-path@

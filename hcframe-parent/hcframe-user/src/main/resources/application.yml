@@ -5,10 +5,10 @@ server:
 pagehelper:
   auto-runtime-dialect: true
 cas:
-  server-url-prefix: http://192.168.1.131:8080/cas
-  client-host-url: http://192.168.1.130:8080
+  server-url-prefix: @cas.cas-service-url@
+  client-host-url: @cas.service-url@
   validation-type: cas3
-  server-login-url: http://192.168.1.131:8080/cas/login
+  server-login-url: @cas.logout-url@
 spring:
   application:
     name: cloud-user

@@ -23,7 +23,7 @@ public class GatewayController {
         try {
             Map<String,String> map=new HashMap<>(2);
             map.put("cas", casGatewayClientConfig.casServiceUrl + casGatewayClientConfig.casContextPath + casGatewayClientConfig.getLoginUrl());
-            map.put("config", casGatewayClientConfig.casServiceUrl);
+            map.put("config", casGatewayClientConfig.serviceUrl+casGatewayClientConfig.getClientContextPath());
             resultMap.put("code", 0);
             resultMap.put("msg", "");
             resultMap.put("data", map);

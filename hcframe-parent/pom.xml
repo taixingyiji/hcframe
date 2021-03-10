@@ -140,11 +140,11 @@
                 <redis.port>6379</redis.port>
                 <redis.password/>
                 <!-- cas配置 -->
-                <cas.enabled>true</cas.enabled>
+                <cas.client-context-path>/user/cas/valid</cas.client-context-path>
                 <cas.cas-service-url>http://192.168.1.131:8080</cas.cas-service-url>
                 <cas.cas-context-path>/cas</cas.cas-context-path>
-                <cas.white-url>^(.*(/logout?))|(/user/cas/url)$</cas.white-url>
-                <cas.service-url>http://192.168.1.130:9527</cas.service-url>
+                <cas.white-url>^.*(/logout?)$</cas.white-url>
+                <cas.service-url>http://192.168.1.130:8084</cas.service-url>
                 <cas.cookie-holder-pattern>com.hcframe.gateway.config.MyDataStorage</cas.cookie-holder-pattern>
                 <cas.login-url>/login</cas.login-url>
                 <cas.logout-url>/logout</cas.logout-url>
