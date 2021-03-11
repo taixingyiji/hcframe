@@ -266,8 +266,8 @@ public class Condition implements Serializable {
         }
 
         public ConditionBuilder like(String key, Object value) {
-            sqlCheck(value);
-            this.conditionSql += " " + key + " " + LIKE + " '%" + value + "%'";
+            sqlCheckLike(value);
+            this.conditionSql += " " + key + " " + LIKE + " '" + value + "'";
             return this;
         }
 
@@ -406,6 +406,15 @@ public class Condition implements Serializable {
         public void sqlCheck(Object obj) {
             if (this.flag) {
                 if (XssClass.sqlInj(obj.toString())) {
+                    logger.error("非法字符："+obj.toString());
+                    throw new ServiceException("value中含有非法字符，有注入风险！");
+                }
+            }
+        }
+
+        public void sqlCheckLike(Object obj) {
+            if (this.flag) {
+                if (XssClass.sqlInjLike(obj.toString())) {
                     logger.error("非法字符："+obj.toString());
                     throw new ServiceException("value中含有非法字符，有注入风险！");
                 }
