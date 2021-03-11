@@ -22,9 +22,10 @@ public class ObjectUtil {
     private static final String LONG = "class java.lang.LONG";
 
     public static Map<String, Object> objToMap(Object obj) {
-        Map<String, Object> map = new HashMap<String, Object>();
         Class<?> clazz = obj.getClass();
-        for (Field field : clazz.getDeclaredFields()) {
+        Field[] fields = clazz.getDeclaredFields();
+        Map<String, Object> map = new HashMap<>(fields.length);
+        for (Field field : fields) {
             field.setAccessible(true);
             String fieldName = field.getName();
             try {

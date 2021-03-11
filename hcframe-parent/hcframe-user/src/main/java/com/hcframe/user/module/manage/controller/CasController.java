@@ -3,7 +3,6 @@ package com.hcframe.user.module.manage.controller;
 import com.hcframe.base.common.ResultVO;
 import com.hcframe.redis.RedisUtil;
 import net.unicon.cas.client.configuration.CasClientConfigurationProperties;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
