@@ -23,6 +23,7 @@
         <module>hcframe-gateway</module>
         <module>hcframe-starter</module>
         <module>hcframe-test</module>
+        <module>hcframe-spider</module>
     </modules>
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -67,6 +68,21 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <!-- guava工具类 -->
+        <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>30.1-jre</version>
+        </dependency>
+
+        <!-- hutool工具类-->
+        <!-- https://mvnrepository.com/artifact/cn.hutool/hutool-all -->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>5.5.9</version>
         </dependency>
     </dependencies>
     <build>
@@ -144,7 +160,7 @@
                 <cas.cas-service-url>http://192.168.100.98:8080</cas.cas-service-url>
                 <cas.cas-context-path>/cas</cas.cas-context-path>
                 <cas.white-url>^.*(/logout?)$</cas.white-url>
-                <cas.service-url>http://192.168.100.98:8084</cas.service-url>
+                <cas.service-url>http://192.168.1.130:8084</cas.service-url>
                 <cas.cookie-holder-pattern>com.hcframe.gateway.config.MyDataStorage</cas.cookie-holder-pattern>
                 <cas.login-url>/login</cas.login-url>
                 <cas.logout-url>/logout</cas.logout-url>

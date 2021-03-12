@@ -2,6 +2,7 @@ package com.hcframe.config.module.controller;
 
 import com.hcframe.base.common.ResultVO;
 import com.hcframe.redis.RedisUtil;
+import net.unicon.cas.client.configuration.CasClientConfigurationProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -18,6 +19,13 @@ public class CasController {
 
     @Autowired
     RedisUtil redisUtil;
+
+//    final
+//    CasClientConfigurationProperties casClientConfigurationProperties;
+//
+//    public CasController(CasClientConfigurationProperties casClientConfigurationProperties) {
+//        this.casClientConfigurationProperties = casClientConfigurationProperties;
+//    }
 
     @GetMapping("valid")
     public ResultVO<String> casValid(HttpServletResponse response, HttpServletRequest request) {

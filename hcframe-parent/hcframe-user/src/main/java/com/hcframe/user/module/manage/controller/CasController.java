@@ -34,6 +34,7 @@ public class CasController {
     @GetMapping("valid")
     public ResultVO<String> casValid(HttpServletResponse response, HttpServletRequest request,String webUrl) {
         String token = "";
+//        token = request.getHeader("X-Access-Token");
         try {
             Cookie[] cookies = request.getCookies();
             for (Cookie cookie : cookies) {

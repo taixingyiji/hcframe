@@ -89,7 +89,6 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
                 token = authId.get(0).getValue();
             }
         }
-
         Assertion assertion = (Assertion) dataStorage.getValue(token, CAS_ASSERTION_KEY);
         if (assertion != null) {
             return chain.filter(exchange);

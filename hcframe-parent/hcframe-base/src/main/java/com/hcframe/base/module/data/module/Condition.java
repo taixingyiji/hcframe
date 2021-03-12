@@ -404,6 +404,9 @@ public class Condition implements Serializable {
         }
 
         public void sqlCheck(Object obj) {
+            if (org.springframework.util.StringUtils.isEmpty(obj)) {
+                obj = "";
+            }
             if (this.flag) {
                 if (XssClass.sqlInj(obj.toString())) {
                     logger.error("非法字符："+obj.toString());
@@ -413,6 +416,9 @@ public class Condition implements Serializable {
         }
 
         public void sqlCheckLike(Object obj) {
+            if (org.springframework.util.StringUtils.isEmpty(obj)) {
+                obj = "";
+            }
             if (this.flag) {
                 if (XssClass.sqlInjLike(obj.toString())) {
                     logger.error("非法字符："+obj.toString());

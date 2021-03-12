@@ -112,7 +112,8 @@ public class Utils {
         if (!casGatewayClientConfig.getAcceptAnyProxy()) {
             ticketValidator = new Cas30ServiceTicketValidator(casGatewayClientConfig.casServiceUrl + casGatewayClientConfig.casContextPath);
         } else {
-            ticketValidator = new Cas30ProxyTicketValidator(casGatewayClientConfig.casServiceUrl + casGatewayClientConfig.casContextPath);
+            Cas30ProxyTicketValidator cas30ProxyTicketValidator = new Cas30ProxyTicketValidator(casGatewayClientConfig.casServiceUrl + casGatewayClientConfig.casContextPath);
+            ticketValidator = cas30ProxyTicketValidator;
         }
         return ticketValidator;
     }
