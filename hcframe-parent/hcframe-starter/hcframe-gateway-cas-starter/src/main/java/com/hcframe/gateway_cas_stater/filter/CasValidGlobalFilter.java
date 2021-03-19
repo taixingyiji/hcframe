@@ -9,7 +9,9 @@ import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
 import org.springframework.http.HttpCookie;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
@@ -45,6 +47,7 @@ public class CasValidGlobalFilter implements GlobalFilter, Ordered {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
+        ServerHttpResponse response = exchange.getResponse();
         if (Utils.preFilter(request, casGatewayClientConfig.proxyReceptorUrl)) {
             String ticket = Utils.getParameter(request, this.protocol.getArtifactParameterName());
             if (StringUtils.isEmpty(ticket)) {
@@ -59,6 +62,7 @@ public class CasValidGlobalFilter implements GlobalFilter, Ordered {
                         return chain.filter(exchange);
                     }
                     dataStorage.setValue(authId.get(0).getValue(), AuthGlobalFilter.CAS_ASSERTION_KEY, assertion);
+                    response.setStatusCode(HttpStatus.UNAUTHORIZED);
                     return Utils.redirect(exchange, Utils.encodingUrl(request, true, true));
                 } catch (TicketValidationException e) {
                     e.printStackTrace();
