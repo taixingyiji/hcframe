@@ -66,6 +66,6 @@ public class CasController {
         String headerToken = request.getHeader("X-Access-Token");
         redisUtil.hdel("session", token);
         redisUtil.hdel("session", headerToken);
-        return ResultVO.getSuccess(casClientConfigurationProperties.getServerUrlPrefix()+"/cas/logout");
+        return ResultVO.getSuccess(casClientConfigurationProperties.getServerUrlPrefix()+"/logout");
     }
 }

@@ -26,7 +26,7 @@ public class CommandLineRunnerImpl implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        DataSourceUtil.initDataSource();
+//        DataSourceUtil.initDataSource();
         // 初始化缓存
 //        for (CacheService cacheService : cacheServices) {
 //            cacheService.initTableCache();
