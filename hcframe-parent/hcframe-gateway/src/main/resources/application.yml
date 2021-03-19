@@ -36,9 +36,9 @@ hcframe:
     logout-url: @cas.logout-url@
     cas-service-url: @cas.cas-service-url@
     client-context-path: @cas.client-context-path@
-    accept-any-proxy: true
-    proxyReceptorUrl: /proxyCallback
-    proxyCallbackUrl: http://192.168.1.130:8084/proxyCallback
+#    accept-any-proxy: true
+#    proxyReceptorUrl: /proxyCallback
+#    proxyCallbackUrl: http://192.168.1.130:8084/proxyCallback
   config:
     # 是否开启redis 用户登录，若开启此项，需要配置redis节点及相关配置，若不开启，需要注释掉redis相关配置信息
     isRedisLogin: true

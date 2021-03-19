@@ -1,6 +1,6 @@
 package com.hcframe.gateway;
 
-//import com.hcframe.gateway_cas_stater.annotate.EnableGatewayCas;
+import com.hcframe.gateway_cas_stater.annotate.EnableGatewayCas;
 import com.hcframe.redis.RedisUtil;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Import;
 @SpringBootApplication
 @EnableDiscoveryClient
 @Import(RedisUtil.class)
-//@EnableGatewayCas
+@EnableGatewayCas
 public class GatewayApplication {
 
     public static void main(String[] args) {
