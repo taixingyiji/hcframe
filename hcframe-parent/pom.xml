@@ -143,13 +143,15 @@
                 <!--当前环境-->
                 <profile.name>dev</profile.name>
                 <!--Nacos配置中心地址-->
-                <config.server-addr>192.168.100.98:8848</config.server-addr>
+                <config.server-addr>taixingyiji.synology.me:8848</config.server-addr>
                 <!--Nacos配置中心命名空间,用于支持多环境.这里必须使用ID，不能使用名称,默认为空-->
-                <config.namespace>2e9f0148-751e-4da2-83ec-cb00ffe0d83a</config.namespace>
+                <config.namespace>686efed2-0f46-4f3f-9a67-10e858ee1d44</config.namespace>
                 <!--Nacos配置分组名称-->
                 <config.group>DEFAULT_GROUP</config.group>
+                <config.username>dev</config.username>
+                <config.password>123456</config.password>
                 <!-- Nacos服务发现地址-->
-                <discovery.server-addr>192.168.100.98:8848</discovery.server-addr>
+                <discovery.server-addr>taixingyiji.synology.me:8848</discovery.server-addr>
                 <!-- redis 配置-->
                 <redis.database>0</redis.database>
                 <redis.host>192.168.4.119</redis.host>
@@ -157,10 +159,10 @@
                 <redis.password/>
                 <!-- cas配置 -->
                 <cas.client-context-path>/user/cas/valid</cas.client-context-path>
-                <cas.cas-service-url>http://192.168.100.98:8080</cas.cas-service-url>
+                <cas.cas-service-url>http://taixingyiji.synology.me:8081</cas.cas-service-url>
                 <cas.cas-context-path>/cas</cas.cas-context-path>
                 <cas.white-url>^.*(/logout?)$</cas.white-url>
-                <cas.service-url>http://192.168.1.130:8084</cas.service-url>
+                <cas.service-url>http://localhost:8084</cas.service-url>
                 <cas.cookie-holder-pattern>com.hcframe.gateway.config.MyDataStorage</cas.cookie-holder-pattern>
                 <cas.login-url>/login</cas.login-url>
                 <cas.logout-url>/logout</cas.logout-url>
@@ -176,6 +178,8 @@
                 <config.namespace>2e9f0148-751e-4da2-83ec-cb00ffe0d83a</config.namespace>
                 <!--Nacos配置分组名称-->
                 <config.group>DEFAULT_GROUP</config.group>
+                <config.username>dev</config.username>
+                <config.password>123456</config.password>
                 <!-- Nacos服务发现地址-->
                 <discovery.server-addr>192.168.100.98:8848</discovery.server-addr>
                 <!-- redis 配置-->
@@ -205,6 +209,8 @@
                 <config.namespace></config.namespace>
                 <!--Nacos配置分组名称-->
                 <config.group>DEFAULT_GROUP</config.group>
+                <config.username>dev</config.username>
+                <config.password>123456</config.password>
                 <!--Nacos服务发现地址-->
                 <discovery.server-addr>127.0.0.1:8848</discovery.server-addr>
                 <redis.database>0</redis.database>

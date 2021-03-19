@@ -53,6 +53,13 @@ public class ObjectUtil {
             String fieldName = field.getName();
             if (field.getAnnotation(Id.class) != null) {
                 dataMap = dataMap.toBuilder().pkName(StringUtils.toUnderScoreUpperCase(fieldName)).build();
+                try {
+                    if (!org.springframework.util.StringUtils.isEmpty(field.get(obj))) {
+                        dataMap.setPkValue(field.get(obj));
+                    }
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
             }
             try {
                 if (!fieldName.equals(SERIAL_VERSION_UID)) {
@@ -87,6 +94,13 @@ public class ObjectUtil {
             String fieldName = field.getName();
             if (field.getAnnotation(Id.class) != null) {
                 dataMap = dataMap.pkName(StringUtils.toUnderScoreUpperCase(fieldName));
+                try {
+                    if (!org.springframework.util.StringUtils.isEmpty(field.get(obj))) {
+                        dataMap.pkValue(field.get(obj));
+                    }
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
             }
             try {
                 if (!fieldName.equals(SERIAL_VERSION_UID)) {

@@ -1,9 +1,7 @@
 package com.hcframe.base.module.data.module;
 
-import com.alibaba.druid.pool.DruidDataSource;
 import com.hcframe.base.common.WebPageInfo;
 import com.hcframe.base.common.utils.MyPageHelper;
-import com.hcframe.base.common.utils.SpringContextUtil;
 import com.hcframe.base.common.utils.StringUtils;
 import com.hcframe.base.module.data.dao.TableMapper;
 import com.hcframe.base.module.data.exception.BaseMapperException;
@@ -626,7 +624,11 @@ public class BaseMapperImpl implements BaseMapper {
             DataMap<Object> dataMap = DataMap.builder().tableName(tableName).pkName(pkName).fields(pkName).build();
             Condition condition = Condition.creatCriteria(dataMap).build();
             Map<String, Object> map = selectOneByCondition(condition);
-            tableMapper.createSequence(tableName, map.get(pkName));
+            if (map == null) {
+                tableMapper.createSequence(tableName, 1);
+            } else {
+                tableMapper.createSequence(tableName, map.get(pkName));
+            }
             id = tableMapper.getSequence(tableName);
         }
         return Long.parseLong(id.toString())+1L;

@@ -47,7 +47,7 @@ public class WebCondition {
     public static Condition.ConditionBuilder setSign(WebCondition webCondition,Condition.ConditionBuilder builder) {
         switch (webCondition.getSign()) {
             case QueryConstants.LIKE:{
-                return builder.like(webCondition.key, webCondition.value);
+                return builder.like(webCondition.key, "%"+webCondition.value+"%");
             }
             case QueryConstants.EQUAL:{
                 return builder.equal(webCondition.key,webCondition.value);
