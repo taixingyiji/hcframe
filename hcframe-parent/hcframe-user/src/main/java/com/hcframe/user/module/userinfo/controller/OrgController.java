@@ -43,7 +43,7 @@ public class OrgController {
     }
 
     @GetMapping()
-    @ApiOperation(value = "获取职位列表", notes = "删除后职位也会被删除")
+    @ApiOperation(value = "获取机构列表", notes = "删除后职位也会被删除")
     public ResultVO<PageInfo<Map<String,Object>>> getOrgList(String data, WebPageInfo webPageInfo) {
         return orgService.getOrgList(data, webPageInfo);
     }
