@@ -47,7 +47,4 @@ public class OrgController {
     public ResultVO<PageInfo<Map<String,Object>>> getOrgList(String data, WebPageInfo webPageInfo) {
         return orgService.getOrgList(data, webPageInfo);
     }
-
-
-
 }

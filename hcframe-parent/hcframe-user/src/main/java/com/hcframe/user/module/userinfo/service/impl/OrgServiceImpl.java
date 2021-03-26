@@ -66,5 +66,4 @@ public class OrgServiceImpl implements OrgService {
         PageInfo<Map<String,Object>> pageInfo = tableService.searchSingleTables(data, TABLE_INFO, webPageInfo);
         return ResultVO.getSuccess(pageInfo);
     }
-
 }
