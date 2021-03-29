@@ -251,9 +251,9 @@ public class TableConfigServiceImpl implements TableConfigService {
         List<OsSysTable> list = osSysTableMapper.selectAll();
         List<Map<String, Object>> resultList = new LinkedList<>();
         for (OsSysTable osSysTable : list) {
-            Map<String, Object> map = new HashMap<>();
+            Map<String, Object> map = new HashMap<>(2);
             map.put("value", osSysTable.getTableId());
-            map.put("label", osSysTable.getTableName());
+            map.put("label", osSysTable.getTableContent());
             resultList.add(map);
         }
         return ResultVO.getSuccess(resultList);
