@@ -260,7 +260,6 @@ public class BaseMapperImpl implements BaseMapper {
                 .andEqual(dataMap.getPkName(), dataMap.getPkValue())
                 .build();
         int i = tableMapper.deleteByWhere(dataMap.getTableName(), condition.getSql());
-        SqlException.base(i, "删除失败");
         return i;
     }
 
@@ -273,7 +272,6 @@ public class BaseMapperImpl implements BaseMapper {
                 .andEqual(pkName, pkValue)
                 .build();
         int i = tableMapper.deleteByWhere(tableName, condition.getSql());
-        SqlException.base(i, "删除失败");
         return i;
     }
 
@@ -286,7 +284,6 @@ public class BaseMapperImpl implements BaseMapper {
                 .andEqual(osSysTable.getTablePk(), pkValue)
                 .build();
         int i = tableMapper.deleteByWhere(osSysTable.getTableName(), condition.getSql());
-        SqlException.base(i, "删除失败");
         return i;
     }
 
@@ -299,7 +296,6 @@ public class BaseMapperImpl implements BaseMapper {
                 .andIn(pkName, ids)
                 .build();
         int i = tableMapper.deleteByWhere(tableName, condition.getSql());
-        SqlException.base(i, "删除失败");
         return i;
     }
 
@@ -312,7 +308,6 @@ public class BaseMapperImpl implements BaseMapper {
                 .andIn(dataMap.getPkName(), dataMap.getIdList())
                 .build();
         int i = tableMapper.deleteByWhere(dataMap.getTableName(), condition.getSql());
-        SqlException.base(i, "删除失败");
         return i;
     }
 
@@ -325,7 +320,6 @@ public class BaseMapperImpl implements BaseMapper {
                 .andIn(osSysTable.getTablePk(), ids)
                 .build();
         int i = tableMapper.deleteByWhere(osSysTable.getTableName(), condition.getSql());
-        SqlException.base(i, "删除失败");
         return i;
     }
 
@@ -333,7 +327,6 @@ public class BaseMapperImpl implements BaseMapper {
     public <E> int deleteByCondition(DataMap<E> dataMap, Condition condition) {
         JudgesNull(dataMap.getTableName(), "tableName can not be null!");
         int i = tableMapper.deleteByWhere(dataMap.getTableName(), condition.getSql());
-        SqlException.base(i, "删除失败");
         return i;
     }
 
@@ -341,7 +334,6 @@ public class BaseMapperImpl implements BaseMapper {
     public int deleteByCondition(String tableName, Condition condition) {
         JudgesNull(tableName, "tableName can not be null!");
         int i = tableMapper.deleteByWhere(tableName, condition.getSql());
-        SqlException.base(i, "删除失败");
         return i;
     }
 
