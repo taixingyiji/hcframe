@@ -117,7 +117,7 @@
         where id = #{info.id}
     </update>
 
-    <update id="updateByWhere" parameterType="map" useGeneratedKeys="true" keyProperty="info.id" keyColumn="id">
+    <update id="updateByWhere" parameterType="map" useGeneratedKeys="true" keyProperty="info.id">
         update ${tableName}
         <set>
             <foreach collection="info" separator="," item="value" index="key">

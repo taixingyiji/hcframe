@@ -73,5 +73,4 @@ public class ShiroRealmConfig implements SystemRealm {
         map.put("/**", ShiroType.ANON);
         return map;
     }
-
 }

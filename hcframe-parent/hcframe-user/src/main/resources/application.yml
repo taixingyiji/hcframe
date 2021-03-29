@@ -28,10 +28,10 @@ spring:
     ehcache:
       config: classpath:ehcache.xml
   redis:
-    database: 0
-    host: 192.168.4.119
-    port: 6379
-    password:
+    database: @redis.database@
+    host: @redis.host@
+    port: @redis.port@
+    password: @redis.password@
     lettuce:
       pool:
         # 连接池中的最大空闲连接 默认8

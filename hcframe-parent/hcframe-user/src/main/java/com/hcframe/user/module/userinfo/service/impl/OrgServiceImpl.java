@@ -39,8 +39,7 @@ public class OrgServiceImpl implements OrgService {
 
     @Override
     public ResultVO<Object> addOrg(Map<String, Object> org) {
-        baseMapper.save(OS_SYS_ORG,ORG_ID,org);
-        return ResultVO.getSuccess();
+        return ResultVO.getSuccess(tableService.saveWithDate(TABLE_INFO, org));
     }
 
     @Override
