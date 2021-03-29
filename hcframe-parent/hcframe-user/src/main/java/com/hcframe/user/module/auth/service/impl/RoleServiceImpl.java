@@ -24,9 +24,8 @@ import java.util.Map;
 @Service
 public class RoleServiceImpl implements RoleService {
 
-    private static final String PK_ID = "ORG_ID";
-    private static final String TABLE_NAME = "OS_SYS_ORG";
-    private static final String OS_SYS_POSITION = "OS_SYS_POSITION";
+    private static final String PK_ID = "ROLE_ID";
+    private static final String TABLE_NAME = "OS_SYS_ROLE";
     private static final OsSysTable TABLE_INFO = OsSysTable.builder().tableName(TABLE_NAME).tablePk(PK_ID).build();
 
     final BaseMapper baseMapper;
@@ -41,7 +40,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public ResultVO<Object> addRole(Map<String, Object> role) {
-        baseMapper.save(TABLE_NAME,PK_ID,role);
+        tableService.saveWithDate(TABLE_INFO,role);
         return ResultVO.getSuccess();
     }
 

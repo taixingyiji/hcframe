@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.hcframe.base.common.ResultVO;
 import com.hcframe.base.common.WebPageInfo;
 import com.hcframe.user.module.auth.service.RoleService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +18,8 @@ import java.util.Map;
  * @description 角色管理
  */
 @RestController
+@Api(tags = "角色管理")
+@RequestMapping("role")
 public class RoleController {
 
     final RoleService roleService;
