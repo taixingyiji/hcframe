@@ -199,9 +199,7 @@ public class BaseMapperImpl implements BaseMapper {
         Condition condition = Condition.creatCriteria()
                 .andIn(dataMap.getPkName(), dataMap.getIdList())
                 .build();
-        int i = tableMapper.updateByWhere(dataMap.getData(), dataMap.getTableName(), condition.getSql());
-        SqlException.base(i, "更新失败");
-        return i;
+        return tableMapper.updateByWhere(dataMap.getData(), dataMap.getTableName(), condition.getSql());
     }
 
     @Override
@@ -599,6 +597,11 @@ public class BaseMapperImpl implements BaseMapper {
     @Override
     public Map<String, Object> selectOneSql(String sql) {
         return tableMapper.userSqlByOne(sql);
+    }
+
+    @Override
+    public Long count(String tableName, Condition condition) {
+        return tableMapper.count(tableName,condition.getSql());
     }
 
     public void JudgesNull(Object object, String str) {

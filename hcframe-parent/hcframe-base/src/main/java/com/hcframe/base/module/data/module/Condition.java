@@ -251,6 +251,9 @@ public class Condition implements Serializable {
 
         public ConditionBuilder equal(String key, Object value) {
             sqlCheck(value);
+            if (value.toString().contains("\"")) {
+                value = value.toString().replaceAll("\"", "");
+            }
             this.conditionSql += " " + key + EQUAL + "'" + value + "'";
             return this;
         }
