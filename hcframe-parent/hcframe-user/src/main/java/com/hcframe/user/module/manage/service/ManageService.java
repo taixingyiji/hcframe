@@ -15,7 +15,9 @@ public interface ManageService {
 
     ResultVO<PageInfo<Map<String, Object>>> getUserList(String data, WebPageInfo webPageInfo);
 
-    ResultVO<Integer> resetPassword(Long userId, Integer version);
+    ResultVO<Integer> resetPassword(String userId, Integer version);
 
-    ResultVO<Integer> disable(Boolean enabled, Long userId, Integer version);
+    ResultVO<Integer> disable(Boolean enabled, String userId, Integer version);
+
+    ResultVO<Object> sync();
 }

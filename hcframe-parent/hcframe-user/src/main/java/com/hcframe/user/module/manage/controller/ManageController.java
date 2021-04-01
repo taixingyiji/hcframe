@@ -44,7 +44,7 @@ public class ManageController {
     }
 
     @DeleteMapping("/{ids}")
-    @ApiOperation(value = "删除用户", notes = "删除后职位也会被删除")
+    @ApiOperation(value = "删除用户（逻辑删除）", notes = "删除后职位也会被删除")
     public ResultVO<Integer> deleteUser(@PathVariable String ids) {
         return manageService.deleteUser(ids);
     }
@@ -57,13 +57,18 @@ public class ManageController {
 
     @PutMapping("disable/{version}")
     @ApiOperation(value = "启用/禁用",notes = "用户启用禁用")
-    public ResultVO<Integer> disable(Boolean enabled,Long userId,@PathVariable Integer version) {
+    public ResultVO<Integer> disable(Boolean enabled,String userId,@PathVariable Integer version) {
         return manageService.disable(enabled,userId,version);
     }
 
     @PutMapping("/resetPassword/{version}")
     @ApiOperation(value = "重置密码",notes = "用户启用禁用")
-    public ResultVO<Integer> resetPassword(Long userId,@PathVariable Integer version) {
+    public ResultVO<Integer> resetPassword(String userId,@PathVariable Integer version) {
         return manageService.resetPassword(userId,version);
+    }
+
+    @GetMapping("/sync")
+    public ResultVO<Object> sync() {
+        return manageService.sync();
     }
 }

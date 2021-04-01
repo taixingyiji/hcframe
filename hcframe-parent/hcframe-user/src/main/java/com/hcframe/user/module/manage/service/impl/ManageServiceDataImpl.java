@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import com.hcframe.user.module.manage.service.ManageService;
+import org.springframework.util.StringUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
@@ -50,10 +51,18 @@ public class ManageServiceDataImpl implements ManageService {
     public ResultVO<Map<String,Object>> addUser(Map<String, Object> user) {
         JudgeException.isNull(user.get("PASSWORD"),"密码不能为空");
         JudgeException.isNull(user.get("LOGIN_NAME"),"用户名不能为空");
+        if (!StringUtils.isEmpty(user.get("ORG_ACCOUNT_ID"))) {
+            String orgAcId = String.valueOf(user.get("ORG_ACCOUNT_ID"));
+            user.put("ORG_ACCOUNT_ID", orgAcId.replaceAll("\"", ""));
+        }
+        if (!StringUtils.isEmpty(user.get("ORG_DEPARTMENT_ID"))) {
+            String orgDeptId = String.valueOf(user.get("ORG_DEPARTMENT_ID"));
+            user.put("ORG_DEPARTMENT_ID", orgDeptId.replaceAll("\"", ""));
+        }
         try {
             user.put("PASSWORD",MD5Utils.encode((String) user.get("PASSWORD")));
         } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
-            logger.error("更新用户失败",e);
+            logger.error("新增用户失败",e);
             throw new ServiceException(e);
         }
         return tableService.saveWithDate(TABLE_INFO,user);
@@ -62,12 +71,20 @@ public class ManageServiceDataImpl implements ManageService {
     @Override
     public ResultVO<Integer> updateUser(Map<String, Object> user, Integer version) {
         user.remove("PASSWORD");
+        if (!StringUtils.isEmpty(user.get("ORG_ACCOUNT_ID"))) {
+            String orgAcId = String.valueOf(user.get("ORG_ACCOUNT_ID"));
+            user.put("ORG_ACCOUNT_ID", orgAcId.replaceAll("\"", ""));
+        }
+        if (!StringUtils.isEmpty(user.get("ORG_DEPARTMENT_ID"))) {
+            String orgDeptId = String.valueOf(user.get("ORG_DEPARTMENT_ID"));
+            user.put("ORG_DEPARTMENT_ID", orgDeptId.replaceAll("\"", ""));
+        }
         return tableService.updateWithDate(TABLE_INFO,user,version);
     }
 
     @Override
     public ResultVO<Integer> deleteUser(String ids) {
-        return tableService.delete(TABLE_INFO,ids);
+        return tableService.logicDelete(TABLE_INFO,ids);
     }
 
     @Override
@@ -76,15 +93,16 @@ public class ManageServiceDataImpl implements ManageService {
         List<Map<String,Object>> list =  page.getList();
         for (Map<String, Object> map : list) {
             map.remove("PASSWORD");
+            map.put("PASSWORD", "******");
         }
         page.setList(list);
         return ResultVO.getSuccess(page);
     }
 
     @Override
-    public ResultVO<Integer> resetPassword(Long userId, Integer version) {
+    public ResultVO<Integer> resetPassword(String userId, Integer version) {
         Map<String, Object> map = new HashMap<>(2);
-        map.put(PK_ID, userId);
+        map.put(PK_ID, userId.replaceAll("\"",""));
         try {
             map.put("PASSWORD",MD5Utils.encode("123456"));
         } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
@@ -95,10 +113,16 @@ public class ManageServiceDataImpl implements ManageService {
     }
 
     @Override
-    public ResultVO<Integer> disable(Boolean enabled, Long userId, Integer version) {
+    public ResultVO<Integer> disable(Boolean enabled, String userId, Integer version) {
         Map<String, Object> map = new HashMap<>(2);
         map.put(PK_ID, userId);
         map.put("DISABLED", enabled);
         return tableService.updateWithDate(TABLE_INFO,map,version);
+    }
+
+    @Override
+    public ResultVO<Object> sync() {
+        baseMapper.selectAll("GB_CAS_MEMBER");
+        return null;
     }
 }
