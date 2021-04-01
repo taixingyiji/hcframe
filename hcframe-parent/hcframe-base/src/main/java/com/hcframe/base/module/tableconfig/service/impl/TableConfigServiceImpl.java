@@ -186,9 +186,7 @@ public class TableConfigServiceImpl implements TableConfigService {
             tableCache.delete(tableAlise);
         }
         int i = osSysFieldDao.deleteByExample(fieldExample);
-        SqlException.operation(i, "删除字段信息失败");
         i = osSysSelectDao.deleteByExample(selectExample);
-        SqlException.operation(i, "删除字段信息失败");
         return ResultVO.getSuccess();
     }
 
