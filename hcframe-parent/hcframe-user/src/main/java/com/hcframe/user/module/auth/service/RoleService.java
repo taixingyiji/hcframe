@@ -21,4 +21,6 @@ public interface RoleService {
     ResultVO<Object> deleteRole(String ids);
 
     ResultVO<PageInfo<Map<String, Object>>> getRoleList(String data, WebPageInfo webPageInfo);
+
+    ResultVO<Object> validCode(String code);
 }

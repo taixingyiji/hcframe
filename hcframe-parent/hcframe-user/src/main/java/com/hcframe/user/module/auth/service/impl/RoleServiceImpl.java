@@ -5,6 +5,7 @@ import com.hcframe.base.common.ResultVO;
 import com.hcframe.base.common.WebPageInfo;
 import com.hcframe.base.module.data.module.BaseMapper;
 import com.hcframe.base.module.data.module.BaseMapperImpl;
+import com.hcframe.base.module.data.module.Condition;
 import com.hcframe.base.module.data.service.TableService;
 import com.hcframe.base.module.tableconfig.entity.OsSysTable;
 import com.hcframe.user.module.auth.service.RoleService;
@@ -33,20 +34,20 @@ public class RoleServiceImpl implements RoleService {
     final TableService tableService;
 
     public RoleServiceImpl(@Qualifier(BaseMapperImpl.BASE) BaseMapper baseMapper,
-                          TableService tableService) {
+                           TableService tableService) {
         this.baseMapper = baseMapper;
         this.tableService = tableService;
     }
 
     @Override
     public ResultVO<Object> addRole(Map<String, Object> role) {
-        tableService.saveWithDate(TABLE_INFO,role);
+        tableService.saveWithDate(TABLE_INFO, role);
         return ResultVO.getSuccess();
     }
 
     @Override
     public ResultVO<Integer> updateRole(Map<String, Object> role, Integer version) {
-        return tableService.updateWithDate(TABLE_INFO,role,version);
+        return tableService.updateWithDate(TABLE_INFO, role, version);
     }
 
     @Override
@@ -60,5 +61,15 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public ResultVO<PageInfo<Map<String, Object>>> getRoleList(String data, WebPageInfo webPageInfo) {
         return ResultVO.getSuccess(tableService.searchSingleTables(data, TABLE_INFO, webPageInfo));
+    }
+
+    @Override
+    public ResultVO<Object> validCode(String code) {
+        Condition condition = Condition.creatCriteria().andEqual("ROLE_CODE", code).build();
+        Long i = baseMapper.count(TABLE_NAME, condition);
+        if (i > 0L) {
+            return ResultVO.getFailed("角色编码不能重复");
+        }
+        return ResultVO.getSuccess();
     }
 }

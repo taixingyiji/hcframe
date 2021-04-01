@@ -5,6 +5,7 @@ import com.hcframe.base.common.ResultVO;
 import com.hcframe.base.common.WebPageInfo;
 import com.hcframe.user.module.auth.service.RoleService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,14 +31,14 @@ public class RoleController {
 
     @PostMapping()
     @ApiOperation(value = "新增role", notes = "给后台传key-value对象模式即可")
-    public ResultVO<Object> addRole(@RequestParam Map<String,Object> role) {
+    public ResultVO<Object> addRole(@RequestParam Map<String, Object> role) {
         return roleService.addRole(role);
     }
 
     @PutMapping("/{version}")
     @ApiOperation(value = "更新role")
-    public ResultVO<Integer> updateRole(@RequestParam Map<String,Object> role,@PathVariable Integer version) {
-        return roleService.updateRole(role,version);
+    public ResultVO<Integer> updateRole(@RequestParam Map<String, Object> role, @PathVariable Integer version) {
+        return roleService.updateRole(role, version);
     }
 
     @DeleteMapping("/{ids}")
@@ -48,7 +49,14 @@ public class RoleController {
 
     @GetMapping()
     @ApiOperation(value = "获取机构列表")
-    public ResultVO<PageInfo<Map<String,Object>>> getOrgList(String data, WebPageInfo webPageInfo) {
+    public ResultVO<PageInfo<Map<String, Object>>> getOrgList(String data, WebPageInfo webPageInfo) {
         return roleService.getRoleList(data, webPageInfo);
+    }
+
+    @GetMapping("valid")
+    @ApiOperation(value = "校验角色是否重复")
+    @ApiImplicitParam(name = "code", value = "角色编码")
+    public ResultVO<Object> validCode(String code) {
+        return roleService.validCode(code);
     }
 }
