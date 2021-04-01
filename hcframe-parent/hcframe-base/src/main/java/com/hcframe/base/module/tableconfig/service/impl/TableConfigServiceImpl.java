@@ -235,7 +235,7 @@ public class TableConfigServiceImpl implements TableConfigService {
                 stringBuilder.append(osSysSelect.getFieldId()).append(",");
             }
             if (selects.size() > 0) {
-                List<String> list = osSysFieldDao.getTableAlise(stringBuilder.substring(0,stringBuilder.length()));
+                List<String> list = osSysFieldDao.getTableAlise(stringBuilder.substring(0,stringBuilder.length()-1));
                 for (String tableAlise : list) {
                     tableCache.delete(tableAlise);
                 }

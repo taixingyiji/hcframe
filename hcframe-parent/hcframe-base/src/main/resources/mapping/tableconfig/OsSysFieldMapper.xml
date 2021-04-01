@@ -17,6 +17,8 @@
     <result column="LOGIC" jdbcType="VARCHAR" property="logic" />
     <result column="SIGN" jdbcType="VARCHAR" property="sign" />
     <result column="IS_SEARCH" jdbcType="VARCHAR" property="isSearch" />
+    <result column="FK_KEY" jdbcType="VARCHAR" property="fkKey" />
+    <result column="FK_VALUE" jdbcType="VARCHAR" property="fkValue" />
     <collection property="selectList" resultMap="com.hcframe.base.module.tableconfig.dao.OsSysSelectDao.OsSysSelectMap"/>
   </resultMap>
     <select id="getTableAlise" resultType="java.lang.String">
