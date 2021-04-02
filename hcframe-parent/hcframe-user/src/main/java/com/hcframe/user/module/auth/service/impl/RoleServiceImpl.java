@@ -8,11 +8,13 @@ import com.hcframe.base.module.data.module.BaseMapperImpl;
 import com.hcframe.base.module.data.module.Condition;
 import com.hcframe.base.module.data.service.TableService;
 import com.hcframe.base.module.tableconfig.entity.OsSysTable;
+import com.hcframe.user.module.auth.mapper.RoleDao;
 import com.hcframe.user.module.auth.service.RoleService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,10 +35,14 @@ public class RoleServiceImpl implements RoleService {
 
     final TableService tableService;
 
+    final RoleDao roleDao;
+
     public RoleServiceImpl(@Qualifier(BaseMapperImpl.BASE) BaseMapper baseMapper,
-                           TableService tableService) {
+                           TableService tableService,
+                           RoleDao roleDao) {
         this.baseMapper = baseMapper;
         this.tableService = tableService;
+        this.roleDao = roleDao;
     }
 
     @Override
@@ -71,5 +77,10 @@ public class RoleServiceImpl implements RoleService {
             return ResultVO.getFailed("角色编码不能重复");
         }
         return ResultVO.getSuccess();
+    }
+
+    @Override
+    public ResultVO<List<Map<String, Object>>> getAll() {
+        return ResultVO.getSuccess(roleDao.getAllList());
     }
 }

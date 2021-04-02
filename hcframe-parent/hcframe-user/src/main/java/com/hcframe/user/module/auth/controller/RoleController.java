@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -48,7 +49,7 @@ public class RoleController {
     }
 
     @GetMapping()
-    @ApiOperation(value = "获取机构列表")
+    @ApiOperation(value = "获取角色列表")
     public ResultVO<PageInfo<Map<String, Object>>> getOrgList(String data, WebPageInfo webPageInfo) {
         return roleService.getRoleList(data, webPageInfo);
     }
@@ -58,5 +59,11 @@ public class RoleController {
     @ApiImplicitParam(name = "code", value = "角色编码")
     public ResultVO<Object> validCode(String code) {
         return roleService.validCode(code);
+    }
+
+    @GetMapping("all")
+    @ApiOperation(value = "获取全部角色信息")
+    public ResultVO<List<Map<String,Object>>> getAll() {
+        return roleService.getAll();
     }
 }

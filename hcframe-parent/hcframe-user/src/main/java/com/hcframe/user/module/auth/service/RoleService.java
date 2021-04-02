@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.hcframe.base.common.ResultVO;
 import com.hcframe.base.common.WebPageInfo;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -23,4 +24,6 @@ public interface RoleService {
     ResultVO<PageInfo<Map<String, Object>>> getRoleList(String data, WebPageInfo webPageInfo);
 
     ResultVO<Object> validCode(String code);
+
+    ResultVO<List<Map<String, Object>>> getAll();
 }
