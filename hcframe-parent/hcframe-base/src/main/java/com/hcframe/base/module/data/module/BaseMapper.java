@@ -122,4 +122,6 @@ public interface BaseMapper {
 
     Map<String, Object> selectOneSql(String sql);
 
+    Long count(String tableName, Condition condition);
+
 }

@@ -4,6 +4,13 @@ server:
     context-path: /user
 pagehelper:
   auto-runtime-dialect: true
+cas:
+  server-url-prefix: @cas.cas-service-url@@cas.cas-context-path@
+  client-host-url: http://192.168.1.130:8080
+  validation-type: cas3
+  server-login-url: @cas.cas-service-url@/cas@cas.login-url@
+  accept-any-proxy: true
+  redirect-after-validation: false
 spring:
   application:
     name: cloud-user
@@ -21,10 +28,10 @@ spring:
     ehcache:
       config: classpath:ehcache.xml
   redis:
-    database: 0
-    host: 192.168.4.119
-    port: 6379
-    password:
+    database: @redis.database@
+    host: @redis.host@
+    port: @redis.port@
+    password: @redis.password@
     lettuce:
       pool:
         # 连接池中的最大空闲连接 默认8
@@ -44,10 +51,10 @@ spring:
   datasource:
     druid:
       # 配置sqlite文件路径，需要填写绝对路径，推荐将sqlite文件放入到服务器上，而非程序jar包或war包中
-      driver-class-name: org.sqlite.JDBC
-      url: jdbc:sqlite:/Volumes/DATA/ideaProject/user/src/main/resources/datasource.db
-      username:
-      password:
+      driver-class-name: dm.jdbc.driver.DmDriver
+      url: jdbc:dm://192.168.1.131:5236/GBCAS?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=utf-8
+      username: GBCAS
+      password: 123456789
       #使用Druid数据源
       initialSize: 5
       # 初始化大小，最小，最大
@@ -77,17 +84,19 @@ mybatis:
      # 开启Sql日志记录
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 # 框架配置
-frame:
-# 是否开启redis 用户登录，若开启此项，需要配置redis节点及相关配置，若不开启，需要注释掉redis相关配置信息
-  isRedisLogin: true
-  # 用户登陆超时设置，单位为小时，此值不能为0
-  loginTimeout: 4
-  # 是否开启controller日志监控
-  showControllerLog: true
+hcframe:
+  config:
+    # 是否开启redis 用户登录，若开启此项，需要配置redis节点及相关配置，若不开启，需要注释掉redis相关配置信息
+    isRedisLogin: true
+    # 用户登陆超时设置，单位为小时，此值不能为0
+    loginTimeout: 4
+    # 是否开启controller日志监控
+    showControllerLog: true
+    multi-data-source: false
 # swagger配置
 swagger:
   # 配置controller包路径
-  path: com.hcframe.module.**.controller
+#  path: com.hcframe.module.**.controller
   # 是否开启权限
   enableAuth: false
   # 用户名

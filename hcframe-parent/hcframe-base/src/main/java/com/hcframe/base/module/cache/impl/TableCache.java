@@ -109,7 +109,7 @@ public class TableCache implements CacheService {
 
     @Override
     public boolean delete(String typeName) {
-        return false;
+        return baseCache.delete(CacheType.tableCache.toString(), typeName);
     }
 
     @Override

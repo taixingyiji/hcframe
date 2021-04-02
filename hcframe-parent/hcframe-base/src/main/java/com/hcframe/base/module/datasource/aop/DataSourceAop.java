@@ -1,7 +1,6 @@
 package com.hcframe.base.module.datasource.aop;
 
 import com.hcframe.base.common.config.FrameConfig;
-import com.hcframe.base.common.utils.RedisUtil;
 import com.hcframe.base.module.datasource.dao.DatasourceConfigDao;
 import com.hcframe.base.module.datasource.dynamic.DBContextHolder;
 import com.hcframe.base.module.datasource.utils.DataUnit;

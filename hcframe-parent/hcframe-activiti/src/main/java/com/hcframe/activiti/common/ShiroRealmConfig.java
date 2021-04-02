@@ -12,7 +12,7 @@ import java.util.LinkedHashMap;
 /**
  * @author lhc
  * @date 2020-07-28
- * @decription shiro 配置类
+ * @ shiro 配置类
  */
 @Component
 public class ShiroRealmConfig implements SystemRealm {
@@ -73,5 +73,4 @@ public class ShiroRealmConfig implements SystemRealm {
         map.put("/**", ShiroType.ANON);
         return map;
     }
-
 }

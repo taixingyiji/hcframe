@@ -18,6 +18,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableCaching
 @EnableDiscoveryClient
 @EnableFeignClients
+//@EnableCasClient
 @ComponentScan(basePackages = {"com.hcframe.**"})
 public class ConfigApplication {
     public static void main(String[] args) {

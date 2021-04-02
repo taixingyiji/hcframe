@@ -81,10 +81,6 @@ mybatis:
 logging:
   level:
     com.common.common.dao : debug
-# 是否开启redis 用户登录，若开启此项，需要配置redis节点及相关配置，若不开启，需要注释掉redis相关配置信息
-isRedisLogin: false
-# 用户登陆超时设置，单位为小时，此值不能为0
-login-time-out: 4
 # swagger配置
 swagger:
   # 配置controller包路径
@@ -106,6 +102,14 @@ druid:
   # Druid 拒绝访问的IP,默认不拒绝全部
 #  deny: 10.0.0.2
 # 是否开启controller日志监控
-show-controller-log: false
-
+# 框架配置
+hcframe:
+  config:
+    # 是否开启redis 用户登录，若开启此项，需要配置redis节点及相关配置，若不开启，需要注释掉redis相关配置信息
+    isRedisLogin: true
+    # 用户登陆超时设置，单位为小时，此值不能为0
+    loginTimeout: 4
+    # 是否开启controller日志监控
+    showControllerLog: true
+    multi-data-source: false
 

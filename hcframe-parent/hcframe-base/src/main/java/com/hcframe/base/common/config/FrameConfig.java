@@ -6,10 +6,10 @@ import org.springframework.stereotype.Component;
 
 @Data
 @Component
-@ConfigurationProperties(prefix = "frame")
+@ConfigurationProperties(prefix = "hcframe.config")
 public class FrameConfig {
     private Boolean isRedisLogin = false;
     private Integer loginTimeout = 4;
     private Boolean showControllerLog = true;
-    private Boolean MultiDataSource = true;
+    private Boolean multiDataSource = true;
 }

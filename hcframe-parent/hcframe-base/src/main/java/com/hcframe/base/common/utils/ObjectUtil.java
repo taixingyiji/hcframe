@@ -22,9 +22,10 @@ public class ObjectUtil {
     private static final String LONG = "class java.lang.LONG";
 
     public static Map<String, Object> objToMap(Object obj) {
-        Map<String, Object> map = new HashMap<String, Object>();
         Class<?> clazz = obj.getClass();
-        for (Field field : clazz.getDeclaredFields()) {
+        Field[] fields = clazz.getDeclaredFields();
+        Map<String, Object> map = new HashMap<>(fields.length);
+        for (Field field : fields) {
             field.setAccessible(true);
             String fieldName = field.getName();
             try {
@@ -52,6 +53,13 @@ public class ObjectUtil {
             String fieldName = field.getName();
             if (field.getAnnotation(Id.class) != null) {
                 dataMap = dataMap.toBuilder().pkName(StringUtils.toUnderScoreUpperCase(fieldName)).build();
+                try {
+                    if (!org.springframework.util.StringUtils.isEmpty(field.get(obj))) {
+                        dataMap.setPkValue(field.get(obj));
+                    }
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
             }
             try {
                 if (!fieldName.equals(SERIAL_VERSION_UID)) {
@@ -86,6 +94,13 @@ public class ObjectUtil {
             String fieldName = field.getName();
             if (field.getAnnotation(Id.class) != null) {
                 dataMap = dataMap.pkName(StringUtils.toUnderScoreUpperCase(fieldName));
+                try {
+                    if (!org.springframework.util.StringUtils.isEmpty(field.get(obj))) {
+                        dataMap.pkValue(field.get(obj));
+                    }
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
             }
             try {
                 if (!fieldName.equals(SERIAL_VERSION_UID)) {

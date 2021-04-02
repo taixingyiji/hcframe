@@ -15,6 +15,6 @@ import java.util.List;
  */
 public interface OsSysFieldDao extends Mapper<OsSysField> {
 
-    List<Integer> getTableId(@Param("ids") String ids);
+    List<String> getTableAlise(@Param("ids") String ids);
 
 }

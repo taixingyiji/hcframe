@@ -2,6 +2,14 @@ server:
   port: 8081
   servlet:
     context-path: /config
+cas:
+  server-url-prefix: http://192.168.1.131:8080/cas
+  client-host-url: http://192.168.1.130:8081
+  validation-type: cas3
+  server-login-url: http://192.168.1.131:8080/cas/login
+  # 代理模式
+  proxy-callback-url: http://192.168.1.130:8081/config/proxyCallback
+  proxy-receptor-url: /config/proxyCallback
 pagehelper:
   auto-runtime-dialect: true
 spring:
@@ -10,21 +18,21 @@ spring:
   # 缓存设置
   cache:
     # redis缓存
-#    type: redis
-#    redis:
-#      time-to-live: 1d
-#      use-key-prefix: true
-#      cache-null-values: true
-#      key-prefix: cache.
+    type: redis
+    redis:
+      time-to-live: 1d
+      use-key-prefix: true
+      cache-null-values: true
+      key-prefix: cache.
     # ehcache缓存
-    type: ehcache
-    ehcache:
-      config: classpath:ehcache.xml
+#    type: ehcache
+#    ehcache:
+#      config: classpath:ehcache.xml
   redis:
-    database: 0
-    host: 192.168.4.119
-    port: 6379
-    password:
+    database: @redis.database@
+    host: @redis.host@
+    port: @redis.port@
+    password: @redis.password@
     lettuce:
       pool:
         # 连接池中的最大空闲连接 默认8
@@ -73,14 +81,6 @@ mybatis:
   configuration:
      # 开启Sql日志记录
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-# 框架配置
-frame:
-# 是否开启redis 用户登录，若开启此项，需要配置redis节点及相关配置，若不开启，需要注释掉redis相关配置信息
-  isRedisLogin: true
-  # 用户登陆超时设置，单位为小时，此值不能为0
-  loginTimeout: 4
-  # 是否开启controller日志监控
-  showControllerLog: true
 # swagger配置
 swagger:
   # 配置controller包路径
@@ -120,7 +120,14 @@ hystrix:
         isolation:
           thread:
             timeoutInMilliseconds: 30000
-
-
+hcframe:
+  config:
+    # 是否开启redis 用户登录，若开启此项，需要配置redis节点及相关配置，若不开启，需要注释掉redis相关配置信息
+    isRedisLogin: true
+    # 用户登陆超时设置，单位为小时，此值不能为0
+    loginTimeout: 4
+    # 是否开启controller日志监控
+    showControllerLog: true
+    multi-data-source: true
 
 

@@ -3,9 +3,10 @@ package com.hcframe.gateway_cas_stater.config;
 import com.hcframe.gateway_cas_stater.data.DataStorage;
 import com.hcframe.gateway_cas_stater.filter.AuthGlobalFilter;
 import com.hcframe.gateway_cas_stater.filter.CasValidGlobalFilter;
+import com.hcframe.gateway_cas_stater.filter.SimpleCORSFilter;
 import org.jasig.cas.client.util.ReflectUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,4 +42,10 @@ public class GatewayCasConfig {
     public CasValidGlobalFilter casValidGlobalFilter() {
         return new CasValidGlobalFilter(casGatewayClientConfig, dataStorage());
     }
+
+    @Bean
+    public SimpleCORSFilter corsFilter(){
+        return new SimpleCORSFilter();
+    }
+
 }

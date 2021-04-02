@@ -1,6 +1,5 @@
 package com.hcframe.base.module.datasource.aop;
 
-import com.hcframe.base.common.utils.RedisUtil;
 import com.hcframe.base.module.datasource.annotation.DatasourceAnno;
 import com.hcframe.base.module.datasource.dynamic.DBContextHolder;
 import com.hcframe.base.module.shiro.dao.FtTokenDao;
@@ -26,9 +25,6 @@ public class DataSourceAnnoOperation {
 
     @Autowired
     FtTokenDao osTokenMapper;
-
-    @Autowired
-    RedisUtil redisUtil;
 
     @Around("@annotation(com.hcframe.base.module.datasource.annotation.DatasourceAnno)")
     public Object aroundAdvice(ProceedingJoinPoint pjp) throws Throwable {

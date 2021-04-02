@@ -11,6 +11,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("hcframe.cas")
 public class CasGatewayClientConfig {
 
+    public Boolean enabled = true;
+
     public String casServiceUrl;
 
     public String serviceUrl;
@@ -29,7 +31,7 @@ public class CasGatewayClientConfig {
 
     public String cookieHolderPattern="com.hcframe.gateway_cas_stater.data.DataStorageImpl";
 
-    public String authKey="hcframe_Key";
+    public String authKey="X-Access-Token";
 
     public String proxyReceptorUrl;
 

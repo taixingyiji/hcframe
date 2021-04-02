@@ -187,6 +187,7 @@ public class TableServiceImpl implements TableService {
             JSONArray jsonArray = JSON.parseArray(map);
             builder = getQueryBuilder(jsonArray, builder);
         }
+        builder.andEqual("DELETED", 1);
         return baseMapper.selectByCondition(builder.build(), webPageInfo);
     }
 
@@ -220,8 +221,8 @@ public class TableServiceImpl implements TableService {
 
     @Override
     public ResultVO<Integer> logicDelete(OsSysTable tableName, String ids) {
-        Map<String, Object> map = new HashMap<>();
-        map.put(FieldConstants.DELETED.toString(), 1);
+        Map<String, Object> map = new HashMap<>(1);
+        map.put(FieldConstants.DELETED.toString(), 0);
         DataMap dataMap = DataMap.builder().sysOsTable(tableName).ids(ids).data(map).build();
         Condition condition = Condition.creatCriteria().andIn(dataMap.getPkName(), dataMap.getIdList()).build();
         int i = baseMapper.updateByCondition(dataMap, condition);

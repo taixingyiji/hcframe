@@ -3,9 +3,47 @@ spring:
     active: @profile.name@
   application:
     name: cloud-gateway
+  # 若不使用redis需要注释掉此类信息
+  redis:
+    database: @redis.database@
+    host: @redis.host@
+    port: @redis.port@
+    password: @redis.password@
+    lettuce:
+      pool:
+        # 连接池中的最大空闲连接 默认8
+        max-idle: 8
+        # 连接池中的最小空闲连接 默认0
+        min-idle: 0
+        # 连接池最大连接数 默认8 ，负数表示没有限制
+        max-active: 8
+        # 连接池最大阻塞等待时间（使用负值表示没有限制） 默认-1
+        max-wait: -1
+    timeout: 30000
 mybatis:
   mapper-locations: classpath*:mapping/**/*.xml
   type-aliases-package: com.hcframe.**.entity
   configuration:
     # 开启Sql日志记录
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+hcframe:
+  cas:
+    white-url: @cas.white-url@
+    cas-context-path: @cas.cas-context-path@
+    service-url: @cas.service-url@
+    cookie-holder-pattern: @cas.cookie-holder-pattern@
+    login-url: @cas.login-url@
+    logout-url: @cas.logout-url@
+    cas-service-url: @cas.cas-service-url@
+    client-context-path: @cas.client-context-path@
+#    accept-any-proxy: true
+#    proxyReceptorUrl: /proxyCallback
+#    proxyCallbackUrl: http://192.168.1.130:8084/proxyCallback
+  config:
+    # 是否开启redis 用户登录，若开启此项，需要配置redis节点及相关配置，若不开启，需要注释掉redis相关配置信息
+    isRedisLogin: true
+    # 用户登陆超时设置，单位为小时，此值不能为0
+    loginTimeout: 4
+    # 是否开启controller日志监控
+    showControllerLog: true
+    multi-data-source: false

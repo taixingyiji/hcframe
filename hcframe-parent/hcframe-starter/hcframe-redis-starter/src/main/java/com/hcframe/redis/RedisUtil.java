@@ -1,19 +1,17 @@
-package com.hcframe.base.common.utils;
+package com.hcframe.redis;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-
-import com.hcframe.base.common.config.FrameConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -23,18 +21,10 @@ import javax.annotation.Resource;
 @Component
 public final class RedisUtil {
 
-    // url
-    public static boolean isUseful;
-
-    // 通过yml文件获取host
-    @Autowired
-    public void setHost(FrameConfig config) {
-        RedisUtil.isUseful = config.getIsRedisLogin();
-    }
-
     private final static Logger logger = LoggerFactory.getLogger(RedisUtil.class);
 
     @Resource
+    @Qualifier("hcframeRedisTemplate")
     private RedisTemplate<String, Object> redisTemplate;
 
     /**

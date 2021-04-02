@@ -15,6 +15,7 @@
         <module>hcframe-gateway-cas-starter</module>
         <module>hcframe-boot-starter</module>
         <module>hcframe-cloud-starter</module>
+        <module>hcframe-redis-starter</module>
     </modules>
 
     <properties>

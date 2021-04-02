@@ -15,4 +15,16 @@ public class XssClass {
         }
         return false;
     }
+
+    public static boolean sqlInjLike(String str){
+        String injStr = "'|and|exec|insert|select|delete|update|"+
+                "count|*|chr|mid|master|truncate|char|declare|;|or|+|,|<script>";
+        String[] injStra = split(injStr,"|");
+        for (String s : injStra) {
+            if (str.contains(s)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

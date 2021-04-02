@@ -77,8 +77,6 @@ public class TableConfigServiceImpl implements TableConfigService {
         if (list != null && list.size() > 0) {
             return ResultVO.getFailed("表别名重复，请修改后提交！");
         }
-//        DataMap<OsSysTable> dataMap = DataMap.<OsSysTable>builder().obj(osSysTable).build();
-//        baseMapper.save(dataMap);
         baseMapper.save(osSysTable);
         tableCache.save(CacheType.tableCache, osSysTable.getTableAlias(), osSysTable, OsSysTable.class);
         return ResultVO.getSuccess(osSysTable);
@@ -92,6 +90,9 @@ public class TableConfigServiceImpl implements TableConfigService {
         Example queryExample = new Example(OsSysTable.class);
         queryExample.createCriteria().andIn("tableId", Arrays.asList(idArr));
         List<OsSysTable> osSysTables = osSysTableMapper.selectByExample(queryExample);
+        for (OsSysTable osSysTable : osSysTables) {
+            tableCache.delete(osSysTable.getTableAlias());
+        }
         Example fieldExample = new Example(OsSysField.class);
         fieldExample.createCriteria().andIn("tableId", Arrays.asList(idArr));
         List<OsSysField> osSysFields = osSysFieldDao.selectByExample(fieldExample);
@@ -112,6 +113,7 @@ public class TableConfigServiceImpl implements TableConfigService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ResultVO updateTable(OsSysTable osSysTable) {
+        tableCache.delete(osSysTable.getTableAlias());
         List<OsSysTable> osSysTables = osSysTableMapper.select(OsSysTable.builder().tableAlias(osSysTable.getTableAlias()).build());
         if (osSysTables.size() > 1) {
             return ResultVO.getFailed("表别名设置重复");
@@ -157,6 +159,7 @@ public class TableConfigServiceImpl implements TableConfigService {
         DataMap<OsSysField> dataMap = DataMap.<OsSysField>builder().obj(osSysField).build();
         baseMapper.save(dataMap);
         OsSysTable osSysTable = osSysTableMapper.selectOne(OsSysTable.builder().tableId(osSysField.getTableId()).build());
+        tableCache.delete(osSysTable.getTableAlias());
         return ResultVO.getSuccess();
     }
 
@@ -166,6 +169,7 @@ public class TableConfigServiceImpl implements TableConfigService {
         int i = osSysFieldDao.updateByPrimaryKeySelective(osSysField);
         SqlException.operation(i, "修改字段信息失败");
         OsSysTable osSysTable = osSysTableMapper.selectOne(OsSysTable.builder().tableId(osSysField.getTableId()).build());
+        tableCache.delete(osSysTable.getTableAlias());
         return ResultVO.getSuccess();
     }
 
@@ -177,11 +181,12 @@ public class TableConfigServiceImpl implements TableConfigService {
         fieldExample.createCriteria().andIn("fieldId", Arrays.asList(idArr));
         Example selectExample = new Example(OsSysField.class);
         selectExample.createCriteria().andIn("fieldId", Arrays.asList(idArr));
-        List<Integer> list = osSysFieldDao.getTableId(ids);
+        List<String> list = osSysFieldDao.getTableAlise(ids);
+        for (String tableAlise : list) {
+            tableCache.delete(tableAlise);
+        }
         int i = osSysFieldDao.deleteByExample(fieldExample);
-        SqlException.operation(i, "删除字段信息失败");
         i = osSysSelectDao.deleteByExample(selectExample);
-        SqlException.operation(i, "删除字段信息失败");
         return ResultVO.getSuccess();
     }
 
@@ -195,6 +200,10 @@ public class TableConfigServiceImpl implements TableConfigService {
     public ResultVO saveSelectInfo(OsSysSelect osSysSelect) {
         DataMap<OsSysSelect> dataMap = DataMap.<OsSysSelect>builder().obj(osSysSelect).build();
         baseMapper.save(dataMap);
+        List<String> list = osSysFieldDao.getTableAlise(osSysSelect.getFieldId().toString());
+        for (String tableAlise : list) {
+            tableCache.delete(tableAlise);
+        }
         return ResultVO.getSuccess();
     }
 
@@ -202,6 +211,10 @@ public class TableConfigServiceImpl implements TableConfigService {
     public ResultVO updateSelectInfo(OsSysSelect osSysSelect) {
         int i = osSysSelectDao.updateByPrimaryKeySelective(osSysSelect);
         if (i > 0) {
+            List<String> list = osSysFieldDao.getTableAlise(osSysSelect.getFieldId().toString());
+            for (String tableAlise : list) {
+                tableCache.delete(tableAlise);
+            }
             return ResultVO.getSuccess();
         } else {
             return ResultVO.getFailed("更新下拉选项失败");
@@ -212,8 +225,19 @@ public class TableConfigServiceImpl implements TableConfigService {
     public ResultVO deleteSelectInfo(String ids) {
         Example example = new Example(OsSysSelect.class);
         example.createCriteria().andIn("selectId", Arrays.asList(ids.split(",")));
+        List<OsSysSelect> selects = osSysSelectDao.selectByExample(example);
         int i = osSysSelectDao.deleteByExample(example);
         if (i > 0) {
+            StringBuilder stringBuilder = new StringBuilder();
+            for (OsSysSelect osSysSelect : selects) {
+                stringBuilder.append(osSysSelect.getFieldId()).append(",");
+            }
+            if (selects.size() > 0) {
+                List<String> list = osSysFieldDao.getTableAlise(stringBuilder.substring(0,stringBuilder.length()-1));
+                for (String tableAlise : list) {
+                    tableCache.delete(tableAlise);
+                }
+            }
             return ResultVO.getSuccess();
         } else {
             return ResultVO.getFailed("删除下拉选项失败");
@@ -225,9 +249,9 @@ public class TableConfigServiceImpl implements TableConfigService {
         List<OsSysTable> list = osSysTableMapper.selectAll();
         List<Map<String, Object>> resultList = new LinkedList<>();
         for (OsSysTable osSysTable : list) {
-            Map<String, Object> map = new HashMap<>();
+            Map<String, Object> map = new HashMap<>(2);
             map.put("value", osSysTable.getTableId());
-            map.put("label", osSysTable.getTableName());
+            map.put("label", osSysTable.getTableContent());
             resultList.add(map);
         }
         return ResultVO.getSuccess(resultList);

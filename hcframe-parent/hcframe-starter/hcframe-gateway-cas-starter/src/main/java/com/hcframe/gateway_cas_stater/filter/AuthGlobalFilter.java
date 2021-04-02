@@ -14,16 +14,20 @@ import org.jasig.cas.client.validation.Assertion;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
+import org.springframework.http.HttpCookie;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * @author lhc
@@ -69,17 +73,30 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
         if (isWhiteList(request)) {
             return chain.filter(exchange);
         }
-        Object authId = request.getCookies().get(casGatewayClientConfig.authKey);
-        if (StringUtils.isEmpty(authId)) {
-            authId = this.tokenProccessor.makeToken();
-            response.addCookie(ResponseCookie.from(casGatewayClientConfig.authKey, authId.toString()).build());
+        String token;
+        HttpHeaders requestHeaders = request.getHeaders();
+        List<String> tokens = requestHeaders.get(casGatewayClientConfig.authKey);
+        if (tokens != null && tokens.size()>0) {
+            token = tokens.get(0);
+        } else {
+            MultiValueMap<String, HttpCookie> cookieMultiValueMap = request.getCookies();
+            List<HttpCookie> authId = cookieMultiValueMap.get(casGatewayClientConfig.authKey);
+            if (StringUtils.isEmpty(authId)) {
+                token = this.tokenProccessor.makeToken();
+                response.addCookie(ResponseCookie.from(casGatewayClientConfig.authKey, token).build());
+                HttpHeaders responseHeaders = response.getHeaders();
+                responseHeaders.set(casGatewayClientConfig.authKey, token);
+            } else {
+                token = authId.get(0).getValue();
+            }
         }
-        Assertion assertion = (Assertion) dataStorage.getValue(authId.toString(), CAS_ASSERTION_KEY);
-        if (!StringUtils.isEmpty(assertion)) {
+        Assertion assertion = (Assertion) dataStorage.getValue(token, CAS_ASSERTION_KEY);
+        if (assertion != null) {
             return chain.filter(exchange);
         } else {
             String serviceUrl = Utils.encodingUrl(request, true, false);
             String urlToRedirectTo = Utils.makeRedirectUrl(casGatewayClientConfig.casServiceUrl + casGatewayClientConfig.casContextPath + casGatewayClientConfig.loginUrl, this.protocol.getServiceParameterName(), serviceUrl);
+            response.setStatusCode(HttpStatus.UNAUTHORIZED);
             return Utils.redirect(exchange, urlToRedirectTo);
         }
     }
@@ -101,5 +118,4 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
             return this.whiteListUrl.matches(requestUri);
         }
     }
-
 }
