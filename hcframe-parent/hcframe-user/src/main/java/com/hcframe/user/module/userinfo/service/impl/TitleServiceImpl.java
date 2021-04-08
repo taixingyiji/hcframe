@@ -20,9 +20,9 @@ import com.hcframe.user.module.userinfo.service.TitleService;
 @Service
 public class TitleServiceImpl implements TitleService{
 	
-	 private static final String ID = "ID";
+	 private static final String TITLE_ID = "TITLE_ID";
 	    private static final String OS_SYS_TITLE = "OS_SYS_TITLE";
-	    private static final OsSysTable TABLE_INFO = OsSysTable.builder().tableName(OS_SYS_TITLE).tablePk(ID).build();
+	    private static final OsSysTable TABLE_INFO = OsSysTable.builder().tableName(OS_SYS_TITLE).tablePk(TITLE_ID).build();
 
 	    final BaseMapper baseMapper;
 
