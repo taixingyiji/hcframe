@@ -1,6 +1,5 @@
 package com.hcframe.base.module.shiro;
 
-import com.hcframe.base.module.data.annotation.DataIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -35,8 +34,5 @@ public class FtToken implements Serializable {
     private Date updateTime;
 
     private Date expireTime;
-
-    @DataIgnore
-    private String test;
 
 }

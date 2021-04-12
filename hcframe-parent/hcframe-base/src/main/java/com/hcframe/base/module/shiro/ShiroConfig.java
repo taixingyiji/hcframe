@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
 import javax.servlet.Filter;
 import java.util.HashMap;
 import java.util.Map;
@@ -39,6 +40,13 @@ public class ShiroConfig {
     public CustomRealm myShiroRealm() {
         return new CustomRealm();
     }
+
+//    @Bean
+//    public DefaultWebSessionManager sessionManager() {
+//        DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
+//        sessionManager.setSessionIdUrlRewritingEnabled(false);
+//        return sessionManager;
+//    }
 
     /**
      *  权限管理，配置主要是Realm的管理认证
@@ -80,4 +88,6 @@ public class ShiroConfig {
     public static LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
         return new LifecycleBeanPostProcessor();
     }
+
+
 }

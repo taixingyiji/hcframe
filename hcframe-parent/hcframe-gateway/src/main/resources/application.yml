@@ -2,7 +2,7 @@ spring:
   profiles:
     active: @profile.name@
   application:
-    name: cloud-gateway
+    name: cloud-gateway1
   # 若不使用redis需要注释掉此类信息
   redis:
     database: @redis.database@
