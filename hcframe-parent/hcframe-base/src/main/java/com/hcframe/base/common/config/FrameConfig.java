@@ -12,4 +12,5 @@ public class FrameConfig {
     private Integer loginTimeout = 4;
     private Boolean showControllerLog = true;
     private Boolean multiDataSource = true;
+    private Boolean cas = false;
 }

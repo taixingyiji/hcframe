@@ -9,6 +9,8 @@ import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.jasig.cas.client.authentication.AttributePrincipal;
+import org.jasig.cas.client.validation.AssertionImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Resource;
@@ -40,7 +42,12 @@ public class CustomRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token)  {
         String accessToken = (String) token.getPrincipal();
         String userId;
-        if (frameConfig.getIsRedisLogin()) {
+        if (frameConfig.getCas()) {
+            Map<Object,Object> hashMap = (Map<Object, Object>) redisUtil.hget("session",accessToken);
+            AssertionImpl assertion = (AssertionImpl) hashMap.get("_const_cas_assertion_");
+            AttributePrincipal attributePrincipal = assertion.getPrincipal();
+            return new SimpleAuthenticationInfo(attributePrincipal.getAttributes(), accessToken, this.getName());
+        }else if (frameConfig.getIsRedisLogin()) {
             Map<Object,Object> hashMap = (Map<Object, Object>) redisUtil.hget("tokenSession",accessToken);
             userId = (String) hashMap.get("userId");
             if (userId == null) {
