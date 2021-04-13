@@ -4,21 +4,30 @@ import com.github.pagehelper.PageInfo;
 import com.hcframe.base.common.ResultVO;
 import com.hcframe.base.common.ServiceException;
 import com.hcframe.base.common.WebPageInfo;
+import com.hcframe.base.common.utils.DateUtil;
 import com.hcframe.base.common.utils.JudgeException;
 import com.hcframe.base.module.data.module.BaseMapper;
 import com.hcframe.base.module.data.module.BaseMapperImpl;
 import com.hcframe.base.module.data.service.TableService;
 import com.hcframe.base.module.tableconfig.entity.OsSysTable;
 import com.hcframe.user.common.utils.MD5Utils;
+import com.hcframe.user.common.utils.POIUtil;
+import com.hcframe.user.module.manage.mapper.ManageMapper;
+import com.hcframe.user.module.manage.service.ManageService;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import com.hcframe.user.module.manage.service.ManageService;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,11 +49,19 @@ public class ManageServiceDataImpl implements ManageService {
 
     final TableService tableService;
 
+    final ManageMapper manageMapper;
+
+    final POIUtil poiUtil;
+
 
     public ManageServiceDataImpl(@Qualifier(BaseMapperImpl.BASE) BaseMapper baseMapper,
-                                 TableService tableService) {
+                                 TableService tableService,
+                                 ManageMapper manageMapper,
+                                 POIUtil poiUtil) {
         this.baseMapper = baseMapper;
         this.tableService = tableService;
+        this.manageMapper = manageMapper;
+        this.poiUtil = poiUtil;
     }
 
     @Override
@@ -121,8 +138,37 @@ public class ManageServiceDataImpl implements ManageService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ResultVO<Object> sync() {
-        baseMapper.selectAll("GB_CAS_MEMBER");
+        Workbook workbook = POIUtil.getWorkBook("/Volumes/DATA/2021年3月花名册.xlsx");
+        Sheet sheet = workbook.getSheet("Sheet1");
+        for (int i = 2; i <= sheet.getLastRowNum(); i++) {
+            Row row = sheet.getRow(i);
+            Cell cell = row.getCell(1);
+            String department = cell.getStringCellValue();
+            cell = row.getCell(2);
+            String name = cell.getStringCellValue();
+            cell = row.getCell(3);
+            String date = String.valueOf(cell.getNumericCellValue());
+            cell = row.getCell(4);
+            String title = cell.getStringCellValue();
+            List<Map<String, Object>> list = manageMapper.selectPersonList(name, department);
+            if (list != null&&list.size()>0) {
+                System.out.println(name+":"+list.get(0).get("ID"));
+                System.out.println(name+":"+list.get(0).get("ID"));
+                String str = date.substring(date.indexOf(".") + 1, date.length());
+                if (str.equals("1")) {
+                    date = date + "0";
+                }
+                System.out.println(date.trim()+".01 00:00:00");
+                Date date1 = DateUtil.StringFormat(date.trim()+".01 00:00:00","yyyy.MM.dd HH:mm:ss");
+                for (Map<String, Object> map : list) {
+                    map.put("TIME_TO_WORK", date1);
+                    map.put("TITLE_NAME", title);
+                    baseMapper.updateByPk(TABLE_INFO, map);
+                }
+            }
+        }
         return null;
     }
 }

@@ -23,4 +23,8 @@ public interface RoleGroupServie {
     ResultVO<Integer> delete(String ids);
 
     ResultVO<PageInfo<Map<String, Object>>> getList(String data, WebPageInfo webPageInfo);
+
+    ResultVO<Object> bind(Integer roleGroupId, String roleIds);
+
+    ResultVO<Object> getRoles(Integer roleGroupId);
 }

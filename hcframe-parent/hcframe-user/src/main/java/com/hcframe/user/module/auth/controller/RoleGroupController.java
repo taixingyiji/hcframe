@@ -5,6 +5,8 @@ import com.hcframe.base.common.ResultVO;
 import com.hcframe.base.common.WebPageInfo;
 import com.hcframe.user.module.auth.service.RoleGroupServie;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,6 +52,25 @@ public class RoleGroupController {
     @ApiOperation(value = "获取角色组列表")
     public ResultVO<PageInfo<Map<String, Object>>> getOrgList(String data, WebPageInfo webPageInfo) {
         return roleGroupServie.getList(data, webPageInfo);
+    }
+
+    @PostMapping("bind")
+    @ApiOperation(value = "绑定角色组")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "roleGroupId", value = "角色组ID",required = true),
+            @ApiImplicitParam(name = "roleIds", value = "角色ID数组",required = true)
+    })
+    public ResultVO<Object> bind(Integer roleGroupId, String roleIds) {
+        return roleGroupServie.bind(roleGroupId, roleIds);
+    }
+
+    @GetMapping("getRoles")
+    @ApiOperation(value = "绑定角色组")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "roleGroupId", value = "角色组ID",required = true),
+    })
+    public ResultVO<Object> getRoles(Integer roleGroupId) {
+        return roleGroupServie.getRoles(roleGroupId);
     }
 
 }

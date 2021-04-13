@@ -4,12 +4,12 @@ server:
     context-path: /config
 cas:
   server-url-prefix: http://192.168.1.131:8080/cas
-  client-host-url: http://192.168.1.130:8081
+  client-host-url: http://192.168.1.194:8081
   validation-type: cas3
   server-login-url: http://192.168.1.131:8080/cas/login
   # 代理模式
-  proxy-callback-url: http://192.168.1.130:8081/config/proxyCallback
-  proxy-receptor-url: /config/proxyCallback
+#  proxy-callback-url: http://192.168.1.130:8081/config/proxyCallback
+#  proxy-receptor-url: /config/proxyCallback
 pagehelper:
   auto-runtime-dialect: true
 spring:
@@ -123,7 +123,7 @@ hystrix:
 hcframe:
   config:
     # 是否开启redis 用户登录，若开启此项，需要配置redis节点及相关配置，若不开启，需要注释掉redis相关配置信息
-    isRedisLogin: true
+    isRedisLogin: false
     # 用户登陆超时设置，单位为小时，此值不能为0
     loginTimeout: 4
     # 是否开启controller日志监控

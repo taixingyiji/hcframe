@@ -3,14 +3,20 @@ package com.hcframe.user.module.auth.service.impl;
 import com.github.pagehelper.PageInfo;
 import com.hcframe.base.common.ResultVO;
 import com.hcframe.base.common.WebPageInfo;
+import com.hcframe.base.common.utils.JudgeException;
 import com.hcframe.base.module.data.module.BaseMapper;
 import com.hcframe.base.module.data.module.BaseMapperImpl;
+import com.hcframe.base.module.data.module.Condition;
+import com.hcframe.base.module.data.module.DataMap;
 import com.hcframe.base.module.data.service.TableService;
 import com.hcframe.base.module.tableconfig.entity.OsSysTable;
 import com.hcframe.user.module.auth.service.RoleGroupServie;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -25,6 +31,11 @@ public class RoleGroupServiceImpl implements RoleGroupServie {
 
     private static final String PK_ID = "GROUP_ID";
     private static final String TABLE_NAME = "OS_SYS_ROLE_GROUP";
+    private static final String OS_SYS_ROLE = "OS_SYS_ROLE";
+    private static final String ROLE_ID = "ROLE_ID";
+    private static final String OS_REL_GROUP_ROLE = "OS_REL_GROUP_ROLE";
+    private static final String ROLE_GROUP_ID = "ROLE_GROUP_ID";
+    private static final String COMMA = ",";
     private static final OsSysTable TABLE_INFO = OsSysTable.builder().tableName(TABLE_NAME).tablePk(PK_ID).build();
 
     final BaseMapper baseMapper;
@@ -49,13 +60,47 @@ public class RoleGroupServiceImpl implements RoleGroupServie {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ResultVO<Integer> delete(String ids) {
-        // TODO 补全删除的关联信息
-        return tableService.delete(TABLE_INFO, ids);
+        tableService.delete(TABLE_INFO, ids);
+        baseMapper.deleteInPk(DataMap
+                .builder()
+                .tableName(OS_SYS_ROLE)
+                .pkName(ROLE_ID)
+                .ids(ids)
+                .build());
+        return ResultVO.getSuccess();
     }
 
     @Override
     public ResultVO<PageInfo<Map<String, Object>>> getList(String data, WebPageInfo webPageInfo) {
         return ResultVO.getSuccess(tableService.searchSingleTables(data, TABLE_INFO, webPageInfo));
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public ResultVO<Object> bind(Integer roleGroupId, String roleIds) {
+        baseMapper.deleteByCondition(OS_REL_GROUP_ROLE, Condition.creatCriteria().andEqual(PK_ID,roleGroupId).build());
+        for (String str : roleIds.split(COMMA)) {
+            Integer roleId = Integer.parseInt(str);
+            DataMap<Object> dataMap = DataMap
+                    .builder()
+                    .pkName(ROLE_GROUP_ID)
+                    .tableName(OS_REL_GROUP_ROLE)
+                    .add(ROLE_ID,roleId)
+                    .add(PK_ID,roleGroupId)
+                    .build();
+            baseMapper.save(dataMap);
+        }
+        return ResultVO.getSuccess();
+    }
+
+    @Override
+    public ResultVO<Object> getRoles(Integer roleGroupId) {
+        JudgeException.isNull(roleGroupId,"roleGroupId 不能为空！");
+        Map<String, Object> map = new HashMap<>(1);
+        map.put(ROLE_GROUP_ID, roleGroupId);
+        List<Map<String, Object>> list = baseMapper.selectByEqual(OS_REL_GROUP_ROLE,map);
+        return ResultVO.getSuccess(list);
     }
 }

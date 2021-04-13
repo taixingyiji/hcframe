@@ -89,6 +89,24 @@
             <artifactId>shiro-spring</artifactId>
             <version>1.3.2</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.shiro/shiro-spring -->
+<!--        <dependency>-->
+<!--            <groupId>org.apache.shiro</groupId>-->
+<!--            <artifactId>shiro-spring</artifactId>-->
+<!--            <version>1.7.1</version>-->
+<!--        </dependency>-->
+        <!-- https://mvnrepository.com/artifact/org.pac4j/pac4j-cas -->
+<!--        <dependency>-->
+<!--            <groupId>org.pac4j</groupId>-->
+<!--            <artifactId>pac4j-cas</artifactId>-->
+<!--            <version>5.0.0</version>-->
+<!--        </dependency>-->
+<!--        &lt;!&ndash; https://mvnrepository.com/artifact/io.buji/buji-pac4j &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>io.buji</groupId>-->
+<!--            <artifactId>buji-pac4j</artifactId>-->
+<!--            <version>6.0.0</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
@@ -170,6 +188,22 @@
             <groupId>com.oracle</groupId>
             <artifactId>ojdbc6</artifactId>
             <version>11.2.0.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>4.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>4.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jasig.cas.client</groupId>
+            <artifactId>cas-client-core</artifactId>
+            <version>3.5.0</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
     <build>

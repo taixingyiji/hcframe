@@ -9,6 +9,8 @@ import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.jasig.cas.client.authentication.AttributePrincipal;
+import org.jasig.cas.client.validation.AssertionImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Resource;
@@ -37,17 +39,27 @@ public class CustomRealm extends AuthorizingRealm {
     }
 
     @Override
-    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token)  {
+    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) {
         String accessToken = (String) token.getPrincipal();
         String userId;
-        if (frameConfig.getIsRedisLogin()) {
-            Map<Object,Object> hashMap = (Map<Object, Object>) redisUtil.hget("tokenSession",accessToken);
+        if (frameConfig.getCas()) {
+            Map<Object, Object> hashMap = (Map<Object, Object>) redisUtil.hget("session", accessToken);
+            Long expireTime = (Long) hashMap.get("expireTime");
+            AssertionImpl assertion = (AssertionImpl) hashMap.get("_const_cas_assertion_");
+            Date validDate = assertion.getAuthenticationDate();
+            AttributePrincipal attributePrincipal = assertion.getPrincipal();
+            if (validDate.getTime() + expireTime < System.currentTimeMillis()) {
+                throw new IncorrectCredentialsException("token失效，请重新登录");
+            }
+            return new SimpleAuthenticationInfo(attributePrincipal.getAttributes(), accessToken, this.getName());
+        } else if (frameConfig.getIsRedisLogin()) {
+            Map<Object, Object> hashMap = (Map<Object, Object>) redisUtil.hget("tokenSession", accessToken);
             userId = (String) hashMap.get("userId");
             if (userId == null) {
                 throw new IncorrectCredentialsException("token失效，请重新登录");
             }
             String tokenStr = (String) redisUtil.hget("session", String.valueOf(userId));
-            if (tokenStr==null||!tokenStr.equals(accessToken)) {
+            if (tokenStr == null || !tokenStr.equals(accessToken)) {
                 redisUtil.del(accessToken);
                 throw new IncorrectCredentialsException("token失效，请重新登录");
             }

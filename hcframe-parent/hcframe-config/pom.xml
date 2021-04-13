@@ -19,19 +19,24 @@
         <dependency>
             <groupId>net.unicon.cas</groupId>
             <artifactId>cas-client-autoconfig-support</artifactId>
-            <version>1.4.0-GA</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.jasig.cas.client</groupId>
-                    <artifactId>cas-client-core</artifactId>
-                </exclusion>
-            </exclusions>
+            <version>2.2.0-GA</version>
         </dependency>
-        <dependency>
-            <groupId>org.jasig.cas.client</groupId>
-            <artifactId>cas-client-core</artifactId>
-            <version>${java.cas.client.version}</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>net.unicon.cas</groupId>-->
+<!--            <artifactId>cas-client-autoconfig-support</artifactId>-->
+<!--            <version>1.4.0-GA</version>-->
+<!--            <exclusions>-->
+<!--                <exclusion>-->
+<!--                    <groupId>org.jasig.cas.client</groupId>-->
+<!--                    <artifactId>cas-client-core</artifactId>-->
+<!--                </exclusion>-->
+<!--            </exclusions>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.jasig.cas.client</groupId>-->
+<!--            <artifactId>cas-client-core</artifactId>-->
+<!--            <version>${java.cas.client.version}</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>com.hcframe</groupId>
             <artifactId>hcframe-boot-starter</artifactId>

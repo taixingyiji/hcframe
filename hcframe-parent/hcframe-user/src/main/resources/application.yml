@@ -93,6 +93,7 @@ hcframe:
     # 是否开启controller日志监控
     showControllerLog: true
     multi-data-source: false
+    cas: true
 # swagger配置
 swagger:
   # 配置controller包路径

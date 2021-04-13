@@ -17,7 +17,6 @@ import reactor.core.publisher.Mono;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public class Utils {
@@ -110,9 +109,13 @@ public class Utils {
     public static TicketValidator initTicketValidator(CasGatewayClientConfig casGatewayClientConfig) {
         TicketValidator ticketValidator;
         if (!casGatewayClientConfig.getAcceptAnyProxy()) {
-            ticketValidator = new Cas30ServiceTicketValidator(casGatewayClientConfig.casServiceUrl + casGatewayClientConfig.casContextPath);
+            Cas30ServiceTicketValidator cas30ServiceTicketValidator= new Cas30ServiceTicketValidator(casGatewayClientConfig.casServiceUrl + casGatewayClientConfig.casContextPath);
+            cas30ServiceTicketValidator.setEncoding("UTF-8");
+            ticketValidator = cas30ServiceTicketValidator;
+
         } else {
             Cas30ProxyTicketValidator cas30ProxyTicketValidator = new Cas30ProxyTicketValidator(casGatewayClientConfig.casServiceUrl + casGatewayClientConfig.casContextPath);
+            cas30ProxyTicketValidator.setEncoding("UTF-8");
             ticketValidator = cas30ProxyTicketValidator;
         }
         return ticketValidator;

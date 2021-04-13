@@ -3,6 +3,8 @@ package com.hcframe.user.module.manage.controller;
 import com.hcframe.base.common.ResultVO;
 import com.hcframe.redis.RedisUtil;
 import net.unicon.cas.client.configuration.CasClientConfigurationProperties;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -55,12 +57,15 @@ public class CasController {
     @GetMapping("userinfo")
     @ResponseBody
     public ResultVO<Object> getUserInfo(String token) {
-        return ResultVO.getSuccess(redisUtil.hget("session", token));
+//        return ResultVO.getSuccess(redisUtil.hget("session", token));
+        return ResultVO.getSuccess(SecurityUtils.getSubject().getPrincipal());
     }
 
     @GetMapping("/logout")
     @ResponseBody
     public ResultVO<String> logout(HttpServletRequest request, @CookieValue("X-Access-Token") String token) {
+        Subject subject = SecurityUtils.getSubject();
+        subject.logout();
         Cookie cookie = new Cookie("X-Access-Token", null);
         cookie.setMaxAge(0);
         String headerToken = request.getHeader("X-Access-Token");

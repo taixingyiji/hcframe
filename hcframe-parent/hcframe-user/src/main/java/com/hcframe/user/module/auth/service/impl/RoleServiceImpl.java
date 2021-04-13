@@ -71,7 +71,7 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public ResultVO<Object> validCode(String code) {
-        Condition condition = Condition.creatCriteria().andEqual("ROLE_CODE", code).build();
+        Condition condition = Condition.creatCriteria().andEqual("ROLE_CODE", code).andEqual("DELETED",1).build();
         Long i = baseMapper.count(TABLE_NAME, condition);
         if (i > 0L) {
             return ResultVO.getFailed("角色编码不能重复");

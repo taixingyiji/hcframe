@@ -2,7 +2,6 @@ package com.hcframe.config.module.controller;
 
 import com.hcframe.base.common.ResultVO;
 import com.hcframe.redis.RedisUtil;
-import net.unicon.cas.client.configuration.CasClientConfigurationProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -52,7 +51,7 @@ public class CasController {
         return ResultVO.getSuccess(redisUtil.hget("session", token));
     }
 
-    @GetMapping("/logout")
+    @GetMapping("/cas/logout")
     @ResponseBody
     public ResultVO<String> logout(HttpServletResponse response, @CookieValue("X-Access-Token") String token) {
         Cookie cookie = new Cookie("X-Access-Token", null);
