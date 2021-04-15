@@ -2,10 +2,6 @@ server:
   port: 8084
 spring:
   cloud:
-    nacos:
-      discovery:
-        server-addr: 192.168.1.131:8848
-        namespace: 2e9f0148-751e-4da2-83ec-cb00ffe0d83a
     gateway:
       discovery:
         locator:

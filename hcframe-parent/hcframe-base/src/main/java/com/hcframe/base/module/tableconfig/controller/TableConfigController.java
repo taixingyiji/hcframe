@@ -72,6 +72,24 @@ public class TableConfigController {
         return tableConfigService.deleteField(ids);
     }
 
+    @ApiOperation(value = "字段排序上移")
+    @PutMapping("field/upMove")
+    public ResultVO upMove(Integer id) {
+        return tableConfigService.upMove(id);
+    }
+
+    @ApiOperation(value = "字段排序上移")
+    @PutMapping("field/downMove")
+    public ResultVO downMove(Integer id) {
+        return tableConfigService.downMove(id);
+    }
+
+    @ApiOperation(value = "字段排序")
+    @PutMapping("field/sort")
+    public ResultVO fieldSort(Integer tableId) {
+        return tableConfigService.fieldSort(tableId);
+    }
+
     @ApiOperation(value = "获取下拉选项列表")
     @GetMapping("select")
     public ResultVO getSelectList(OsSysSelect osSysSelect) {

@@ -14,6 +14,7 @@ import com.hcframe.user.module.auth.service.RoleGroupServie;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -81,6 +82,9 @@ public class RoleGroupServiceImpl implements RoleGroupServie {
     @Transactional(rollbackFor = Exception.class)
     public ResultVO<Object> bind(Integer roleGroupId, String roleIds) {
         baseMapper.deleteByCondition(OS_REL_GROUP_ROLE, Condition.creatCriteria().andEqual(PK_ID,roleGroupId).build());
+        if (StringUtils.isEmpty(roleIds)) {
+            return ResultVO.getSuccess();
+        }
         for (String str : roleIds.split(COMMA)) {
             Integer roleId = Integer.parseInt(str);
             DataMap<Object> dataMap = DataMap
@@ -96,10 +100,10 @@ public class RoleGroupServiceImpl implements RoleGroupServie {
     }
 
     @Override
-    public ResultVO<Object> getRoles(Integer roleGroupId) {
-        JudgeException.isNull(roleGroupId,"roleGroupId 不能为空！");
+    public ResultVO<Object> getRoles(Integer groupId) {
+        JudgeException.isNull(groupId,"roleGroupId 不能为空！");
         Map<String, Object> map = new HashMap<>(1);
-        map.put(ROLE_GROUP_ID, roleGroupId);
+        map.put(PK_ID, groupId);
         List<Map<String, Object>> list = baseMapper.selectByEqual(OS_REL_GROUP_ROLE,map);
         return ResultVO.getSuccess(list);
     }

@@ -73,6 +73,7 @@ public class ShiroRealmConfig implements SystemRealm {
         // druid 资源路径
         map.put("/druid/**",ShiroType.ANON);
         map.put("/cas/valid",ShiroType.ANON);
+        map.put("/cas/logout",ShiroType.ANON);
         // 其余路径均拦截
         map.put("/**", ShiroType.AUTH);
         return map;

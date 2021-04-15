@@ -57,20 +57,20 @@ public class RoleGroupController {
     @PostMapping("bind")
     @ApiOperation(value = "绑定角色组")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "roleGroupId", value = "角色组ID",required = true),
+            @ApiImplicitParam(name = "groupId", value = "角色组ID",required = true),
             @ApiImplicitParam(name = "roleIds", value = "角色ID数组",required = true)
     })
-    public ResultVO<Object> bind(Integer roleGroupId, String roleIds) {
-        return roleGroupServie.bind(roleGroupId, roleIds);
+    public ResultVO<Object> bind(Integer groupId, String roleIds) {
+        return roleGroupServie.bind(groupId, roleIds);
     }
 
     @GetMapping("getRoles")
     @ApiOperation(value = "绑定角色组")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "roleGroupId", value = "角色组ID",required = true),
+            @ApiImplicitParam(name = "groupId", value = "角色组ID",required = true),
     })
-    public ResultVO<Object> getRoles(Integer roleGroupId) {
-        return roleGroupServie.getRoles(roleGroupId);
+    public ResultVO<Object> getRoles(Integer groupId) {
+        return roleGroupServie.getRoles(groupId);
     }
 
 }
