@@ -33,4 +33,10 @@ public interface TableConfigService {
     ResultVO deleteSelectInfo(String ids);
 
     ResultVO getTableSelect();
+
+    ResultVO fieldSort(Integer tableId);
+
+    ResultVO upMove(Integer id);
+
+    ResultVO downMove(Integer id);
 }
