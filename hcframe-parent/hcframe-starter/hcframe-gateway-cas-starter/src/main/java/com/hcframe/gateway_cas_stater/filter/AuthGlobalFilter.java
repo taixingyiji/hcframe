@@ -16,10 +16,9 @@ import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
 import org.springframework.http.HttpCookie;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
-import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
@@ -96,7 +95,6 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
         } else {
             String serviceUrl = Utils.encodingUrl(request, true, false);
             String urlToRedirectTo = Utils.makeRedirectUrl(casGatewayClientConfig.casServiceUrl + casGatewayClientConfig.casContextPath + casGatewayClientConfig.loginUrl, this.protocol.getServiceParameterName(), serviceUrl);
-            response.setStatusCode(HttpStatus.UNAUTHORIZED);
             return Utils.redirect(exchange, urlToRedirectTo);
         }
     }
