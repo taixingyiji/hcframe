@@ -1,15 +1,5 @@
 package com.hcframe.user.module.auth.service.impl;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.StringJoiner;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.github.pagehelper.PageInfo;
 import com.hcframe.base.common.ResultVO;
 import com.hcframe.base.common.WebPageInfo;
@@ -18,15 +8,24 @@ import com.hcframe.base.module.data.module.Condition;
 import com.hcframe.base.module.data.service.TableService;
 import com.hcframe.base.module.tableconfig.entity.OsSysTable;
 import com.hcframe.user.module.auth.service.MenuService;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.StringJoiner;
 
 /**
  * @author wewe
  * @date 2021年4月14日
  * @description 功能级权限增删改查
  */
-@Service
+@Service("userMenuService")
 public class MenuServiceImpl implements MenuService {
-	
+
     private static final OsSysTable OS_SYS_MENU = OsSysTable.builder().tableName("OS_SYS_MENU").tablePk("MENU_ID").build();
     private static final OsSysTable OS_REL_ROLE_MENU = OsSysTable.builder().tableName("OS_REL_ROLE_MENU").tablePk("ROLE_MENU_ID").build();
 
@@ -53,7 +52,7 @@ public class MenuServiceImpl implements MenuService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public ResultVO<Object> deleteMenu(List<Long> ids) {
-		ids.forEach(id -> {	
+		ids.forEach(id -> {
 			// 删除菜单及子菜单
 			String familyIds = getCascadeList(id);
 			tableService.logicDelete(OS_SYS_MENU, familyIds);
