@@ -27,4 +27,6 @@ public interface RoleGroupServie {
     ResultVO<Object> bind(Integer roleGroupId, String roleIds);
 
     ResultVO<Object> getRoles(Integer groupId);
+
+    ResultVO<Object> getAll();
 }

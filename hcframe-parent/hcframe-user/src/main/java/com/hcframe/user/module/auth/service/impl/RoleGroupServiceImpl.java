@@ -107,4 +107,9 @@ public class RoleGroupServiceImpl implements RoleGroupServie {
         List<Map<String, Object>> list = baseMapper.selectByEqual(OS_REL_GROUP_ROLE,map);
         return ResultVO.getSuccess(list);
     }
+
+    @Override
+    public ResultVO<Object> getAll() {
+        return ResultVO.getSuccess(baseMapper.selectAll(TABLE_NAME));
+    }
 }

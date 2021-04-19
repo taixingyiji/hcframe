@@ -65,12 +65,18 @@ public class RoleGroupController {
     }
 
     @GetMapping("getRoles")
-    @ApiOperation(value = "绑定角色组")
+    @ApiOperation(value = "获取角色")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "groupId", value = "角色组ID",required = true),
     })
     public ResultVO<Object> getRoles(Integer groupId) {
         return roleGroupServie.getRoles(groupId);
+    }
+
+    @GetMapping("all")
+    @ApiOperation(value = "获取全部角色组")
+    public ResultVO<Object> getAll() {
+        return roleGroupServie.getAll();
     }
 
 }

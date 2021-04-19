@@ -10,7 +10,11 @@ import com.hcframe.base.common.ResultVO;
  * @description 描述
  */
 public interface RoleUserService {
-    ResultVO<Object> roleUserBind(Long userId, String roleId);
+    ResultVO<Object> roleUserBind(String userId, String roleIds);
 
-    ResultVO<Object> roleGroupBind(Long userId, String groupId);
+    ResultVO<Object> roleGroupBind(String userId, String groupIds);
+
+    ResultVO<Object> getUserRole(String userId);
+
+    ResultVO<Object> getUserGroup(String userId);
 }
