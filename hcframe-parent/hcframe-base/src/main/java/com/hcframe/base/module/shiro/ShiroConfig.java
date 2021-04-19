@@ -1,11 +1,16 @@
 package com.hcframe.base.module.shiro;
 
 import com.hcframe.base.module.shiro.service.SystemRealm;
+import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
+import org.apache.shiro.mgt.DefaultSubjectDAO;
 import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.session.mgt.DefaultSessionManager;
+import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.shiro.web.mgt.DefaultWebSubjectFactory;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -38,22 +43,53 @@ public class ShiroConfig {
      */
     @Bean
     public CustomRealm myShiroRealm() {
+        CustomRealm customRealm = new CustomRealm();
+        customRealm.setCachingEnabled(false);
         return new CustomRealm();
     }
-
-//    @Bean
-//    public DefaultWebSessionManager sessionManager() {
-//        DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
-//        sessionManager.setSessionIdUrlRewritingEnabled(false);
-//        return sessionManager;
-//    }
+    /**
+     * @author lhc
+     * @description // 自定义subject工厂
+     * @date 4:50 下午 2021/4/19
+     * @params []
+     * @return org.apache.shiro.web.mgt.DefaultWebSubjectFactory
+     **/
+    @Bean
+    public DefaultWebSubjectFactory subjectFactory() {
+        return new StatelessDefaultSubjectFactory();
+    }
+    /**
+     * @author lhc
+     * @description // 自定义session管理器
+     * @date 4:52 下午 2021/4/19
+     * @params []
+     * @return org.apache.shiro.session.mgt.SessionManager
+     **/
+    @Bean
+    public SessionManager sessionManager() {
+        DefaultSessionManager shiroSessionManager = new DefaultSessionManager();
+        // 关闭session校验轮询
+        shiroSessionManager.setSessionValidationSchedulerEnabled(false);
+        return shiroSessionManager;
+    }
 
     /**
-     *  权限管理，配置主要是Realm的管理认证
+     * 权限管理，配置主要是Realm的管理认证
      */
     @Bean("securityManager")
     public SecurityManager securityManager() {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
+        // 禁用session
+        DefaultSubjectDAO subjectDAO = new DefaultSubjectDAO();
+        DefaultSessionStorageEvaluator defaultSessionStorageEvaluator = new DefaultSessionStorageEvaluator();
+        defaultSessionStorageEvaluator.setSessionStorageEnabled(false);
+        subjectDAO.setSessionStorageEvaluator(defaultSessionStorageEvaluator);
+        securityManager.setSubjectDAO(subjectDAO);
+        // 设置自定义subject工厂
+        securityManager.setSubjectFactory(subjectFactory());
+        // 设置自定义session管理器
+        securityManager.setSessionManager(sessionManager());
+        // 设置自定义realm
         securityManager.setRealm(myShiroRealm());
         return securityManager;
     }
@@ -63,12 +99,11 @@ public class ShiroConfig {
      * Filter工厂，设置对应的过滤条件和跳转条件
      */
     @Bean("shiroFilter")
-    public ShiroFilterFactoryBean shiroFilterFactoryBean(SecurityManager securityManager) {
+    public ShiroFilterFactoryBean shiroFilterFactoryBean() {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
-        shiroFilterFactoryBean.setSecurityManager(securityManager);
-        Map<String, Filter> filters = new HashMap<>();
-        filters.put("auth", new AuthFilter());
-        shiroFilterFactoryBean.setFilters(filters);
+        shiroFilterFactoryBean.setSecurityManager(securityManager());
+        Map<String, Filter> filters = new HashMap<>(1);
+        filters.put("auth", new NoStateFilter());
         shiroFilterFactoryBean.setFilters(filters);
         shiroFilterFactoryBean.setFilterChainDefinitionMap(systemRealm.setShiroUrl());
         return shiroFilterFactoryBean;

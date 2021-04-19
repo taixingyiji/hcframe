@@ -19,23 +19,23 @@ public class TestController {
     BaseMapper baseMapper;
 
     @GetMapping("/test")
-    public ResultVO<String> getUser(HttpServletRequest request) {
-        return ResultVO.getSuccess("token");
+    public ResultVO<Object> getUser(HttpServletRequest request) {
+        return ResultVO.getSuccess(SecurityUtils.getSubject().getPrincipal());
     }
 
     @GetMapping("/casProxy")
     public ResultVO<Object> getCasProxy(HttpServletRequest request) throws IOException {
         String serviceUrl = "http://192.168.1.130:8084/user/manage/ja";
-//        try {
+        try {
 //1、获取到AttributePrincipal对象
             AttributePrincipal principal = (AttributePrincipal) request.getUserPrincipal();
             if (principal == null) {
                 return ResultVO.getFailed("用户未登录");
             }
             return ResultVO.getSuccess(principal);
-//        } catch (ClassCastException e) {
-//            return ResultVO.getSuccess(request.getUserPrincipal());
-//        }
+        } catch (ClassCastException e) {
+            return ResultVO.getSuccess(request.getUserPrincipal());
+        }
 
         //2、获取对应的(PT)proxy ticket
 //        String proxyTicket = principal.getProxyTicketFor(serviceUrl);
@@ -82,6 +82,7 @@ public class TestController {
 //        conn.disconnect();
 
     }
+
     @GetMapping("/ivid")
     public ResultVO<String> ivid(HttpServletRequest request) {
 //        HttpSession session = request.getSession();

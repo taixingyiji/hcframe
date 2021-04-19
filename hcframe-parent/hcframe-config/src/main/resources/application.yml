@@ -7,6 +7,7 @@ cas:
   client-host-url: http://192.168.1.194:8081
   validation-type: cas3
   server-login-url: http://192.168.1.131:8080/cas/login
+  use-session: true
   # 代理模式
 #  proxy-callback-url: http://192.168.1.130:8081/config/proxyCallback
 #  proxy-receptor-url: /config/proxyCallback
