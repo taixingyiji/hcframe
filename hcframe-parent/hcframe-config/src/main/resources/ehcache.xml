@@ -16,7 +16,15 @@
             timeToLiveSeconds = "120"
             diskExpiryThreadIntervalSeconds = "120"
             memoryStoreEvictionPolicy = "LRU"/>
-
+    <cache
+            name="users"
+            eternal="false"
+            maxElementsInMemory="100"
+            overflowToDisk="false"
+            diskPersistent="false"
+            timeToIdleSeconds="0"
+            timeToLiveSeconds="300"
+            memoryStoreEvictionPolicy="LRU" />
     <!-- 此缓存最多可以存活timeToLiveSeconds秒，如果期间超过timeToIdleSeconds秒未访问，缓存失效 -->
     <cache
             name = "tableCache"

@@ -47,20 +47,28 @@ public class ShiroConfig {
         customRealm.setCachingEnabled(false);
         return new CustomRealm();
     }
-
+    /**
+     * @author lhc
+     * @description // 自定义subject工厂
+     * @date 4:50 下午 2021/4/19
+     * @params []
+     * @return org.apache.shiro.web.mgt.DefaultWebSubjectFactory
+     **/
     @Bean
     public DefaultWebSubjectFactory subjectFactory() {
         return new StatelessDefaultSubjectFactory();
     }
-
     /**
-     * 自定义sessionManager
-     *
-     * @return
-     */
+     * @author lhc
+     * @description // 自定义session管理器
+     * @date 4:52 下午 2021/4/19
+     * @params []
+     * @return org.apache.shiro.session.mgt.SessionManager
+     **/
     @Bean
     public SessionManager sessionManager() {
         DefaultSessionManager shiroSessionManager = new DefaultSessionManager();
+        // 关闭session校验轮询
         shiroSessionManager.setSessionValidationSchedulerEnabled(false);
         return shiroSessionManager;
     }
@@ -71,13 +79,17 @@ public class ShiroConfig {
     @Bean("securityManager")
     public SecurityManager securityManager() {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
+        // 禁用session
         DefaultSubjectDAO subjectDAO = new DefaultSubjectDAO();
         DefaultSessionStorageEvaluator defaultSessionStorageEvaluator = new DefaultSessionStorageEvaluator();
         defaultSessionStorageEvaluator.setSessionStorageEnabled(false);
         subjectDAO.setSessionStorageEvaluator(defaultSessionStorageEvaluator);
         securityManager.setSubjectDAO(subjectDAO);
+        // 设置自定义subject工厂
         securityManager.setSubjectFactory(subjectFactory());
+        // 设置自定义session管理器
         securityManager.setSessionManager(sessionManager());
+        // 设置自定义realm
         securityManager.setRealm(myShiroRealm());
         return securityManager;
     }
