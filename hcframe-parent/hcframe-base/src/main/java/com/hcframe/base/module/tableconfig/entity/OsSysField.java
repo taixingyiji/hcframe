@@ -77,6 +77,8 @@ public class OsSysField implements Serializable {
     private Integer logic;
     private String fkKey;
     private String fkValue;
+    private Integer width;
+    private Integer orderId;
 
     private List<OsSysSelect> selectList;
 }

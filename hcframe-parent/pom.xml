@@ -161,7 +161,7 @@
                 <cas.client-context-path>/user/cas/valid</cas.client-context-path>
                 <cas.cas-service-url>http://192.168.100.98:8080</cas.cas-service-url>
                 <cas.cas-context-path>/cas</cas.cas-context-path>
-                <cas.white-url>^.*(/logout?)$</cas.white-url>
+                <cas.white-url>^.*(/logout/?)$</cas.white-url>
                 <cas.service-url>http://localhost:8084</cas.service-url>
                 <cas.cookie-holder-pattern>com.hcframe.gateway.config.MyDataStorage</cas.cookie-holder-pattern>
                 <cas.login-url>/login</cas.login-url>

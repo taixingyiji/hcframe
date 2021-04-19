@@ -7,6 +7,8 @@ import com.hcframe.base.common.ResultVO;
 import com.hcframe.base.common.WebPageInfo;
 
 public interface TitleService {
+	
+	    ResultVO<Object> checkExistTitle(String titlecode);
 
 	    ResultVO<Object> addTitle(Map<String, Object> title);
 

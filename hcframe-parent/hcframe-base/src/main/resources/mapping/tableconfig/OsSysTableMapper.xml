@@ -10,13 +10,11 @@
         <collection property="fieldList" resultMap="com.hcframe.base.module.tableconfig.dao.OsSysFieldDao.BaseResultMap">
         </collection>
     </resultMap>
-
     <select id="getTableAllInfo" resultMap="BaseResultMap">
         select *
         from OS_SYS_TABLE
                  left join OS_SYS_FIELD on OS_SYS_TABLE.TABLE_ID = OS_SYS_FIELD.TABLE_ID
                  left join OS_SYS_SELECT on OS_SYS_FIELD.FIELD_ID = OS_SYS_SELECT.FIELD_ID
-        where OS_SYS_TABLE.TABLE_ALIAS = #{typeName} order by OS_SYS_FIELD.FIELD_ID,OS_SYS_SELECT.SELECT_ID
+        where OS_SYS_TABLE.TABLE_ALIAS = #{typeName} order by OS_SYS_FIELD.ORDER_ID,OS_SYS_SELECT.SELECT_ID
     </select>
-
 </mapper>

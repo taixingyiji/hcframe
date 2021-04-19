@@ -256,4 +256,54 @@ public class TableConfigServiceImpl implements TableConfigService {
         }
         return ResultVO.getSuccess(resultList);
     }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public ResultVO fieldSort(Integer tableId) {
+        List<OsSysField> list = osSysFieldDao.select(OsSysField.builder().tableId(tableId).build());
+        for (int i = 0; i < list.size(); i++) {
+            OsSysField osSysField = list.get(i);
+            osSysField.setOrderId(i);
+            osSysFieldDao.updateByPrimaryKey(osSysField);
+        }
+        OsSysTable osSysTable = osSysTableMapper.selectByPrimaryKey(OsSysTable.builder().tableId(tableId).build());
+        tableCache.delete(osSysTable.getTableAlias());
+        return ResultVO.getSuccess();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public ResultVO upMove(Integer id) {
+        OsSysField osSysField = osSysFieldDao.selectOne(OsSysField.builder().fieldId(id).build());
+        Integer orderId = osSysField.getOrderId();
+        OsSysField field = osSysFieldDao.selectOne(OsSysField.builder().tableId(osSysField.getTableId()).orderId(orderId-1).build());
+        if (field == null) {
+            return ResultVO.getSuccess();
+        }
+        osSysField.setOrderId(orderId - 1);
+        osSysFieldDao.updateByPrimaryKey(osSysField);
+        field.setOrderId(orderId);
+        osSysFieldDao.updateByPrimaryKey(field);
+        OsSysTable osSysTable = osSysTableMapper.selectByPrimaryKey(OsSysTable.builder().tableId(field.getTableId()).build());
+        tableCache.delete(osSysTable.getTableAlias());
+        return ResultVO.getSuccess();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public ResultVO downMove(Integer id) {
+        OsSysField osSysField = osSysFieldDao.selectOne(OsSysField.builder().fieldId(id).build());
+        Integer orderId = osSysField.getOrderId();
+        OsSysField field = osSysFieldDao.selectOne(OsSysField.builder().tableId(osSysField.getTableId()).orderId(orderId+1).build());
+        if (field == null) {
+            return ResultVO.getSuccess();
+        }
+        osSysField.setOrderId(orderId + 1);
+        osSysFieldDao.updateByPrimaryKey(osSysField);
+        field.setOrderId(orderId);
+        osSysFieldDao.updateByPrimaryKey(field);
+        OsSysTable osSysTable = osSysTableMapper.selectByPrimaryKey(OsSysTable.builder().tableId(field.getTableId()).build());
+        tableCache.delete(osSysTable.getTableAlias());
+        return ResultVO.getSuccess();
+    }
 }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.github.pagehelper.PageInfo;
 import com.hcframe.base.common.ResultVO;
 import com.hcframe.base.common.WebPageInfo;
+import com.hcframe.base.module.log.annotation.LogAnno;
 import com.hcframe.user.module.userinfo.service.OrgService;
 import com.hcframe.user.module.userinfo.service.TitleService;
 
@@ -29,6 +30,12 @@ public class TitleController {
 
 	    public TitleController(TitleService titleService) {
 	        this.titleService = titleService;
+	    }
+	    
+	    @GetMapping("/{titlecode}")
+	    @ApiOperation(value = "校验职称编码是否存在", notes = "将自动传承key-value对象模式即可")
+	    public ResultVO<Object> checkExistTitle(@PathVariable String titlecode) {
+	        return titleService.checkExistTitle(titlecode);
 	    }
 
 	    @PostMapping()
@@ -50,6 +57,7 @@ public class TitleController {
 	    }
 
 	    @GetMapping()
+	    @LogAnno(operateType="getTitleList",tableName="title")
 	    @ApiOperation(value = "获取职称列表")
 	    public ResultVO<PageInfo<Map<String,Object>>> getTitleList(String data, WebPageInfo webPageInfo) {
 	        return titleService.getTitleList(data, webPageInfo);
