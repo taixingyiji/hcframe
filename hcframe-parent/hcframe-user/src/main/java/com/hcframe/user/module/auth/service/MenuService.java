@@ -1,0 +1,29 @@
+package com.hcframe.user.module.auth.service;
+
+import java.util.List;
+import java.util.Map;
+
+import com.github.pagehelper.PageInfo;
+import com.hcframe.base.common.ResultVO;
+import com.hcframe.base.common.WebPageInfo;
+
+/**
+ * @author wewe
+ * @date 2021年4月14日
+ * @description 功能级权限增删改查
+ */
+public interface MenuService {
+
+	ResultVO<Object> addMenu(Map<String, Object> data);
+
+	ResultVO<Object> deleteMenu(List<Long> ids);
+
+	ResultVO<Integer> updateMenu(Map<String, Object> data, Integer version);
+
+	ResultVO<PageInfo<Map<String, Object>>> getMenuList(String data, WebPageInfo webPageInfo);
+
+	ResultVO<Object> addRoleMenu(List<Long> roleIds, List<Long> menuIds);
+
+	ResultVO<Object> deleteRoleMenu(String ids);
+
+}

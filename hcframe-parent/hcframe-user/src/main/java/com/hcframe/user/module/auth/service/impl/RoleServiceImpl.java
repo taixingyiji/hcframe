@@ -27,8 +27,8 @@ import java.util.Map;
 @Service
 public class RoleServiceImpl implements RoleService {
 
-    private static final String PK_ID = "ROLE_ID";
-    private static final String TABLE_NAME = "OS_SYS_ROLE";
+    private static final String PK_ID = "MENU_ID";
+    private static final String TABLE_NAME = "OS_SYS_MENU";
     private static final OsSysTable TABLE_INFO = OsSysTable.builder().tableName(TABLE_NAME).tablePk(PK_ID).build();
 
     final BaseMapper baseMapper;
