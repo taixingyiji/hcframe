@@ -1,5 +1,7 @@
 package com.hcframe.user.module.manage.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.github.pagehelper.PageInfo;
 import com.hcframe.base.common.ResultVO;
 import com.hcframe.base.common.ServiceException;
@@ -8,6 +10,8 @@ import com.hcframe.base.common.utils.DateUtil;
 import com.hcframe.base.common.utils.JudgeException;
 import com.hcframe.base.module.data.module.BaseMapper;
 import com.hcframe.base.module.data.module.BaseMapperImpl;
+import com.hcframe.base.module.data.module.Condition;
+import com.hcframe.base.module.data.module.DataMap;
 import com.hcframe.base.module.data.service.TableService;
 import com.hcframe.base.module.tableconfig.entity.OsSysTable;
 import com.hcframe.user.common.utils.MD5Utils;
@@ -26,11 +30,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.security.NoSuchAlgorithmException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author lhc
@@ -105,8 +107,31 @@ public class ManageServiceDataImpl implements ManageService {
     }
 
     @Override
-    public ResultVO<PageInfo<Map<String, Object>>> getUserList(String data, WebPageInfo webPageInfo) {
-        PageInfo<Map<String, Object>> page = tableService.searchSingleTables(data, TABLE_INFO, webPageInfo);
+    public ResultVO<PageInfo<Map<String, Object>>> getUserList(String data, WebPageInfo webPageInfo, String orgId) {
+        DataMap<Object> dataMap = DataMap.builder().sysOsTable(TABLE_INFO).build();
+        Condition.ConditionBuilder builder = Condition.creatCriteria(dataMap);
+        if (!StringUtils.isEmpty(orgId)) {
+            orgId = orgId.replaceAll("\"", "");
+            String sql = "select ID from GB_CAS_DEPT start with ID="+orgId+" connect by prior ID=ORG_ACCOUNT_ID";
+            List<Map<String, Object>> list = baseMapper.selectSql(sql);
+            List<Object> idList = new ArrayList<>();
+            for (Map<String, Object> code : list) {
+                idList.add(code.get("ID"));
+            }
+            builder.andIn("ORG_DEPARTMENT_ID",idList);
+        }
+        builder.andEqual("USER_TYPE", "GN");
+        if (!StringUtils.isEmpty(data)) {
+            try {
+                data = URLDecoder.decode(data, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                throw new ServiceException(e);
+            }
+            JSONArray jsonArray = JSON.parseArray(data);
+            builder = tableService.getQueryBuilder(jsonArray, builder);
+        }
+        builder.andEqual("DELETED", 1);
+        PageInfo<Map<String,Object>> page = baseMapper.selectByCondition(builder.build(), webPageInfo);
         List<Map<String,Object>> list =  page.getList();
         for (Map<String, Object> map : list) {
             map.remove("PASSWORD");
