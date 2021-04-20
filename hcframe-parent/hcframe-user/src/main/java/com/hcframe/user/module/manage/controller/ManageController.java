@@ -50,9 +50,9 @@ public class ManageController {
     }
 
     @GetMapping()
-    @ApiOperation(value = "获取用户列表", notes = "删除后职位也会被删除")
-    public ResultVO<PageInfo<Map<String,Object>>> getUserList(String data, WebPageInfo webPageInfo) {
-        return manageService.getUserList(data, webPageInfo);
+    @ApiOperation(value = "获取用户列表" )
+    public ResultVO<PageInfo<Map<String,Object>>> getUserList(String data, WebPageInfo webPageInfo,String orgId) {
+        return manageService.getUserList(data, webPageInfo,orgId);
     }
 
     @PutMapping("disable/{version}")

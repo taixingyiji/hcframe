@@ -230,7 +230,8 @@ public class TableServiceImpl implements TableService {
         return ResultVO.getSuccess(i);
     }
 
-    private Condition.ConditionBuilder getQueryBuilder(JSONArray query, Condition.ConditionBuilder builder) {
+    @Override
+    public Condition.ConditionBuilder getQueryBuilder(JSONArray query, Condition.ConditionBuilder builder) {
         for (Object qObj : query) {
             WebCondition webCondition = JSON.parseObject(String.valueOf(qObj), WebCondition.class);
             if (!StringUtils.isEmpty(webCondition.getLogic())) {
