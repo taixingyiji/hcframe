@@ -11,6 +11,7 @@ import com.hcframe.user.module.auth.service.RoleUserService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -46,15 +47,16 @@ public class RoleUserServiceImpl implements RoleUserService {
     @Transactional(rollbackFor = Exception.class)
     public ResultVO<Object> roleUserBind(String userId, String roleIds) {
         JudgeException.isNull(userId,"userId 不能为空");
-        JudgeException.isNull(roleIds,"roleIds 不能为空");
         OsSysTable osSysTable = OsSysTable.builder().tableName(OS_REL_USER_ROLE).tablePk(USER_ROLE_ID).build();
         Condition condition = Condition.creatCriteria().andEqual("USER_ID",userId).build();
         baseMapper.deleteByCondition(OS_REL_USER_ROLE, condition);
-        for (String roleId : roleIds.split(COMMA)) {
-            Map<String, Object> map = new HashMap<>(2);
-            map.put("USER_ID", userId.replaceAll("\"",""));
-            map.put("ROLE_ID", Integer.parseInt(roleId));
-            tableService.save(osSysTable, map);
+        if (!StringUtils.isEmpty(roleIds)) {
+            for (String roleId : roleIds.split(COMMA)) {
+                Map<String, Object> map = new HashMap<>(2);
+                map.put("USER_ID", userId.replaceAll("\"",""));
+                map.put("ROLE_ID", Integer.parseInt(roleId));
+                tableService.save(osSysTable, map);
+            }
         }
         return ResultVO.getSuccess();
     }
@@ -63,15 +65,16 @@ public class RoleUserServiceImpl implements RoleUserService {
     @Transactional(rollbackFor = Exception.class)
     public ResultVO<Object> roleGroupBind(String userId, String groupIds) {
         JudgeException.isNull(userId,"userId 不能为空");
-        JudgeException.isNull(groupIds,"roleIds 不能为空");
         Condition condition = Condition.creatCriteria().andEqual("USER_ID",userId).build();
         baseMapper.deleteByCondition(OS_REL_USER_GROUP, condition);
         OsSysTable osSysTable = OsSysTable.builder().tableName(OS_REL_USER_GROUP).tablePk(USER_GROUP_ID).build();
-        for (String groupId : groupIds.split(COMMA)) {
-            Map<String, Object> map = new HashMap<>(2);
-            map.put("USER_ID", userId.replaceAll("\"",""));
-            map.put("GROUP_ID", groupId);
-            tableService.save(osSysTable, map);
+        if (!StringUtils.isEmpty(groupIds)) {
+            for (String groupId : groupIds.split(COMMA)) {
+                Map<String, Object> map = new HashMap<>(2);
+                map.put("USER_ID", userId.replaceAll("\"",""));
+                map.put("GROUP_ID", groupId);
+                tableService.save(osSysTable, map);
+            }
         }
         return ResultVO.getSuccess();
     }
