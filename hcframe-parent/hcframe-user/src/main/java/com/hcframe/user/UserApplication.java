@@ -2,10 +2,8 @@ package com.hcframe.user;
 
 import com.hcframe.base.module.datasource.config.DataSourceConfiguration;
 import net.unicon.cas.client.configuration.CasClientConfigurationProperties;
-import net.unicon.cas.client.configuration.EnableCasClient;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
