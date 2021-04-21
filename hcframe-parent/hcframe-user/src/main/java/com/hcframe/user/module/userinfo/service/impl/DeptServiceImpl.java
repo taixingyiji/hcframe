@@ -26,7 +26,9 @@ public class DeptServiceImpl implements DeptService {
     private static final String OS_SYS_POSITION = "OS_SYS_POSITION";
     private static final String ORG_ACCOUNT_ID = "ORG_ACCOUNT_ID";
     private static final String TYPE = "TYPE";
+    private static final String NAME = "NAME";
     private static final String PATH = "PATH";
+    private static final String SORT_ID = "SORT_ID";
     private static final String[] LABELCH = {"一级", "二级", "三级", "四级", "五级", "六级", "七级", "八级", "九级", "十级"};
     private static final OsSysTable TABLE_INFO = OsSysTable.builder().tableName(GB_CAS_DEPT).tablePk(ID).build();
 
@@ -73,7 +75,8 @@ public class DeptServiceImpl implements DeptService {
     @Override
     public ResultVO<List<Map<String, Object>>> getDeptTree() {
         // 获取全部
-        List<Map<String, Object>> allDataList = baseMapper.selectAll(GB_CAS_DEPT);
+        String sql = "SELECT " + ID + "," + PATH + "," + TYPE + "," + NAME + " FROM " + GB_CAS_DEPT + " ORDER BY " + SORT_ID;
+        List<Map<String, Object>> allDataList = baseMapper.selectSql(sql);
         // 根节点
         List<Map<String, Object>> rootList = new ArrayList<>();
         // 遍历list生成以父节点为key的map
@@ -90,7 +93,7 @@ public class DeptServiceImpl implements DeptService {
                         pathMapList.add(map);
                     } else {
                         List<Map<String, Object>> pathMapList = new ArrayList<>();
-//                        pathMapList.add(rootList);
+                        pathMapList.add(map);
                         pathMap.put(rootPath, pathMapList);
                     }
                 }
