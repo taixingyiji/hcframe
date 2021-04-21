@@ -66,6 +66,12 @@ public class ManageController {
     public ResultVO<Integer> resetPassword(String userId,@PathVariable Integer version) {
         return manageService.resetPassword(userId,version);
     }
+    
+    @PutMapping("changePassword")
+    @ApiOperation(value = "修改密码",notes = "用户输入原密码和新密码")
+    public ResultVO<Integer> changePassword(String pwd,String npwd,String npwd2) {
+        return manageService.changePassword(pwd,npwd,npwd2);
+    }
 
     @GetMapping("/sync")
     public ResultVO<Object> sync() {

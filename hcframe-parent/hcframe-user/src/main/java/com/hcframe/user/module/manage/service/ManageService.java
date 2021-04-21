@@ -20,4 +20,6 @@ public interface ManageService {
     ResultVO<Integer> disable(Boolean enabled, String userId, Integer version);
 
     ResultVO<Object> sync();
+
+	ResultVO<Integer> changePassword(String pwd, String npwd, String npwd2);
 }
