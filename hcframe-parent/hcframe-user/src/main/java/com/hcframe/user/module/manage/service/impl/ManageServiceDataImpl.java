@@ -8,6 +8,7 @@ import com.hcframe.base.common.ServiceException;
 import com.hcframe.base.common.WebPageInfo;
 import com.hcframe.base.common.utils.DateUtil;
 import com.hcframe.base.common.utils.JudgeException;
+import com.hcframe.base.module.data.constants.FieldConstants;
 import com.hcframe.base.module.data.module.BaseMapper;
 import com.hcframe.base.module.data.module.BaseMapperImpl;
 import com.hcframe.base.module.data.module.Condition;
@@ -22,6 +23,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -196,4 +198,42 @@ public class ManageServiceDataImpl implements ManageService {
         }
         return null;
     }
+
+	@Override
+	public ResultVO<Integer> changePassword(String pwd, String npwd, String npwd2) {
+		
+		JudgeException.isNull(pwd,"密码不能为空");
+		JudgeException.isNull(npwd,"新密码不能为空");
+		
+		if(!npwd.equals(npwd2)) {
+			return ResultVO.getFailed("两次新密码输入不一致");
+		}
+		
+		Map<String, Object> user = (Map<String, Object>) SecurityUtils.getSubject().getPrincipal();
+		
+		String id = (String) user.get("ID");
+		
+        Map<String, Object> data = baseMapper.selectByPk(TABLE_NAME,PK_ID,id);
+        Integer version = Integer.parseInt(data.get(FieldConstants.VERSION.toString()).toString());
+
+        try {
+        	 if(!data.get("PASSWORD").equals(MD5Utils.encode(pwd))) {
+        		 return ResultVO.getFailed("原密码错误");
+        	 }
+        } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+            logger.error("验证密码失败",e);
+            throw new ServiceException(e);
+        }
+       
+		
+		Map<String, Object> map = new HashMap<>(2);
+        map.put(PK_ID, id);
+        try {
+            map.put("PASSWORD",MD5Utils.encode(npwd));
+        } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+            logger.error("重置密码失败",e);
+            throw new ServiceException(e);
+        }
+        return tableService.updateWithDate(TABLE_INFO,map,version);
+	}
 }
