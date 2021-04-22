@@ -1,5 +1,6 @@
 package com.hcframe.user.module.auth.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +26,7 @@ import com.hcframe.user.module.auth.service.MenuService;
  * @description 功能级权限增删改查
  */
 @Service
-public class MenuServiceImpl implements MenuService {
+public class MenuServiceImpl2 implements MenuService {
 	
     private static final OsSysTable OS_SYS_MENU = OsSysTable.builder().tableName("OS_SYS_MENU").tablePk("MENU_ID").build();
     private static final OsSysTable OS_REL_ROLE_MENU = OsSysTable.builder().tableName("OS_REL_ROLE_MENU").tablePk("ROLE_MENU_ID").build();
@@ -41,10 +42,16 @@ public class MenuServiceImpl implements MenuService {
 		if (StringUtils.isBlank((String) data.get("MENU_NAME"))) {
 			return ResultVO.getFailed("菜单名称不能为空");
 		}
+		if (StringUtils.isBlank((String) data.get("PATH"))) {
+			return ResultVO.getFailed("PATH不能为空");
+		}
 		Condition condition = Condition.creatCriteria().andEqual("MENU_NAME", data.get("MENU_NAME")).andEqual("DELETED",1).build();
-        Long i = baseMapper.count("OS_SYS_MENU", condition);
-        if (i > 0L) {
+        if (baseMapper.count("OS_SYS_MENU", condition) > 0L) {
             return ResultVO.getFailed("菜单名称不能重复");
+        }
+        Condition condition1 = Condition.creatCriteria().andEqual("PATH", data.get("PATH")).andEqual("DELETED",1).build();
+        if (baseMapper.count("OS_SYS_MENU", condition1) > 0L) {
+            return ResultVO.getFailed("PATH不能重复");
         }
         tableService.saveWithDate(OS_SYS_MENU, data);
 		return ResultVO.getSuccess();
@@ -110,9 +117,57 @@ public class MenuServiceImpl implements MenuService {
 	}
 
 	@Override
-	public ResultVO<Object> deleteRoleMenu(String ids) {
-		tableService.logicDelete(OS_REL_ROLE_MENU, ids);
-		return ResultVO.getSuccess();
+	public ResultVO<Object> updateRoleMenu(List<Long> roleIds, List<Long> menuIds) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
+	@Override
+	public ResultVO<Object> getMenuTree() {
+		List<Map<String, Object>> osList = baseMapper.selectSql(
+				"SELECT OS_ID AS \"id\",OS_NAME AS \"label\" FROM OS_SYS_OS WHERE DELETED=1");
+		osList.forEach(os -> {
+			List<Map<String, Object>> menuList = baseMapper.selectSql(
+					"SELECT MENU_ID AS \"id\",MENU_NAME AS \"label\",PARENT_ID AS \"pid\" FROM OS_SYS_MENU WHERE DELETED=1 AND OS_ID=" + os.get("id"));
+			os.put("children", buildTree(menuList));
+			os.put("id", "OS" + os.get("id"));
+		});
+		return ResultVO.getSuccess(osList);
+	}
+
+	private Object buildTree(List<Map<String, Object>> menuList) {
+		List<Map<String, Object>> tree = new ArrayList<>();
+        for(Map<String, Object> node : menuList) {
+            if((Long)node.get("pid") == 0L){
+                tree.add(findChild(node,menuList));
+            }
+        }
+        return tree;
+	}
+
+	private Map<String, Object> findChild(Map<String, Object> node, List<Map<String, Object>> menuList) {
+		for(Map<String, Object> n:menuList){
+            if(n.get("pid") == node.get("id")){
+                if(node.get("children") == null){
+                    node.put("children", new ArrayList<Map<String, Object>>());
+                }
+                ((List<Map<String,Object>>) node.get("children")).add(findChild(n,menuList));
+            }
+        }
+        return node;
+	}
+
+	@Override
+	public ResultVO<Object> getSelectedMenu(Long roldId) {
+		List<Object> ids = new ArrayList<>();
+		List<Map<String, Object>> osList = baseMapper.selectSql("SELECT OS_ID FROM OS_REL_ROLE_OS WHERE DELETED=1 AND ROLE_ID=" + roldId);
+		osList.forEach(os -> {
+			ids.add("OS" + os.get("OS_ID"));
+		});
+		List<Map<String, Object>> menuList = baseMapper.selectSql("SELECT MENU_ID FROM OS_REL_ROLE_MENU WHERE DELETED=1 AND ROLE_ID=" + roldId);
+		menuList.forEach(menu -> {
+			ids.add(menu.get("MENU_ID"));
+		});
+		return ResultVO.getSuccess(ids);
+	}
 }

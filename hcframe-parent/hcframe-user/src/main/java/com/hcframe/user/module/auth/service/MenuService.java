@@ -24,6 +24,10 @@ public interface MenuService {
 
 	ResultVO<Object> addRoleMenu(List<Long> roleIds, List<Long> menuIds);
 
-	ResultVO<Object> deleteRoleMenu(String ids);
+	ResultVO<Object> getMenuTree();
+
+	ResultVO<Object> getSelectedMenu(Long roldId);
+
+	ResultVO<Object> updateRoleMenu(List<Long> roleIds, List<Long> menuIds);
 
 }

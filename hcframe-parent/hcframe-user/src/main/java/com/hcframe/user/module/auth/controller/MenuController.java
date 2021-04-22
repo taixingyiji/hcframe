@@ -32,13 +32,13 @@ public class MenuController {
 	
 	@Autowired MenuService menuService;
 	
-	@PostMapping()
+	@PostMapping("add")
     @ApiOperation(value = "新增功能级权限", notes = "给后台传key-value对象模式即可")
     public ResultVO<Object> addMenu(@RequestParam Map<String, Object> data) {
         return menuService.addMenu(data);
     }
 	
-	@DeleteMapping()
+	@PostMapping("delete")
     @ApiOperation(value = "删除功能级权限", notes = "删除后关联表数据也会被删除")
     public ResultVO<Object> deleteMenu(@RequestParam List<Long> ids) {
         return menuService.deleteMenu(ids);
@@ -50,22 +50,34 @@ public class MenuController {
         return menuService.updateMenu(data, version);
     }
 	
-	@GetMapping()
+	@GetMapping("list")
     @ApiOperation(value = "查询功能级权限列表")
     public ResultVO<PageInfo<Map<String, Object>>> getMenuList(String data, WebPageInfo webPageInfo) {
         return menuService.getMenuList(data, webPageInfo);
     }
 	
-	@PostMapping()
+	@PostMapping("addRole")
     @ApiOperation(value = "角色授权", notes = "roleIds,menuIds,中间用逗号连接")
     public ResultVO<Object> addRoleMenu(@RequestParam List<Long> roleIds,@RequestParam List<Long> menuIds) {
         return menuService.addRoleMenu(roleIds, menuIds);
     }
 	
-	@PostMapping()
-    @ApiOperation(value = "删除角色授权", notes = "ids,中间用逗号连接")
-    public ResultVO<Object> deleteRoleMenu(@RequestParam String ids) {
-        return menuService.deleteRoleMenu(ids);
+	@PostMapping("updateRole")
+    @ApiOperation(value = "角色授权", notes = "roleIds,menuIds,中间用逗号连接")
+    public ResultVO<Object> updateRoleMenu(@RequestParam List<Long> roleIds,@RequestParam List<Long> menuIds) {
+        return menuService.updateRoleMenu(roleIds, menuIds);
+    }
+	
+	@GetMapping("tree")
+    @ApiOperation(value = "功能级权限树，根节点是业务系统")
+    public ResultVO<Object> getMenuTree() {
+        return menuService.getMenuTree();
+    }
+	
+	@GetMapping("selected")
+    @ApiOperation(value = "获取当前角色已选中节点")
+    public ResultVO<Object> getSelectedMenu(Long roldId) {
+        return menuService.getSelectedMenu(roldId);
     }
 
 }
