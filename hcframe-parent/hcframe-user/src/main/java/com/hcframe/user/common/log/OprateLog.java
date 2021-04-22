@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.hcframe.base.common.ResultVO;
 import com.hcframe.base.module.auth.entity.FtUser;
@@ -25,6 +26,8 @@ import com.hcframe.base.module.tableconfig.entity.OsSysTable;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.HashMap;
@@ -77,14 +80,46 @@ public class OprateLog {
         log.put("IP", request.getRemoteAddr());
         log.put("CURL", request.getRequestURI());
         log.put("ACTTYPE", request.getMethod());
-        log.put("CLOG","参数：" + request.getQueryString());
+        log.put("CLOG","参数：" + getRequestParamsByProceedingJoinPoint(pjp));
         log.put("OPERATETYPE", logAnno.operateType()); 
         log.put("MODULENAME", logAnno.moduleName());
         log.put("USERID", user.get("LOGIN_NAME"));
- 
+        log.put("USERNAME", user.get("NAME"));
         tableService.saveWithDate(TABLE_INFO, log);
      
         return result;
+    }
+    
+    /**
+     * 获取入参
+     *
+     * @param proceedingJoinPoint
+     * @return
+     */
+    private Map<String, Object> getRequestParamsByProceedingJoinPoint(ProceedingJoinPoint proceedingJoinPoint) {
+        //参数名
+        String[] paramNames = ((MethodSignature) proceedingJoinPoint.getSignature()).getParameterNames();
+        //参数值
+        Object[] paramValues = proceedingJoinPoint.getArgs();
+        return buildRequestParam(paramNames, paramValues);
+    }
+
+    private Map<String, Object> buildRequestParam(String[] paramNames, Object[] paramValues) {
+        Map<String, Object> requestParams = new HashMap<>();
+        for (int i = 0; i < paramNames.length; i++) {
+            Object value = paramValues[i];
+            if ((value instanceof HttpServletRequest) || (value instanceof HttpServletResponse)) {
+                continue;
+            }
+            //如果是文件对象
+            if (value instanceof MultipartFile) {
+                MultipartFile file = (MultipartFile) value;
+                // 获取文件名
+                value = file.getOriginalFilename();
+            }
+            requestParams.put(paramNames[i], value);
+        }
+        return requestParams;
     }
 
 }
