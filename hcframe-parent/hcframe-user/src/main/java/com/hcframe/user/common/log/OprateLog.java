@@ -6,6 +6,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
+import org.jasig.cas.client.authentication.AttributePrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.annotation.Order;
@@ -15,6 +16,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.hcframe.base.common.ResultVO;
+import com.hcframe.base.module.auth.entity.FtUser;
 import com.hcframe.base.module.data.module.BaseMapper;
 import com.hcframe.base.module.data.module.BaseMapperImpl;
 import com.hcframe.base.module.data.service.TableService;
@@ -55,6 +57,8 @@ public class OprateLog {
     	ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         assert attributes != null;
         HttpServletRequest request = attributes.getRequest();
+        HashMap<String,Object>  user=(HashMap<String,Object>)SecurityUtils.getSubject().getPrincipal(); 
+	
         // 1.方法执行前的处理，相当于前置通知
         // 获取方法签名
         MethodSignature methodSignature = (MethodSignature) pjp.getSignature();
@@ -67,17 +71,17 @@ public class OprateLog {
             result= (ResultVO) pjp.proceed();
         }
         
-        String operateType = logAnno.operateType();
         // 获取操作记录的日志表
         Map<String,Object> log=new HashMap<String,Object>();
         log.put("CREATE_TIME", new Date());
         log.put("IP", request.getRemoteAddr());
         log.put("CURL", request.getRequestURI());
         log.put("ACTTYPE", request.getMethod());
-        log.put("CLOG", operateType + "参数：" + request.getQueryString());
-       // log.put("USERID", value);
-        log.put("STATUS", (byte) 1); 
-        
+        log.put("CLOG","参数：" + request.getQueryString());
+        log.put("OPERATETYPE", logAnno.operateType()); 
+        log.put("MODULENAME", logAnno.moduleName());
+        log.put("USERID", user.get("LOGIN_NAME"));
+ 
         tableService.saveWithDate(TABLE_INFO, log);
      
         return result;

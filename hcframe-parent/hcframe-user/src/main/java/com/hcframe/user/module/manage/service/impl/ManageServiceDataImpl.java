@@ -1,13 +1,18 @@
 package com.hcframe.user.module.manage.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.github.pagehelper.PageInfo;
 import com.hcframe.base.common.ResultVO;
 import com.hcframe.base.common.ServiceException;
 import com.hcframe.base.common.WebPageInfo;
 import com.hcframe.base.common.utils.DateUtil;
 import com.hcframe.base.common.utils.JudgeException;
+import com.hcframe.base.module.data.constants.FieldConstants;
 import com.hcframe.base.module.data.module.BaseMapper;
 import com.hcframe.base.module.data.module.BaseMapperImpl;
+import com.hcframe.base.module.data.module.Condition;
+import com.hcframe.base.module.data.module.DataMap;
 import com.hcframe.base.module.data.service.TableService;
 import com.hcframe.base.module.tableconfig.entity.OsSysTable;
 import com.hcframe.user.common.utils.MD5Utils;
@@ -18,6 +23,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -26,11 +32,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.security.NoSuchAlgorithmException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author lhc
@@ -105,8 +109,31 @@ public class ManageServiceDataImpl implements ManageService {
     }
 
     @Override
-    public ResultVO<PageInfo<Map<String, Object>>> getUserList(String data, WebPageInfo webPageInfo) {
-        PageInfo<Map<String, Object>> page = tableService.searchSingleTables(data, TABLE_INFO, webPageInfo);
+    public ResultVO<PageInfo<Map<String, Object>>> getUserList(String data, WebPageInfo webPageInfo, String orgId) {
+        DataMap<Object> dataMap = DataMap.builder().sysOsTable(TABLE_INFO).build();
+        Condition.ConditionBuilder builder = Condition.creatCriteria(dataMap);
+        if (!StringUtils.isEmpty(orgId)) {
+            orgId = orgId.replaceAll("\"", "");
+            String sql = "select ID from GB_CAS_DEPT start with ID="+orgId+" connect by prior ID=ORG_ACCOUNT_ID";
+            List<Map<String, Object>> list = baseMapper.selectSql(sql);
+            List<Object> idList = new ArrayList<>();
+            for (Map<String, Object> code : list) {
+                idList.add(code.get("ID"));
+            }
+            builder.andIn("ORG_DEPARTMENT_ID",idList);
+        }
+        builder.andEqual("USER_TYPE", "GN");
+        if (!StringUtils.isEmpty(data)) {
+            try {
+                data = URLDecoder.decode(data, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                throw new ServiceException(e);
+            }
+            JSONArray jsonArray = JSON.parseArray(data);
+            builder = tableService.getQueryBuilder(jsonArray, builder);
+        }
+        builder.andEqual("DELETED", 1);
+        PageInfo<Map<String,Object>> page = baseMapper.selectByCondition(builder.build(), webPageInfo);
         List<Map<String,Object>> list =  page.getList();
         for (Map<String, Object> map : list) {
             map.remove("PASSWORD");
@@ -171,4 +198,42 @@ public class ManageServiceDataImpl implements ManageService {
         }
         return null;
     }
+
+	@Override
+	public ResultVO<Integer> changePassword(String pwd, String npwd, String npwd2) {
+		
+		JudgeException.isNull(pwd,"密码不能为空");
+		JudgeException.isNull(npwd,"新密码不能为空");
+		
+		if(!npwd.equals(npwd2)) {
+			return ResultVO.getFailed("两次新密码输入不一致");
+		}
+		
+		Map<String, Object> user = (Map<String, Object>) SecurityUtils.getSubject().getPrincipal();
+		
+		String id = (String) user.get("ID");
+		
+        Map<String, Object> data = baseMapper.selectByPk(TABLE_NAME,PK_ID,id);
+        Integer version = Integer.parseInt(data.get(FieldConstants.VERSION.toString()).toString());
+
+        try {
+        	 if(!data.get("PASSWORD").equals(MD5Utils.encode(pwd))) {
+        		 return ResultVO.getFailed("原密码错误");
+        	 }
+        } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+            logger.error("验证密码失败",e);
+            throw new ServiceException(e);
+        }
+       
+		
+		Map<String, Object> map = new HashMap<>(2);
+        map.put(PK_ID, id);
+        try {
+            map.put("PASSWORD",MD5Utils.encode(npwd));
+        } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+            logger.error("重置密码失败",e);
+            throw new ServiceException(e);
+        }
+        return tableService.updateWithDate(TABLE_INFO,map,version);
+	}
 }

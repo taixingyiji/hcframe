@@ -22,12 +22,14 @@ public interface MenuService {
 
 	ResultVO<PageInfo<Map<String, Object>>> getMenuList(String data, WebPageInfo webPageInfo);
 
-	ResultVO<Object> addRoleMenu(List<Long> roleIds, List<Long> menuIds);
+	ResultVO<Object> addRoleMenu(Long roleId, List<String> menuIds);
 
 	ResultVO<Object> getMenuTree();
 
 	ResultVO<Object> getSelectedMenu(Long roldId);
 
-	ResultVO<Object> updateRoleMenu(List<Long> roleIds, List<Long> menuIds);
+	ResultVO<Object> checkPath(Map<String, Object> data);
+
+	ResultVO<Object> getOsList();
 
 }

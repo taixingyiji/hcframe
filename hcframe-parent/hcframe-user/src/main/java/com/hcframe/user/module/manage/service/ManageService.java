@@ -13,11 +13,13 @@ public interface ManageService {
 
     ResultVO<Integer> deleteUser(String ids);
 
-    ResultVO<PageInfo<Map<String, Object>>> getUserList(String data, WebPageInfo webPageInfo);
+    ResultVO<PageInfo<Map<String, Object>>> getUserList(String data, WebPageInfo webPageInfo, String orgId);
 
     ResultVO<Integer> resetPassword(String userId, Integer version);
 
     ResultVO<Integer> disable(Boolean enabled, String userId, Integer version);
 
     ResultVO<Object> sync();
+
+	ResultVO<Integer> changePassword(String pwd, String npwd, String npwd2);
 }

@@ -1,7 +1,9 @@
 package com.hcframe.base.module.data.service;
 
+import com.alibaba.fastjson.JSONArray;
 import com.hcframe.base.common.ResultVO;
 import com.hcframe.base.common.WebPageInfo;
+import com.hcframe.base.module.data.module.Condition;
 import com.hcframe.base.module.tableconfig.entity.OsSysTable;
 import com.github.pagehelper.PageInfo;
 
@@ -38,4 +40,6 @@ public interface TableService {
     PageInfo<Map<String,Object>> searchJoinTables(String data, WebPageInfo webPageInfo, OsSysTable tableName);
 
     ResultVO<Integer> logicDelete(OsSysTable tableName, String ids);
+
+    Condition.ConditionBuilder getQueryBuilder(JSONArray query, Condition.ConditionBuilder builder);
 }

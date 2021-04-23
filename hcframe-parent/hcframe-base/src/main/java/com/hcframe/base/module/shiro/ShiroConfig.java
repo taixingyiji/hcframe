@@ -61,7 +61,7 @@ public class ShiroConfig {
     /**
      * @author lhc
      * @description // 自定义session管理器
-     * @date 4:52 下午 2021/4/19
+     * @date 5:50 下午 2021/4/19
      * @params []
      * @return org.apache.shiro.session.mgt.SessionManager
      **/

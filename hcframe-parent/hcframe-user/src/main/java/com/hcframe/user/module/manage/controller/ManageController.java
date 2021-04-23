@@ -50,9 +50,9 @@ public class ManageController {
     }
 
     @GetMapping()
-    @ApiOperation(value = "获取用户列表", notes = "删除后职位也会被删除")
-    public ResultVO<PageInfo<Map<String,Object>>> getUserList(String data, WebPageInfo webPageInfo) {
-        return manageService.getUserList(data, webPageInfo);
+    @ApiOperation(value = "获取用户列表" )
+    public ResultVO<PageInfo<Map<String,Object>>> getUserList(String data, WebPageInfo webPageInfo,String orgId) {
+        return manageService.getUserList(data, webPageInfo,orgId);
     }
 
     @PutMapping("disable/{version}")
@@ -65,6 +65,12 @@ public class ManageController {
     @ApiOperation(value = "重置密码",notes = "用户启用禁用")
     public ResultVO<Integer> resetPassword(String userId,@PathVariable Integer version) {
         return manageService.resetPassword(userId,version);
+    }
+    
+    @PutMapping("changePassword")
+    @ApiOperation(value = "修改密码",notes = "用户输入原密码和新密码")
+    public ResultVO<Integer> changePassword(String pwd,String npwd,String npwd2) {
+        return manageService.changePassword(pwd,npwd,npwd2);
     }
 
     @GetMapping("/sync")

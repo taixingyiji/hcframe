@@ -39,25 +39,27 @@ public class TitleController {
 	    }
 
 	    @PostMapping()
+	    @LogAnno(operateType="新增职称信息",moduleName="系统管理-用户管理-职称管理")
 	    @ApiOperation(value = "新增title", notes = "将自动传承key-value对象模式即可")
 	    public ResultVO<Object> addTitle(@RequestParam Map<String,Object> title) {
 	        return titleService.addTitle(title);
 	    }
 
 	    @PutMapping("/{version}")
+	    @LogAnno(operateType="更新职称信息",moduleName="系统管理-用户管理-职称管理")
 	    @ApiOperation(value = "更新title")
 	    public ResultVO<Integer> updateTitle(@RequestParam Map<String,Object> title,@PathVariable Integer version) {
 	        return titleService.updateTitle(title,version);
 	    }
 
 	    @DeleteMapping("/{ids}")
+	    @LogAnno(operateType="删除职称信息",moduleName="系统管理-用户管理-职称管理")
 	    @ApiOperation(value = "删除title")
 	    public ResultVO<Object> deleteTitle(@PathVariable String ids) {
 	        return titleService.deleteTitle(ids);
 	    }
 
 	    @GetMapping()
-	    @LogAnno(operateType="getTitleList",tableName="title")
 	    @ApiOperation(value = "获取职称列表")
 	    public ResultVO<PageInfo<Map<String,Object>>> getTitleList(String data, WebPageInfo webPageInfo) {
 	        return titleService.getTitleList(data, webPageInfo);

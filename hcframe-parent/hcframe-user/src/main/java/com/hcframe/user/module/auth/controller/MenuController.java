@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,7 +24,7 @@ import io.swagger.annotations.ApiOperation;
  * @date 2021年4月13日
  * @description 角色管理
  */
-@RestController
+@RestController("userMenuController")
 @Api(tags = "功能级权限管理")
 @RequestMapping("menu")
 public class MenuController {
@@ -43,7 +42,7 @@ public class MenuController {
     public ResultVO<Object> deleteMenu(@RequestParam List<Long> ids) {
         return menuService.deleteMenu(ids);
     }
-	
+
 	@PutMapping("/{version}")
     @ApiOperation(value = "更新功能级权限")
     public ResultVO<Integer> updateMenu(@RequestParam Map<String, Object> data, @PathVariable Integer version) {
@@ -57,15 +56,9 @@ public class MenuController {
     }
 	
 	@PostMapping("addRole")
-    @ApiOperation(value = "角色授权", notes = "roleIds,menuIds,中间用逗号连接")
-    public ResultVO<Object> addRoleMenu(@RequestParam List<Long> roleIds,@RequestParam List<Long> menuIds) {
-        return menuService.addRoleMenu(roleIds, menuIds);
-    }
-	
-	@PostMapping("updateRole")
-    @ApiOperation(value = "角色授权", notes = "roleIds,menuIds,中间用逗号连接")
-    public ResultVO<Object> updateRoleMenu(@RequestParam List<Long> roleIds,@RequestParam List<Long> menuIds) {
-        return menuService.updateRoleMenu(roleIds, menuIds);
+    @ApiOperation(value = "角色授权", notes = "roleId,menuIds,中间用逗号连接")
+    public ResultVO<Object> addRoleMenu(@RequestParam Long roleId,@RequestParam List<String> menuIds) {
+        return menuService.addRoleMenu(roleId, menuIds);
     }
 	
 	@GetMapping("tree")
@@ -76,8 +69,20 @@ public class MenuController {
 	
 	@GetMapping("selected")
     @ApiOperation(value = "获取当前角色已选中节点")
-    public ResultVO<Object> getSelectedMenu(Long roldId) {
-        return menuService.getSelectedMenu(roldId);
+    public ResultVO<Object> getSelectedMenu(@RequestParam Long roleId) {
+        return menuService.getSelectedMenu(roleId);
+    }
+	
+	@PostMapping("checkPath")
+    @ApiOperation(value = "校验PATH是否唯一", notes = "")
+    public ResultVO<Object> checkPath(@RequestParam Map<String, Object> data) {
+        return menuService.checkPath(data);
+    }
+	
+	@GetMapping("oslist")
+    @ApiOperation(value = "获取系统信息列表")
+    public ResultVO<Object> getOsList() {
+        return menuService.getOsList();
     }
 
 }

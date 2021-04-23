@@ -19,8 +19,8 @@ public @interface LogAnno {
     String operateType();
     // 记录日志主键
     String primaryKey() default "id";
-    // 记录日志表
-    String tableName() default "-";
+    // 记录模块
+    String moduleName() default "-";
 
     boolean isBefore() default false;
 }

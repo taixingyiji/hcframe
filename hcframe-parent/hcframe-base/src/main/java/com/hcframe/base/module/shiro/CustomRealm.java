@@ -45,6 +45,7 @@ public class CustomRealm extends AuthorizingRealm {
         if (frameConfig.getCas()) {
             Map<Object, Object> hashMap = (Map<Object, Object>) redisUtil.hget("session", accessToken);
             Long expireTime = (Long) hashMap.get("expireTime");
+            expireTime = expireTime * 1000;
             AssertionImpl assertion = (AssertionImpl) hashMap.get("_const_cas_assertion_");
             Date validDate = assertion.getAuthenticationDate();
             AttributePrincipal attributePrincipal = assertion.getPrincipal();
