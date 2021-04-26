@@ -23,35 +23,115 @@
         <result property="alwaysShow" column="AlWAYSSHOW" jdbcType="VARCHAR"/>
         <result property="affix" column="AFFIX" jdbcType="VARCHAR"/>
         <result property="breadcrumb" column="BREADCRUMB" jdbcType="VARCHAR"/>
+        <result property="osId" column="OS_ID" jdbcType="BIGINT"/>
+        <result property="version" column="VERSION" jdbcType="INTEGER"/>
+        <result property="deleted" column="DELETED" jdbcType="INTEGER"/>
     </resultMap>
     <select id="selectMenu" resultMap="BaseResultMap">
-        SELECT
-            OS_SYS_MENU.MENU_ID,
-            OS_SYS_MENU.MENU_NAME,
-            OS_SYS_MENU.PARENT_ID,
-            OS_SYS_MENU.PATH,
-            OS_SYS_MENU.COMPONENT,
-            OS_SYS_MENU.IS_CACHE,
-            OS_SYS_MENU.VISIBLE,
-            OS_SYS_MENU.IS_FRAME,
-            OS_SYS_MENU.MENU_TYPE,
-            OS_SYS_MENU.ORDER_NUM,
-            OS_SYS_MENU.MENU_STATUS,
-            OS_SYS_MENU.PERMS,
-            OS_SYS_MENU.AFFIX,
-            OS_SYS_MENU.BREADCRUMB,
-            OS_SYS_MENU.AlWAYSSHOW,
-            OS_SYS_MENU.REMARK,
-            OS_SYS_MENU.UPDATE_TIME,
-            OS_SYS_MENU.CREATE_TIME,
-            OS_SYS_MENU.ICON
-        FROM
-            OS_SYS_MENU
-        WHERE
-            MENU_STATUS = 1 AND
-            MENU_TYPE IN ('C','M')
-        ORDER BY
-            OS_SYS_MENU.PARENT_ID ASC,
-            OS_SYS_MENU.ORDER_NUM ASC
+        SELECT OS_SYS_MENU.MENU_ID,
+               OS_SYS_MENU.MENU_NAME,
+               OS_SYS_MENU.PARENT_ID,
+               OS_SYS_MENU.PATH,
+               OS_SYS_MENU.COMPONENT,
+               OS_SYS_MENU.IS_CACHE,
+               OS_SYS_MENU.VISIBLE,
+               OS_SYS_MENU.IS_FRAME,
+               OS_SYS_MENU.MENU_TYPE,
+               OS_SYS_MENU.ORDER_NUM,
+               OS_SYS_MENU.MENU_STATUS,
+               OS_SYS_MENU.PERMS,
+               OS_SYS_MENU.AFFIX,
+               OS_SYS_MENU.BREADCRUMB,
+               OS_SYS_MENU.AlWAYSSHOW,
+               OS_SYS_MENU.REMARK,
+               OS_SYS_MENU.UPDATE_TIME,
+               OS_SYS_MENU.CREATE_TIME,
+               OS_SYS_MENU.ICON,
+               OS_SYS_MENU.OS_ID,
+               OS_SYS_MENU.VERSION,
+               OS_SYS_MENU.DELETED
+        FROM OS_SYS_MENU
+        WHERE MENU_STATUS = 1
+          AND MENU_TYPE IN ('C', 'M')
+          AND DELETED = 1
+        ORDER BY OS_SYS_MENU.PARENT_ID ASC,
+                 OS_SYS_MENU.ORDER_NUM ASC
+    </select>
+    <select id="selectMenuByUser" resultMap="BaseResultMap">
+        SELECT OS_SYS_MENU.MENU_ID,
+               OS_SYS_MENU.MENU_NAME,
+               OS_SYS_MENU.PARENT_ID,
+               OS_SYS_MENU.PATH,
+               OS_SYS_MENU.COMPONENT,
+               OS_SYS_MENU.IS_CACHE,
+               OS_SYS_MENU.VISIBLE,
+               OS_SYS_MENU.IS_FRAME,
+               OS_SYS_MENU.MENU_TYPE,
+               OS_SYS_MENU.ORDER_NUM,
+               OS_SYS_MENU.MENU_STATUS,
+               OS_SYS_MENU.PERMS,
+               OS_SYS_MENU.AFFIX,
+               OS_SYS_MENU.BREADCRUMB,
+               OS_SYS_MENU.AlWAYSSHOW,
+               OS_SYS_MENU.REMARK,
+               OS_SYS_MENU.UPDATE_TIME,
+               OS_SYS_MENU.CREATE_TIME,
+               OS_SYS_MENU.ICON,
+               OS_SYS_MENU.OS_ID,
+               OS_SYS_MENU.VERSION,
+               OS_SYS_MENU.DELETED
+        FROM OS_SYS_MENU
+        WHERE MENU_STATUS = 1
+          AND MENU_TYPE IN ('C', 'M')
+          AND DELETED = 1
+          AND PATH IN (${paths})
+        ORDER BY OS_SYS_MENU.PARENT_ID ASC,
+                 OS_SYS_MENU.ORDER_NUM ASC
+    </select>
+    <select id="selectAllAuth" resultType="java.lang.String">
+        SELECT OS_SYS_MENU.PATH
+        FROM OS_SYS_MENU
+        WHERE MENU_STATUS = 1
+        ORDER BY OS_SYS_MENU.PARENT_ID ASC,
+                 OS_SYS_MENU.ORDER_NUM ASC
+    </select>
+    <select id="selectMenuList" resultMap="BaseResultMap">
+        SELECT OS_SYS_MENU.MENU_ID,
+               OS_SYS_MENU.MENU_NAME,
+               OS_SYS_MENU.PARENT_ID,
+               OS_SYS_MENU.PATH,
+               OS_SYS_MENU.COMPONENT,
+               OS_SYS_MENU.IS_CACHE,
+               OS_SYS_MENU.VISIBLE,
+               OS_SYS_MENU.IS_FRAME,
+               OS_SYS_MENU.MENU_TYPE,
+               OS_SYS_MENU.ORDER_NUM,
+               OS_SYS_MENU.MENU_STATUS,
+               OS_SYS_MENU.PERMS,
+               OS_SYS_MENU.AFFIX,
+               OS_SYS_MENU.BREADCRUMB,
+               OS_SYS_MENU.AlWAYSSHOW,
+               OS_SYS_MENU.REMARK,
+               OS_SYS_MENU.UPDATE_TIME,
+               OS_SYS_MENU.CREATE_TIME,
+               OS_SYS_MENU.ICON,
+               OS_SYS_MENU.OS_ID,
+               OS_SYS_MENU.VERSION,
+               OS_SYS_MENU.DELETED
+        FROM OS_SYS_MENU
+        WHERE MENU_STATUS = 1
+          AND MENU_TYPE IN ('C', 'M')
+          AND DELETED = 1
+        <if test="menu.menuName!=null and menu.menuName!=''">
+            AND MENU_NAME like CONCAT('%',#{menu.menuName},'%')
+        </if>
+        <if test="menu.osId!=null and menu.osId!=''">
+            AND  OS_ID = #{menu.osId}
+        </if>
+        <if test="menu.status!=null and menu.status!=''">
+            AND  MENU_STATUS = #{menu.status}
+        </if>
+        ORDER BY OS_SYS_MENU.PARENT_ID ASC,
+                 OS_SYS_MENU.ORDER_NUM ASC
     </select>
 </mapper>

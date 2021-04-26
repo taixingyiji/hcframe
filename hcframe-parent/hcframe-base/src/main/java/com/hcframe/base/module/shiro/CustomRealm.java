@@ -33,7 +33,6 @@ public class CustomRealm extends AuthorizingRealm {
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-        //1. 从 PrincipalCollection 中来获取登录用户的信息
         Object user = principalCollection.getPrimaryPrincipal();
         return systemRealm.setAuthoriztion(user);
     }

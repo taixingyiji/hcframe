@@ -122,7 +122,7 @@ public class ResultVO<T> {
      * @return ResultVO
      */
     public static <T> ResultVO<T> getNoAuthorization() {
-        return new ResultVO<T>(NOAUTH, "用户没有操作权限，请重新登录");
+        return new ResultVO<T>(NOAUTH, "用户没有操作权限");
     }
 
     public static <T> ResultVO<T> getException(Throwable exp) {

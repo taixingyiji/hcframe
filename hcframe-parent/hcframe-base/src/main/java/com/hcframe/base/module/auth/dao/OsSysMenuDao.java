@@ -2,8 +2,10 @@ package com.hcframe.base.module.auth.dao;
 
 import com.hcframe.base.common.Mapper;
 import com.hcframe.base.module.auth.entity.OsSysMenu;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 菜单权限表(OsSysMenu)表数据库访问层
@@ -14,4 +16,10 @@ import java.util.List;
 public interface OsSysMenuDao extends Mapper<OsSysMenu> {
 
     List<OsSysMenu> selectMenu();
+
+    List<OsSysMenu> selectMenuByUser(@Param("paths")String paths);
+
+    Set<String> selectAllAuth();
+
+    List<OsSysMenu> selectMenuList(@Param("menu")OsSysMenu osSysMenu);
 }
