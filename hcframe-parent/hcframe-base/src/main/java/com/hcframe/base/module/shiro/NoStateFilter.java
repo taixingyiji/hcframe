@@ -13,9 +13,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * auth过滤器
- *
- * @Author lhc
+ * @author lhc
+ * @version 1.0
+ * @className NoStateFilter
+ * @date 2021年04月19日 2:56 下午
+ * @description 实现shiro 过滤器
  */
 public class NoStateFilter extends AccessControlFilter {
 

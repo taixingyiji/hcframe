@@ -3,8 +3,11 @@ package com.hcframe.base.module.shiro;
 import org.apache.shiro.authc.AuthenticationToken;
 
 /**
- * 自定义AuthenticationToken类
- * @Author lhc
+ * @author lhc
+ * @version 1.0
+ * @className AuthToken
+ * @date 2021年04月19日 2:56 下午
+ * @description 实现shiro AuthenticationToken
  */
 public class AuthToken implements AuthenticationToken {
 

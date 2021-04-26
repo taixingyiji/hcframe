@@ -17,6 +17,14 @@ import javax.annotation.Resource;
 import java.util.Date;
 import java.util.Map;
 
+
+/**
+ * @author lhc
+ * @version 1.0
+ * @className CustomRealm
+ * @date 2021年04月19日 2:56 下午
+ * @description 自定义Realm
+ */
 public class CustomRealm extends AuthorizingRealm {
 
     @Resource
@@ -92,6 +100,5 @@ public class CustomRealm extends AuthorizingRealm {
     public boolean supports(AuthenticationToken authenticationToken) {
         return authenticationToken instanceof AuthToken;
     }
-
 }
 
