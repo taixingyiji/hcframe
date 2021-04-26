@@ -1,24 +1,15 @@
 package com.hcframe.user.module.manage.controller;
 
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.github.pagehelper.PageInfo;
 import com.hcframe.base.common.ResultVO;
 import com.hcframe.base.common.WebPageInfo;
 import com.hcframe.user.module.manage.service.ManageGwService;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 /**
  * @author wewe
@@ -29,15 +20,15 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping("manage-gw")
 @RestController
 public class ManageGwController {
-	
+
 	@Autowired ManageGwService service;
-	
+
 	@PostMapping()
     @ApiOperation(value = "新增用户信息", notes = "将自动传承ey-value对象模式即可")
     public ResultVO<Map<String,Object>> addUser(@RequestParam Map<String,Object> user) {
         return service.addUser(user);
     }
-	
+
 	@PutMapping("/{version}")
     @ApiOperation(value = "更新用户信息")
     public ResultVO<Integer> updateUser(@RequestParam Map<String,Object> user,@PathVariable Integer version) {
@@ -51,9 +42,9 @@ public class ManageGwController {
     }
 
     @GetMapping()
-    @ApiOperation(value = "获取用户列表", notes = "删除后职位也会被删除")
-    public ResultVO<PageInfo<Map<String,Object>>> getUserList(String data, WebPageInfo webPageInfo) {
-        return service.getUserList(data, webPageInfo);
+    @ApiOperation(value = "获取用户列表" )
+    public ResultVO<PageInfo<Map<String,Object>>> getUserList(String data, WebPageInfo webPageInfo,String orgId) {
+        return service.getUserList(data, webPageInfo,orgId);
     }
 
     @PutMapping("disable/{version}")
@@ -68,5 +59,10 @@ public class ManageGwController {
         return service.resetPassword(userId,version);
     }
 
+    @GetMapping("valid")
+    @ApiOperation(value = "校验用户名")
+    public ResultVO<Object> valid(String loginName) {
+        return service.valid(loginName);
+    }
 
 }

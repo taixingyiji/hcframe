@@ -6,6 +6,7 @@ import com.hcframe.base.common.WebPageInfo;
 import com.hcframe.user.module.manage.service.ManageService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -62,11 +63,12 @@ public class ManageController {
     }
 
     @PutMapping("/resetPassword/{version}")
-    @ApiOperation(value = "重置密码",notes = "用户启用禁用")
+    @ApiOperation(value = "重置密码")
+    @RequiresPermissions(value = { "systemManage" })
     public ResultVO<Integer> resetPassword(String userId,@PathVariable Integer version) {
         return manageService.resetPassword(userId,version);
     }
-    
+
     @PutMapping("changePassword")
     @ApiOperation(value = "修改密码",notes = "用户输入原密码和新密码")
     public ResultVO<Integer> changePassword(String pwd,String npwd,String npwd2) {

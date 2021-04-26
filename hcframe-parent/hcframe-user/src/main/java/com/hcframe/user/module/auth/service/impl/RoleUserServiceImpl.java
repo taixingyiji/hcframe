@@ -81,14 +81,14 @@ public class RoleUserServiceImpl implements RoleUserService {
 
     @Override
     public ResultVO<Object> getUserRole(String userId) {
-        Condition condition = Condition.creatCriteria().andEqual("USER_ID",userId).build();
+        Condition condition = Condition.creatCriteria().andEqual("USER_ID",userId).andEqual("DELETED",1).build();
         List<Map<String,Object>> list = baseMapper.selectByCondition(OS_REL_USER_ROLE, condition);
         return ResultVO.getSuccess(list);
     }
 
     @Override
     public ResultVO<Object> getUserGroup(String userId) {
-        Condition condition = Condition.creatCriteria().andEqual("USER_ID",userId).build();
+        Condition condition = Condition.creatCriteria().andEqual("USER_ID",userId).andEqual("DELETED",1).build();
         List<Map<String,Object>> list = baseMapper.selectByCondition(OS_REL_USER_GROUP, condition);
         return ResultVO.getSuccess(list);
     }

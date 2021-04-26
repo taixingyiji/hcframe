@@ -59,8 +59,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ResultVO<Object> deleteRole(String ids) {
-        // TODO 补全需要删除的关联表
-        tableService.delete(TABLE_INFO, ids);
+        tableService.logicDelete(TABLE_INFO, ids);
         return ResultVO.getSuccess();
     }
 
@@ -81,6 +80,6 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public ResultVO<List<Map<String, Object>>> getAll() {
-        return ResultVO.getSuccess(roleDao.getAllList());
+        return ResultVO.getSuccess(baseMapper.selectByCondition(TABLE_NAME, Condition.creatCriteria().andEqual("DELETED", 1).build()));
     }
 }

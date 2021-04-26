@@ -32,7 +32,6 @@ public class RoleGroupServiceImpl implements RoleGroupServie {
 
     private static final String PK_ID = "GROUP_ID";
     private static final String TABLE_NAME = "OS_SYS_ROLE_GROUP";
-    private static final String OS_SYS_ROLE = "OS_SYS_ROLE";
     private static final String ROLE_ID = "ROLE_ID";
     private static final String OS_REL_GROUP_ROLE = "OS_REL_GROUP_ROLE";
     private static final String ROLE_GROUP_ID = "ROLE_GROUP_ID";
@@ -63,13 +62,7 @@ public class RoleGroupServiceImpl implements RoleGroupServie {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ResultVO<Integer> delete(String ids) {
-        tableService.delete(TABLE_INFO, ids);
-        baseMapper.deleteInPk(DataMap
-                .builder()
-                .tableName(OS_SYS_ROLE)
-                .pkName(ROLE_ID)
-                .ids(ids)
-                .build());
+        tableService.logicDelete(TABLE_INFO, ids);
         return ResultVO.getSuccess();
     }
 
@@ -110,6 +103,6 @@ public class RoleGroupServiceImpl implements RoleGroupServie {
 
     @Override
     public ResultVO<Object> getAll() {
-        return ResultVO.getSuccess(baseMapper.selectAll(TABLE_NAME));
+        return ResultVO.getSuccess( baseMapper.selectByCondition(TABLE_NAME, Condition.creatCriteria().andEqual("DELETED", 1).build()));
     }
 }
