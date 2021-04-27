@@ -14,4 +14,20 @@ import java.util.Map;
  */
 public interface AuthDao {
     List<Map<String,Object>> selectMenuList(OsSysMenu osSysMenu);
+
+    List<String> getUserRoleAuth(String userId);
+
+    List<String> getUserRoleGroupAuth(String userId);
+
+    List<String> getOrgRoleAuth(String orgCode);
+
+    List<String> getOrgGroupAuth(String orgCode);
+
+    Long getRoleOs(String userId);
+
+    Long getGroupOs(String userId);
+
+    Long getOrgOs(String orgCode);
+
+    Long getOrgGroupOs(String orgCode);
 }

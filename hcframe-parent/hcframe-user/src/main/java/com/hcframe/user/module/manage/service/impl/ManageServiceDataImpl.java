@@ -69,9 +69,9 @@ public class ManageServiceDataImpl implements ManageService {
     }
 
     @Override
-    public ResultVO<Map<String,Object>> addUser(Map<String, Object> user) {
-        JudgeException.isNull(user.get("PASSWORD"),"密码不能为空");
-        JudgeException.isNull(user.get("LOGIN_NAME"),"用户名不能为空");
+    public ResultVO<Map<String, Object>> addUser(Map<String, Object> user) {
+        JudgeException.isNull(user.get("PASSWORD"), "密码不能为空");
+        JudgeException.isNull(user.get("LOGIN_NAME"), "用户名不能为空");
         if (!StringUtils.isEmpty(user.get("ORG_ACCOUNT_ID"))) {
             String orgAcId = String.valueOf(user.get("ORG_ACCOUNT_ID"));
             user.put("ORG_ACCOUNT_ID", orgAcId.replaceAll("\"", ""));
@@ -81,12 +81,12 @@ public class ManageServiceDataImpl implements ManageService {
             user.put("ORG_DEPARTMENT_ID", orgDeptId.replaceAll("\"", ""));
         }
         try {
-            user.put("PASSWORD",MD5Utils.encode((String) user.get("PASSWORD")));
+            user.put("PASSWORD", MD5Utils.encode((String) user.get("PASSWORD")));
         } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
-            logger.error("新增用户失败",e);
+            logger.error("新增用户失败", e);
             throw new ServiceException(e);
         }
-        return tableService.saveWithDate(TABLE_INFO,user);
+        return tableService.saveWithDate(TABLE_INFO, user);
     }
 
     @Override
@@ -100,27 +100,27 @@ public class ManageServiceDataImpl implements ManageService {
             String orgDeptId = String.valueOf(user.get("ORG_DEPARTMENT_ID"));
             user.put("ORG_DEPARTMENT_ID", orgDeptId.replaceAll("\"", ""));
         }
-        return tableService.updateWithDate(TABLE_INFO,user,version);
+        return tableService.updateWithDate(TABLE_INFO, user, version);
     }
 
     @Override
     public ResultVO<Integer> deleteUser(String ids) {
-        return tableService.logicDelete(TABLE_INFO,ids);
+        return tableService.logicDelete(TABLE_INFO, ids);
     }
 
     @Override
     public ResultVO<PageInfo<Map<String, Object>>> getUserList(String data, WebPageInfo webPageInfo, String orgId) {
         DataMap<Object> dataMap = DataMap.builder().sysOsTable(TABLE_INFO).build();
         Condition.ConditionBuilder builder = Condition.creatCriteria(dataMap);
-        if (!StringUtils.isEmpty(orgId)&&!orgId.equals("guobo")) {
+        if (!StringUtils.isEmpty(orgId) && !orgId.equals("guobo")) {
             orgId = orgId.replaceAll("\"", "");
-            String sql = "select CODE from GB_CAS_DEPT where CODE like '"+orgId+"%'";
+            String sql = "select CODE from GB_CAS_DEPT where CODE like '" + orgId + "%'";
             List<Map<String, Object>> list = baseMapper.selectSql(sql);
             List<Object> idList = new ArrayList<>();
             for (Map<String, Object> code : list) {
                 idList.add(code.get("CODE"));
             }
-            builder.andIn("DEPT_CODE",idList);
+            builder.andIn("DEPT_CODE", idList);
         }
         builder.andEqual("USER_TYPE", "GN");
         if (!StringUtils.isEmpty(data)) {
@@ -133,8 +133,8 @@ public class ManageServiceDataImpl implements ManageService {
             builder = tableService.getQueryBuilder(jsonArray, builder);
         }
         builder.andEqual("DELETED", 1);
-        PageInfo<Map<String,Object>> page = baseMapper.selectByCondition(builder.build(), webPageInfo);
-        List<Map<String,Object>> list =  page.getList();
+        PageInfo<Map<String, Object>> page = baseMapper.selectByCondition(builder.build(), webPageInfo);
+        List<Map<String, Object>> list = page.getList();
         for (Map<String, Object> map : list) {
             map.remove("PASSWORD");
             map.put("PASSWORD", "******");
@@ -146,14 +146,14 @@ public class ManageServiceDataImpl implements ManageService {
     @Override
     public ResultVO<Integer> resetPassword(String userId, Integer version) {
         Map<String, Object> map = new HashMap<>(2);
-        map.put(PK_ID, userId.replaceAll("\"",""));
+        map.put(PK_ID, userId.replaceAll("\"", ""));
         try {
-            map.put("PASSWORD",MD5Utils.encode("123456"));
+            map.put("PASSWORD", MD5Utils.encode("123456"));
         } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
-            logger.error("重置密码失败",e);
+            logger.error("重置密码失败", e);
             throw new ServiceException(e);
         }
-        return tableService.updateWithDate(TABLE_INFO,map,version);
+        return tableService.updateWithDate(TABLE_INFO, map, version);
     }
 
     @Override
@@ -161,7 +161,7 @@ public class ManageServiceDataImpl implements ManageService {
         Map<String, Object> map = new HashMap<>(2);
         map.put(PK_ID, userId);
         map.put("DISABLED", enabled);
-        return tableService.updateWithDate(TABLE_INFO,map,version);
+        return tableService.updateWithDate(TABLE_INFO, map, version);
     }
 
     @Override
@@ -180,15 +180,15 @@ public class ManageServiceDataImpl implements ManageService {
             cell = row.getCell(4);
             String title = cell.getStringCellValue();
             List<Map<String, Object>> list = manageMapper.selectPersonList(name, department);
-            if (list != null&&list.size()>0) {
-                System.out.println(name+":"+list.get(0).get("ID"));
-                System.out.println(name+":"+list.get(0).get("ID"));
+            if (list != null && list.size() > 0) {
+                System.out.println(name + ":" + list.get(0).get("ID"));
+                System.out.println(name + ":" + list.get(0).get("ID"));
                 String str = date.substring(date.indexOf(".") + 1, date.length());
                 if (str.equals("1")) {
                     date = date + "0";
                 }
-                System.out.println(date.trim()+".01 00:00:00");
-                Date date1 = DateUtil.StringFormat(date.trim()+".01 00:00:00","yyyy.MM.dd HH:mm:ss");
+                System.out.println(date.trim() + ".01 00:00:00");
+                Date date1 = DateUtil.StringFormat(date.trim() + ".01 00:00:00", "yyyy.MM.dd HH:mm:ss");
                 for (Map<String, Object> map : list) {
                     map.put("TIME_TO_WORK", date1);
                     map.put("TITLE_NAME", title);
@@ -199,41 +199,33 @@ public class ManageServiceDataImpl implements ManageService {
         return null;
     }
 
-	@Override
-	public ResultVO<Integer> changePassword(String pwd, String npwd, String npwd2) {
-		
-		JudgeException.isNull(pwd,"密码不能为空");
-		JudgeException.isNull(npwd,"新密码不能为空");
-		
-		if(!npwd.equals(npwd2)) {
-			return ResultVO.getFailed("两次新密码输入不一致");
-		}
-		
-		Map<String, Object> user = (Map<String, Object>) SecurityUtils.getSubject().getPrincipal();
-		
-		String id = (String) user.get("ID");
-		
-        Map<String, Object> data = baseMapper.selectByPk(TABLE_NAME,PK_ID,id);
+    @Override
+    public ResultVO<Integer> changePassword(String pwd, String npwd, String npwd2) {
+        JudgeException.isNull(pwd, "密码不能为空");
+        JudgeException.isNull(npwd, "新密码不能为空");
+        if (!npwd.equals(npwd2)) {
+            return ResultVO.getFailed("两次新密码输入不一致");
+        }
+        Map<String, Object> user = (Map<String, Object>) SecurityUtils.getSubject().getPrincipal();
+        String id = (String) user.get("ID");
+        Map<String, Object> data = baseMapper.selectByPk(TABLE_NAME, PK_ID, id);
         Integer version = Integer.parseInt(data.get(FieldConstants.VERSION.toString()).toString());
-
         try {
-        	 if(!data.get("PASSWORD").equals(MD5Utils.encode(pwd))) {
-        		 return ResultVO.getFailed("原密码错误");
-        	 }
+            if (!data.get("PASSWORD").equals(MD5Utils.encode(pwd))) {
+                return ResultVO.getFailed("原密码错误");
+            }
         } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
-            logger.error("验证密码失败",e);
+            logger.error("验证密码失败", e);
             throw new ServiceException(e);
         }
-       
-		
-		Map<String, Object> map = new HashMap<>(2);
+        Map<String, Object> map = new HashMap<>(2);
         map.put(PK_ID, id);
         try {
-            map.put("PASSWORD",MD5Utils.encode(npwd));
+            map.put("PASSWORD", MD5Utils.encode(npwd));
         } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
-            logger.error("重置密码失败",e);
+            logger.error("重置密码失败", e);
             throw new ServiceException(e);
         }
-        return tableService.updateWithDate(TABLE_INFO,map,version);
-	}
+        return tableService.updateWithDate(TABLE_INFO, map, version);
+    }
 }

@@ -6,6 +6,7 @@ import com.hcframe.base.common.WebPageInfo;
 import com.hcframe.user.module.manage.service.ManageService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,6 +53,7 @@ public class ManageController {
 
     @GetMapping()
     @ApiOperation(value = "获取用户列表" )
+    @RequiresPermissions(value = {"userinfo","system:userManage:innerUser:list"},logical = Logical.OR)
     public ResultVO<PageInfo<Map<String,Object>>> getUserList(String data, WebPageInfo webPageInfo,String orgId) {
         return manageService.getUserList(data, webPageInfo,orgId);
     }
@@ -64,7 +66,7 @@ public class ManageController {
 
     @PutMapping("/resetPassword/{version}")
     @ApiOperation(value = "重置密码")
-    @RequiresPermissions(value = { "systemManage" })
+    @RequiresPermissions(value = { "systemManage","system:list" },logical = Logical.AND)
     public ResultVO<Integer> resetPassword(String userId,@PathVariable Integer version) {
         return manageService.resetPassword(userId,version);
     }
