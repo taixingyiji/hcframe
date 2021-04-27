@@ -38,5 +38,10 @@ public class LogController {
 	    public ResultVO<PageInfo<Map<String,Object>>> getLogList(String data, WebPageInfo webPageInfo) {
 	        return logService.getLogList(data, webPageInfo);
 	    }
+	    @GetMapping("/loginlog")
+	    @ApiOperation(value = "登录日志查询模块")
+	    public ResultVO<PageInfo<Map<String,Object>>> getLoginLogList(String data, WebPageInfo webPageInfo) {
+	        return logService.getLoginLogList(data, webPageInfo);
+	    }
 
 }

@@ -24,6 +24,8 @@ public class LogServiceImpl implements LogService{
 	 private static final String OS_SYS_TITLE = "GB_LOGS";
 	 private static final OsSysTable TABLE_INFO = OsSysTable.builder().tableName(OS_SYS_TITLE).tablePk(LOG_ID).build();
 
+	 private static final OsSysTable TABLE_INFO_LOGIN = OsSysTable.builder().tableName("GB_LOGIN_LOGS").tablePk("LOGIN_LOG_ID").build();
+
 	    final BaseMapper baseMapper;
 
 	    final TableService tableService;
@@ -33,12 +35,16 @@ public class LogServiceImpl implements LogService{
 	        this.baseMapper = baseMapper;
 	        this.tableService = tableService;
 	    }
-	    
-	   
 
 	    @Override
 	    public  ResultVO<PageInfo<Map<String, Object>>> getLogList(String data, WebPageInfo webPageInfo) {
 	        PageInfo<Map<String,Object>> pageInfo = tableService.searchSingleTables(data, TABLE_INFO, webPageInfo);
+	        return ResultVO.getSuccess(pageInfo);
+	    }
+	    
+	    @Override
+	    public  ResultVO<PageInfo<Map<String, Object>>> getLoginLogList(String data, WebPageInfo webPageInfo) {
+	        PageInfo<Map<String,Object>> pageInfo = tableService.searchSingleTables(data, TABLE_INFO_LOGIN, webPageInfo);
 	        return ResultVO.getSuccess(pageInfo);
 	    }
 

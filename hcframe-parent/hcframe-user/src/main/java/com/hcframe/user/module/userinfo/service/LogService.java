@@ -8,4 +8,6 @@ import com.hcframe.base.common.WebPageInfo;
 
 public interface LogService {
 	ResultVO<PageInfo<Map<String, Object>>> getLogList(String data, WebPageInfo webPageInfo);
+	
+	ResultVO<PageInfo<Map<String, Object>>> getLoginLogList(String data, WebPageInfo webPageInfo);
 }
