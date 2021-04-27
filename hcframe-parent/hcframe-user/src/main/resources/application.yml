@@ -16,17 +16,17 @@ spring:
     name: cloud-user
   # 缓存设置
   cache:
-    # redis缓存
-#    type: redis
-#    redis:
-#      time-to-live: 1d
-#      use-key-prefix: true
-#      cache-null-values: true
-#      key-prefix: cache.
-    # ehcache缓存
-    type: ehcache
-    ehcache:
-      config: classpath:ehcache.xml
+#     redis缓存
+    type: redis
+    redis:
+      time-to-live: 1d
+      use-key-prefix: true
+      cache-null-values: true
+      key-prefix: cache.
+#    # ehcache缓存
+#    type: ehcache
+#    ehcache:
+#      config: classpath:ehcache.xml
   redis:
     database: @redis.database@
     host: @redis.host@

@@ -3,6 +3,7 @@ package com.hcframe.user.module.auth.controller;
 import com.github.pagehelper.PageInfo;
 import com.hcframe.base.common.ResultVO;
 import com.hcframe.base.common.WebPageInfo;
+import com.hcframe.redis.RedisUtil;
 import com.hcframe.user.module.auth.service.RoleGroupServie;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -25,9 +26,12 @@ import java.util.Map;
 public class RoleGroupController {
 
     final RoleGroupServie roleGroupServie;
+    final RedisUtil redisUtil;
 
-    public RoleGroupController(RoleGroupServie roleGroupServie) {
+    public RoleGroupController(RoleGroupServie roleGroupServie,
+                               RedisUtil redisUtil) {
         this.roleGroupServie = roleGroupServie;
+        this.redisUtil = redisUtil;
     }
 
     @PostMapping()
@@ -39,12 +43,14 @@ public class RoleGroupController {
     @PutMapping("/{version}")
     @ApiOperation(value = "更新角色组")
     public ResultVO<Integer> updateRole(@RequestParam Map<String, Object> roleGroup, @PathVariable Integer version) {
+        redisUtil.del("auth");
         return roleGroupServie.update(roleGroup, version);
     }
 
     @DeleteMapping("/{ids}")
     @ApiOperation(value = "删除角色组", notes = "删除后关联表数据也会被删除")
     public ResultVO<Integer> deleteOrg(@PathVariable String ids) {
+        redisUtil.del("auth");
         return roleGroupServie.delete(ids);
     }
 
@@ -61,6 +67,7 @@ public class RoleGroupController {
             @ApiImplicitParam(name = "roleIds", value = "角色ID数组",required = true)
     })
     public ResultVO<Object> bind(Integer groupId, String roleIds) {
+        redisUtil.del("auth");
         return roleGroupServie.bind(groupId, roleIds);
     }
 

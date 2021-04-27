@@ -39,12 +39,14 @@ public class MenuController {
 	@PostMapping("delete")
     @ApiOperation(value = "删除功能级权限", notes = "删除后关联表数据也会被删除")
     public ResultVO<Object> deleteMenu(@RequestParam List<Long> ids) {
+        redisUtil.del("auth");
         return menuService.deleteMenu(ids);
     }
 
 	@PutMapping("/{version}")
     @ApiOperation(value = "更新功能级权限")
     public ResultVO<Integer> updateMenu(@RequestParam Map<String, Object> data, @PathVariable Integer version) {
+        redisUtil.del("auth");
         return menuService.updateMenu(data, version);
     }
 
