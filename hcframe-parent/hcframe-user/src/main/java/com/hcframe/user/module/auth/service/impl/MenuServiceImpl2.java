@@ -114,7 +114,7 @@ public class MenuServiceImpl2 implements MenuService {
 			if (menuId.startsWith("OS")) {
 				Map<String, Object> data = new HashMap<>();
 				data.put("ROLE_ID", roleId);
-				data.put("OS_ID", Long.getLong(menuId.substring(2)));
+				data.put("OS_ID", Long.valueOf(menuId.substring(2)));
 				data.put("VERSION", 1);
 				data.put("DELETED", 1);
 				tableService.saveWithDate(OS_REL_ROLE_OS, data);
