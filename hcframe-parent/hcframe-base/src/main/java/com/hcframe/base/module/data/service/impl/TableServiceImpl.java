@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hcframe.base.common.ResultVO;
 import com.hcframe.base.common.ServiceException;
 import com.hcframe.base.common.WebPageInfo;
+import com.hcframe.base.common.utils.JudgeException;
 import com.hcframe.base.common.utils.TableNameUtil;
 import com.hcframe.base.module.data.constants.FieldConstants;
 import com.hcframe.base.module.data.constants.QueryConstants;
@@ -110,6 +111,7 @@ public class TableServiceImpl implements TableService {
 
     @Override
     public ResultVO<Integer> delete(OsSysTable osSysTable, String ids) {
+        JudgeException.isNull(ids,"ids 不能为空");
         int i = baseMapper.deleteInPk(DataMap.builder().sysOsTable(osSysTable).ids(ids).build());
         SqlException.operation(i, "删除失败");
         return ResultVO.getSuccess(i);

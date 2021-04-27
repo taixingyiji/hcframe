@@ -16,20 +16,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * auth过滤器
- *
- * @Author lhc
+ * @author lhc
+ * @version 1.0
+ * @className AuthFilter
+ * @date 2021年04月19日 2:56 下午
+ * @description 实现shiro 过滤器
  */
 public class AuthFilter extends AuthenticatingFilter {
 
     /**
-     * 生成自定义token
-     *
-     * @param request
-     * @param response
-     * @return
-     * @throws Exception
-     */
+     * @author lhc
+     * @description 创建token
+     * @date 4:35 下午 2021/4/26
+     * @params [request, response]
+     * @return org.apache.shiro.authc.AuthenticationToken
+     **/
     @Override
     protected AuthenticationToken createToken(ServletRequest request, ServletResponse response) throws Exception {
         //获取请求token
@@ -54,26 +55,24 @@ public class AuthFilter extends AuthenticatingFilter {
     }
 
     /**
-     * 步骤1.所有请求全部拒绝访问
-     *
-     * @param request
-     * @param response
-     * @param mappedValue
-     * @return
-     */
+     * @author lhc
+     * @description 步骤1.所有请求全部拒绝访问
+     * @date 4:37 下午 2021/4/26
+     * @params [request, response, mappedValue]
+     * @return boolean
+     **/
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
         return ((HttpServletRequest) request).getMethod().equals(RequestMethod.OPTIONS.name());
     }
 
     /**
-     * 步骤2，拒绝访问的请求，会调用onAccessDenied方法，onAccessDenied方法先获取 token，再调用executeLogin方法
-     *
-     * @param request
-     * @param response
-     * @return
-     * @throws Exception
-     */
+     * @author lhc
+     * @description 步骤2，拒绝访问的请求，会调用onAccessDenied方法，onAccessDenied方法先获取 token，再调用executeLogin方法
+     * @date 4:37 下午 2021/4/26
+     * @params [request, response]
+     * @return boolean
+     **/
     @Override
     protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
         //获取请求token，如果token不存在，直接返回
@@ -98,8 +97,12 @@ public class AuthFilter extends AuthenticatingFilter {
     }
 
     /**
-     * 登陆失败时候调用
-     */
+     * @author lhc
+     * @description 登陆失败时候调用
+     * @date 4:38 下午 2021/4/26
+     * @params [token, e, request, response]
+     * @return boolean
+     **/
     @Override
     protected boolean onLoginFailure(AuthenticationToken token, AuthenticationException e, ServletRequest request, ServletResponse response) {
         //处理登录失败的异常
@@ -125,8 +128,12 @@ public class AuthFilter extends AuthenticatingFilter {
     }
 
     /**
-     * 获取请求的token
-     */
+     * @author lhc
+     * @description 获取请求的token
+     * @date 4:38 下午 2021/4/26
+     * @params [httpRequest]
+     * @return java.lang.String
+     **/
     private String getRequestToken(HttpServletRequest httpRequest) {
         //从header中获取token
         String token = httpRequest.getHeader("X-Access-Token");

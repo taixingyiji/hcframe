@@ -7,6 +7,7 @@ import com.hcframe.base.module.cache.emum.CacheType;
 import com.hcframe.base.module.data.controller.TableController;
 import com.hcframe.base.module.data.module.BaseMapper;
 import com.hcframe.base.module.data.module.BaseMapperImpl;
+import com.hcframe.base.module.data.module.Condition;
 import com.hcframe.base.module.tableconfig.dao.OsSysTableMapper;
 import com.hcframe.base.module.tableconfig.entity.OsSysTable;
 import org.slf4j.Logger;
@@ -88,10 +89,13 @@ public class TableCache implements CacheService {
                     break;
                 case baseCache:
                     OsSysTable osSysTable1 = getCacheValue(CacheType.tableCache, key, OsSysTable.class);
-                    List<Map<String, Object>> baseList = baseMapper.selectAll(osSysTable1.getTableName());
+                    Condition condition = Condition.creatCriteria().andEqual("DELETED",1).build();
+                    List<Map<String, Object>> baseList = baseMapper.selectByCondition(osSysTable1.getTableName(),condition);
                     JudgeException.isNull(baseList, "can not find key " + key + " in cache which cache name is " + name);
                     baseCache.add(name.toString(), key, baseList, List.class);
                     break;
+                default:
+                    throw new SecurityException("noValue!");
             }
         }
         return baseCache.get(name.toString(), key, tClass);

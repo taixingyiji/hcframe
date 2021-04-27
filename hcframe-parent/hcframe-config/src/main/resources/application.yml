@@ -86,9 +86,9 @@ mybatis:
 # swagger配置
 swagger:
   # 配置controller包路径
-  path: com.hcframe.module.**.controller
+#  path: com.hcframe.module.**.controller
   # 是否开启权限
-  enableAuth: false
+  enableAuth: fals
   # 用户名
   username: admin
   # 密码

@@ -1,13 +1,17 @@
 package com.hcframe.user.common.config;
 
-import com.hcframe.base.module.auth.dao.FtUserDao;
-import com.hcframe.base.module.auth.entity.FtUser;
+import com.hcframe.base.module.data.module.BaseMapper;
+import com.hcframe.base.module.data.module.BaseMapperImpl;
 import com.hcframe.base.module.shiro.service.ShiroType;
 import com.hcframe.base.module.shiro.service.SystemRealm;
+import com.hcframe.user.module.auth.service.AuthService;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author lhc
@@ -17,11 +21,13 @@ import java.util.LinkedHashMap;
 @Component
 public class ShiroRealmConfig implements SystemRealm {
 
-    final
-    FtUserDao ftUserDao;
+    final BaseMapper baseMapper;
+    final AuthService authService;
 
-    public ShiroRealmConfig(FtUserDao ftUserDao) {
-        this.ftUserDao = ftUserDao;
+    public ShiroRealmConfig(@Qualifier(BaseMapperImpl.BASE)BaseMapper baseMapper,
+                            AuthService authService){
+        this.baseMapper = baseMapper;
+        this.authService = authService;
     }
 
     /**
@@ -31,7 +37,13 @@ public class ShiroRealmConfig implements SystemRealm {
      */
     @Override
     public SimpleAuthorizationInfo setAuthoriztion(Object user) {
-        return new SimpleAuthorizationInfo();
+        Map<String, Object> map = (Map<String, Object>) user;
+        SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
+        Set<String> set = authService.getUserAuth(String.valueOf(map.get("ID")));
+        for (String auth : set) {
+            simpleAuthorizationInfo.addStringPermission(auth);
+        }
+        return simpleAuthorizationInfo;
     }
 
     /**
@@ -41,7 +53,7 @@ public class ShiroRealmConfig implements SystemRealm {
      */
     @Override
     public Object findByUserId(String userId) {
-        return ftUserDao.selectOne(FtUser.builder().userId(Integer.parseInt(userId)).build());
+        return null;
     }
 
     /**

@@ -45,25 +45,27 @@ public class ShiroConfig {
     public CustomRealm myShiroRealm() {
         CustomRealm customRealm = new CustomRealm();
         customRealm.setCachingEnabled(false);
-        return new CustomRealm();
+        return customRealm;
     }
+
     /**
+     * @return org.apache.shiro.web.mgt.DefaultWebSubjectFactory
      * @author lhc
      * @description // 自定义subject工厂
      * @date 4:50 下午 2021/4/19
      * @params []
-     * @return org.apache.shiro.web.mgt.DefaultWebSubjectFactory
      **/
     @Bean
     public DefaultWebSubjectFactory subjectFactory() {
         return new StatelessDefaultSubjectFactory();
     }
+
     /**
+     * @return org.apache.shiro.session.mgt.SessionManager
      * @author lhc
      * @description // 自定义session管理器
      * @date 5:50 下午 2021/4/19
      * @params []
-     * @return org.apache.shiro.session.mgt.SessionManager
      **/
     @Bean
     public SessionManager sessionManager() {
@@ -89,7 +91,7 @@ public class ShiroConfig {
         securityManager.setSubjectFactory(subjectFactory());
         // 设置自定义session管理器
         securityManager.setSessionManager(sessionManager());
-        // 设置自定义realm
+//         设置自定义realm
         securityManager.setRealm(myShiroRealm());
         return securityManager;
     }
@@ -103,7 +105,7 @@ public class ShiroConfig {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager());
         Map<String, Filter> filters = new HashMap<>(1);
-        filters.put("auth", new NoStateFilter());
+        filters.put("auth", new AuthFilter());
         shiroFilterFactoryBean.setFilters(filters);
         shiroFilterFactoryBean.setFilterChainDefinitionMap(systemRealm.setShiroUrl());
         return shiroFilterFactoryBean;
@@ -113,9 +115,9 @@ public class ShiroConfig {
      * 加入注解的使用，不加入这个注解不生效
      */
     @Bean
-    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(SecurityManager securityManager) {
+    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor() {
         AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor = new AuthorizationAttributeSourceAdvisor();
-        authorizationAttributeSourceAdvisor.setSecurityManager(securityManager);
+        authorizationAttributeSourceAdvisor.setSecurityManager(securityManager());
         return authorizationAttributeSourceAdvisor;
     }
 

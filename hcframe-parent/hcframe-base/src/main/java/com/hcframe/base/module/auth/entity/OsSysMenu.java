@@ -1,10 +1,12 @@
 package com.hcframe.base.module.auth.entity;
 
+import com.hcframe.base.module.data.annotation.DataIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Date;
@@ -33,6 +35,7 @@ public class OsSysMenu implements Serializable {
     /**
     * 菜单ID
     */
+    @Id
     private Long menuId;
     /**
     * 菜单名称
@@ -109,6 +112,13 @@ public class OsSysMenu implements Serializable {
      */
     private String affix;
 
+    private Long osId;
+
+    private Integer version;
+
+    private Integer deleted;
+
+    @DataIgnore
     private List<OsSysMenu> children;
 
 }

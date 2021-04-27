@@ -75,7 +75,7 @@ public class DeptServiceImpl implements DeptService {
     @Override
     public ResultVO<List<Map<String, Object>>> getDeptTree() {
         // 获取全部
-        String sql = "SELECT " + ID + "," + PATH + "," + TYPE + "," + NAME + " FROM " + GB_CAS_DEPT + " ORDER BY " + SORT_ID;
+        String sql = "SELECT " + ID + "," + PATH + "," + TYPE + "," + NAME + ",CODE FROM " + GB_CAS_DEPT + " ORDER BY " + SORT_ID;
         List<Map<String, Object>> allDataList = baseMapper.selectSql(sql);
         // 根节点
         List<Map<String, Object>> rootList = new ArrayList<>();

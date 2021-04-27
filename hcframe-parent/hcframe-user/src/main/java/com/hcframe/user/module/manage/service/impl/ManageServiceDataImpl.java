@@ -112,15 +112,15 @@ public class ManageServiceDataImpl implements ManageService {
     public ResultVO<PageInfo<Map<String, Object>>> getUserList(String data, WebPageInfo webPageInfo, String orgId) {
         DataMap<Object> dataMap = DataMap.builder().sysOsTable(TABLE_INFO).build();
         Condition.ConditionBuilder builder = Condition.creatCriteria(dataMap);
-        if (!StringUtils.isEmpty(orgId)) {
+        if (!StringUtils.isEmpty(orgId)&&!orgId.equals("guobo")) {
             orgId = orgId.replaceAll("\"", "");
-            String sql = "select ID from GB_CAS_DEPT start with ID="+orgId+" connect by prior ID=ORG_ACCOUNT_ID";
+            String sql = "select CODE from GB_CAS_DEPT where CODE like '"+orgId+"%'";
             List<Map<String, Object>> list = baseMapper.selectSql(sql);
             List<Object> idList = new ArrayList<>();
             for (Map<String, Object> code : list) {
-                idList.add(code.get("ID"));
+                idList.add(code.get("CODE"));
             }
-            builder.andIn("ORG_DEPARTMENT_ID",idList);
+            builder.andIn("DEPT_CODE",idList);
         }
         builder.andEqual("USER_TYPE", "GN");
         if (!StringUtils.isEmpty(data)) {

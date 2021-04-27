@@ -6,6 +6,7 @@
     <result column="FIELD_NAME" jdbcType="VARCHAR" property="fieldName" />
     <result column="NAME_CN" jdbcType="VARCHAR" property="nameCn" />
     <result column="JAVA_TYPE" jdbcType="VARCHAR" property="javaType" />
+    <result column="JAVA_FIELD" jdbcType="VARCHAR" property="javaField" />
     <result column="WEB_TYPE" jdbcType="VARCHAR" property="webType" />
     <result column="NOT_NULL" jdbcType="VARCHAR" property="notNull" />
     <result column="IS_CHANGE" jdbcType="VARCHAR" property="isChange" />
