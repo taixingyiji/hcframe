@@ -45,114 +45,24 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public List<String> getUserRoleAuth(String userId) {
-        SelectCondition selectCondition = SelectCondition
-                .sqlJoinBuilder("OS_REL_USER_ROLE")
-                .field("OS_SYS_MENU.PATH")
-                .join("OS_REL_ROLE_MENU")
-                .on("ROLE_ID", "OS_REL_USER_ROLE", "ROLE_ID")
-                .join("OS_SYS_MENU")
-                .on("MENU_ID", "OS_REL_ROLE_MENU", "MENU_ID")
-                .join("OS_SYS_ROLE")
-                .on("ROLE_ID", "OS_REL_USER_ROLE", "ROLE_ID")
-                .build();
-        Condition condition = Condition.creatCriteria(selectCondition)
-                .andEqual("OS_SYS_ROLE.DELETED", 1)
-                .andEqual("OS_SYS_MENU.DELETED", 1)
-                .andEqual("OS_SYS_MENU.MENU_STATUS",1)
-                .andEqual("OS_SYS_MENU.OS_ID", 8)
-                .andEqual("OS_REL_USER_ROLE.USER_ID", userId.replaceAll("\"", ""))
-                .build();
-        return getPaths(condition);
+        return authDao.getUserRoleAuth(userId);
     }
 
     @Override
     public List<String> getUserRoleGroupAuth(String userId) {
-        SelectCondition selectCondition = SelectCondition
-                .sqlJoinBuilder("OS_REL_USER_GROUP")
-                .field("OS_SYS_MENU.PATH")
-                .join("OS_SYS_ROLE_GROUP")
-                .on("GROUP_ID", "OS_REL_USER_GROUP", "GROUP_ID")
-                .join("OS_REL_GROUP_ROLE")
-                .on("GROUP_ID", "OS_REL_USER_GROUP", "GROUP_ID")
-                .join("OS_SYS_ROLE")
-                .on("ROLE_ID", "OS_REL_GROUP_ROLE", "ROLE_ID")
-                .join("OS_REL_ROLE_MENU")
-                .on("ROLE_ID", "OS_REL_GROUP_ROLE", "ROLE_ID")
-                .join("OS_SYS_MENU")
-                .on("MENU_ID", "OS_REL_ROLE_MENU", "MENU_ID")
-                .build();
-        Condition condition = Condition.creatCriteria(selectCondition)
-                .andEqual("OS_SYS_ROLE.DELETED", 1)
-                .andEqual("OS_SYS_MENU.DELETED", 1)
-                .andEqual("OS_SYS_MENU.OS_ID", 8)
-                .andEqual("OS_SYS_MENU.MENU_STATUS",1)
-                .andEqual("OS_SYS_ROLE_GROUP.DELETED", 1)
-                .andEqual("OS_REL_USER_GROUP.USER_ID", userId.replaceAll("\"", ""))
-                .build();
-        return getPaths(condition);
-    }
+        return authDao.getUserRoleGroupAuth(userId);
 
-    private List<String> getPaths(Condition condition) {
-        List<Map<String, Object>> list = baseMapper.selectByCondition(condition);
-        List<String> resultList = new ArrayList<>();
-        if (list != null && list.size() > 0) {
-            for (Map<String, Object> objectMap : list) {
-                resultList.add(String.valueOf(objectMap.get("PATH")));
-            }
-        }
-        return resultList;
     }
 
     @Override
     public List<String> getOrgRoleAuth(String orgCode) {
-        DataMap<Object> dataMap = DataMap.builder().tableName("GB_CAS_DEPT").fields("ID").build();
-        Map<String, Object> org = baseMapper.selectOneByCondition(Condition.creatCriteria(dataMap).andEqual("CODE", orgCode).build());
-        SelectCondition selectCondition = SelectCondition
-                .sqlJoinBuilder("OS_REL_DEPT_ROLE")
-                .field("OS_SYS_MENU.PATH")
-                .join("OS_SYS_ROLE")
-                .on("ROLE_ID", "OS_REL_DEPT_ROLE", "ROLE_ID")
-                .join("OS_REL_ROLE_MENU")
-                .on("ROLE_ID", "OS_REL_DEPT_ROLE", "ROLE_ID")
-                .join("OS_SYS_MENU")
-                .on("MENU_ID", "OS_REL_ROLE_MENU", "MENU_ID")
-                .build();
-        Condition condition = Condition.creatCriteria(selectCondition)
-                .andEqual("OS_SYS_ROLE.DELETED", 1)
-                .andEqual("OS_SYS_MENU.DELETED", 1)
-                .andEqual("OS_SYS_MENU.OS_ID", 8)
-                .andEqual("OS_SYS_MENU.MENU_STATUS",1)
-                .andEqual("OS_REL_DEPT_ROLE.DEPT_ID", org.get("ID")).build();
-        return getPaths(condition);
+        return authDao.getOrgRoleAuth(orgCode);
+
     }
 
     @Override
     public List<String> getOrgGroupAuth(String orgCode) {
-        DataMap<Object> dataMap = DataMap.builder().tableName("GB_CAS_DEPT").fields("ID").build();
-        Map<String, Object> org = baseMapper.selectOneByCondition(Condition.creatCriteria(dataMap).andEqual("CODE", orgCode).build());
-        SelectCondition selectCondition = SelectCondition
-                .sqlJoinBuilder("OS_REL_DEPT_GROUP")
-                .field("OS_SYS_MENU.PATH")
-                .join("OS_SYS_ROLE_GROUP")
-                .on("GROUP_ID", "OS_REL_DEPT_GROUP", "GROUP_ID")
-                .join("OS_REL_GROUP_ROLE")
-                .on("GROUP_ID", "OS_REL_DEPT_GROUP", "GROUP_ID")
-                .join("OS_SYS_ROLE")
-                .on("ROLE_ID", "OS_REL_GROUP_ROLE", "ROLE_ID")
-                .join("OS_REL_ROLE_MENU")
-                .on("ROLE_ID", "OS_REL_GROUP_ROLE", "ROLE_ID")
-                .join("OS_SYS_MENU")
-                .on("MENU_ID", "OS_REL_ROLE_MENU", "MENU_ID")
-                .build();
-        Condition condition = Condition.creatCriteria(selectCondition)
-                .andEqual("OS_SYS_ROLE.DELETED", 1)
-                .andEqual("OS_SYS_MENU.DELETED", 1)
-                .andEqual("OS_SYS_ROLE_GROUP.DELETED", 1)
-                .andEqual("OS_SYS_MENU.OS_ID", 8)
-                .andEqual("OS_SYS_MENU.MENU_STATUS",1)
-                .andEqual("OS_REL_DEPT_GROUP.DEPT_ID", org.get("ID"))
-                .build();
-        return getPaths(condition);
+        return authDao.getOrgGroupAuth(orgCode);
     }
 
     @Override
@@ -160,15 +70,22 @@ public class AuthServiceImpl implements AuthService {
         Set<String> authSet = (Set<String>) redisUtil.hget("auth", userId);
         if (authSet == null) {
             Map<String, Object> user = baseMapper.selectByPk(DataMap.builder().tableName("GB_CAS_MEMBER").pkName("ID").pkValue(userId).build());
-            if ("admin".equals(user.get("NAME"))) {
+            if (user != null && "admin".equals(user.get("NAME"))) {
                 authSet = getAllAuth();
-                redisUtil.hset("auth", userId,authSet,24 * 3600);
+                redisUtil.hset("auth", userId, authSet, 24 * 3600);
                 return getAllAuth();
             }
             List<String> roleAuth = getUserRoleAuth(String.valueOf(user.get("ID")));
             List<String> groupAuth = getUserRoleAuth(String.valueOf(user.get("ID")));
-            List<String> orgAui = getOrgRoleAuth(String.valueOf(user.get("DEPT_CODE")));
-            List<String> orgGroupAuth = getOrgGroupAuth(String.valueOf(user.get("DEPT_CODE")));
+            List<String> orgAui;
+            List<String> orgGroupAuth;
+            if (!org.springframework.util.StringUtils.isEmpty(user.get("DEPT_CODE"))) {
+                orgAui = getOrgRoleAuth(String.valueOf(user.get("DEPT_CODE")));
+                orgGroupAuth = getOrgGroupAuth(String.valueOf(user.get("DEPT_CODE")));
+            } else {
+                orgAui = new ArrayList<>();
+                orgGroupAuth = new ArrayList<>();
+            }
             List<String> orgGuobo = getOrgGroupAuth("guobo");
             List<String> orgGuoboGroup = getOrgGroupAuth("guobo");
             authSet = new HashSet<>(roleAuth);
@@ -177,7 +94,7 @@ public class AuthServiceImpl implements AuthService {
             authSet.addAll(orgGroupAuth);
             authSet.addAll(orgGuobo);
             authSet.addAll(orgGuoboGroup);
-            if (String.valueOf(user.get("DEPT_CODE")).length() == 6) {
+            if (!org.springframework.util.StringUtils.isEmpty(user.get("DEPT_CODE")) && String.valueOf(user.get("DEPT_CODE")).length() == 6) {
                 String code = String.valueOf(user.get("DEPT_CODE"));
                 code = code.substring(0, 4);
                 List<String> orgAuiParent = getOrgGroupAuth(code);
@@ -185,7 +102,7 @@ public class AuthServiceImpl implements AuthService {
                 authSet.addAll(orgAuiParent);
                 authSet.addAll(orgGroupAuthParent);
             }
-            redisUtil.hset("auth", userId,authSet,24 * 3600);
+            redisUtil.hset("auth", userId, authSet, 24 * 3600);
         }
         return authSet;
     }
@@ -247,7 +164,8 @@ public class AuthServiceImpl implements AuthService {
         }
         return tlist;
     }
-     private boolean hasChild(List<OsSysMenu> list, OsSysMenu t) {
+
+    private boolean hasChild(List<OsSysMenu> list, OsSysMenu t) {
         return getChildList(list, t).size() > 0;
     }
 
@@ -298,11 +216,14 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public List<OsSysMenu> getUserMenuResult(Set<String> set) {
+        if (set == null || set.size() == 0) {
+            return new ArrayList<>();
+        }
         StringBuilder stringBuilder = new StringBuilder();
         for (String str : set) {
             stringBuilder.append("'").append(str).append("'").append(",");
         }
-        List<OsSysMenu> list=osSysMenuDao.selectMenuByUser(stringBuilder.substring(0, stringBuilder.length() - 1));
+        List<OsSysMenu> list = osSysMenuDao.selectMenuByUser(stringBuilder.substring(0, stringBuilder.length() - 1));
         return getChildPerms(list, 0);
     }
 
@@ -312,9 +233,41 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public List<Map<String,Object>> getMenuResultList(OsSysMenu osSysMenu) {
-
+    public List<Map<String, Object>> getMenuResultList(OsSysMenu osSysMenu) {
         return authDao.selectMenuList(osSysMenu);
+    }
+
+    @Override
+    public Long getUserOs(String userId) {
+        Map<String, Object> user = baseMapper.selectByPk("GB_CAS_MEMBER", "ID", userId.replaceAll("\"", ""));
+        if (user != null && "admin".equals(user.get("NAME"))) {
+            return baseMapper.count("OS_SYS_OS", Condition.creatCriteria().build());
+        }
+        Long count = 0L;
+        count += getRoleOs(userId);
+        count += getGroupOs(userId);
+        if (!org.springframework.util.StringUtils.isEmpty(user.get("DEPT_CODE"))) {
+            count += getOrgOs(String.valueOf(user.get("DEPT_CODE")));
+            count += getOrgGroupOs(String.valueOf(user.get("DEPT_CODE")));
+        }
+        return count;
+    }
+
+    public Long getRoleOs(String userId) {
+        return authDao.getRoleOs(userId);
+    }
+
+    public Long getGroupOs(String userId) {
+        return authDao.getGroupOs(userId);
+    }
+
+    public Long getOrgOs(String orgCode) {
+        return authDao.getOrgOs(orgCode);
+
+    }
+
+    public Long getOrgGroupOs(String orgCode) {
+        return authDao.getOrgGroupOs(orgCode);
     }
 
 
@@ -364,7 +317,7 @@ public class AuthServiceImpl implements AuthService {
         if (StringUtils.isNotEmpty(menu.getComponent()) && !isMeunFrame(menu)) {
             component = menu.getComponent();
         }
-        if (StringUtils.isEmpty(menu.getComponent())&&isNotParentMenuFrame(menu)) {
+        if (StringUtils.isEmpty(menu.getComponent()) && isNotParentMenuFrame(menu)) {
             component = AuthConstants.UN_LAYOUT;
         }
         return component;

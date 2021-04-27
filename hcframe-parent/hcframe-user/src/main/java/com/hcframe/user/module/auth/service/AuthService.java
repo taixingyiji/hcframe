@@ -36,4 +36,6 @@ public interface AuthService {
 
     List<Map<String,Object>> getMenuResultList(OsSysMenu osSysMenu);
 
+    Long getUserOs(String userId);
+
 }

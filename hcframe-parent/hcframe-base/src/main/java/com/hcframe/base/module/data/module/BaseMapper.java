@@ -124,4 +124,6 @@ public interface BaseMapper {
 
     Long count(String tableName, Condition condition);
 
+    Long count(Condition condition);
+
 }
