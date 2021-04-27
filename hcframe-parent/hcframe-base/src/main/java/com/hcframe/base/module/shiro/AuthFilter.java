@@ -44,7 +44,7 @@ public class AuthFilter extends AuthenticatingFilter {
             httpResponse.setHeader("Access-Control-Allow-Headers", "x-requested-with, X-Access-Token, datasource-Key");
             httpResponse.setHeader("Access-Control-Allow-Origin", myOrigin);
             httpResponse.setCharacterEncoding("UTF-8");
-            Map<String, Object> result = new HashMap<>();
+            Map<String, Object> result = new HashMap<>(2);
             result.put("code", 3);
             result.put("msg", "未登陆");
             String json = JSON.toJSONString(result);
@@ -86,7 +86,7 @@ public class AuthFilter extends AuthenticatingFilter {
             httpResponse.setHeader("Access-Control-Allow-Headers", "x-requested-with, X-Access-Token, datasource-Key");
             httpResponse.setHeader("Access-Control-Allow-Origin", myOrigin);
             httpResponse.setCharacterEncoding("UTF-8");
-            Map<String, Object> result = new HashMap<>();
+            Map<String, Object> result = new HashMap<>(2);
             result.put("code", 3);
             result.put("msg", "未登陆");
             String json = JSON.toJSONString(result);
@@ -117,7 +117,7 @@ public class AuthFilter extends AuthenticatingFilter {
         try {
             //处理登录失败的异常
             Throwable throwable = e.getCause() == null ? e : e.getCause();
-            Map<String, Object> result = new HashMap<>();
+            Map<String, Object> result = new HashMap<>(2);
             result.put("code", 3);
             result.put("msg", "未登陆");
             String json = JSON.toJSONString(result);

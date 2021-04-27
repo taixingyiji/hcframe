@@ -46,4 +46,6 @@ public interface TableMapper {
     int createSequence(@Param("tableName") String tableName, @Param("lastId")Object lastId);
 
     Long count(@Param("tableName")String tableName,@Param("sql")String sql);
+
+    Long countBySql(@Param("sql") String sql);
 }

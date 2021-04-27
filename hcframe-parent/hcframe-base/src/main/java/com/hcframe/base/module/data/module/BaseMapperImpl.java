@@ -604,6 +604,11 @@ public class BaseMapperImpl implements BaseMapper {
         return tableMapper.count(tableName,condition.getSql());
     }
 
+    @Override
+    public Long count(Condition condition) {
+        return tableMapper.countBySql(condition.getSql());
+    }
+
     public void JudgesNull(Object object, String str) {
         if (object == null) {
             throw new BaseMapperException(str);
