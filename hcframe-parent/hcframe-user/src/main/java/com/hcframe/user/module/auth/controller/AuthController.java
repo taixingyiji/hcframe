@@ -55,7 +55,7 @@ public class AuthController {
         if (menus == null || menus.size() == 0) {
             return ResultVO.getSuccess(new ArrayList<>());
         }
-        Map<String, Object> resultMap = new HashMap<>();
+        Map<String, Object> resultMap = new HashMap<>(2);
         resultMap.put("menu", authService.formatMenu(menus));
         resultMap.put("auth", set);
         return ResultVO.getSuccess(resultMap);

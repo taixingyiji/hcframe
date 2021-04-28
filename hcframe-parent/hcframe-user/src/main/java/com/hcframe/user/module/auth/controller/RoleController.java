@@ -3,6 +3,7 @@ package com.hcframe.user.module.auth.controller;
 import com.github.pagehelper.PageInfo;
 import com.hcframe.base.common.ResultVO;
 import com.hcframe.base.common.WebPageInfo;
+import com.hcframe.redis.RedisUtil;
 import com.hcframe.user.module.auth.service.RoleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -25,9 +26,12 @@ import java.util.Map;
 public class RoleController {
 
     final RoleService roleService;
+    final RedisUtil redisUtil;
 
-    public RoleController(RoleService roleService) {
+    public RoleController(RoleService roleService,
+                          RedisUtil redisUtil) {
         this.roleService = roleService;
+        this.redisUtil = redisUtil;
     }
 
     @PostMapping()
@@ -39,12 +43,14 @@ public class RoleController {
     @PutMapping("/{version}")
     @ApiOperation(value = "更新role")
     public ResultVO<Integer> updateRole(@RequestParam Map<String, Object> role, @PathVariable Integer version) {
+        redisUtil.del("auth");
         return roleService.updateRole(role, version);
     }
 
     @DeleteMapping("/{ids}")
     @ApiOperation(value = "删除role", notes = "删除后关联表数据也会被删除")
-    public ResultVO<Object> deleteOrg(@PathVariable String ids) {
+    public ResultVO<Object> deleteRole(@PathVariable String ids) {
+        redisUtil.del("auth");
         return roleService.deleteRole(ids);
     }
 

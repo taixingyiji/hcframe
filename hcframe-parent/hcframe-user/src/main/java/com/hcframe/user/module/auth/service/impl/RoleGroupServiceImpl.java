@@ -74,6 +74,7 @@ public class RoleGroupServiceImpl implements RoleGroupServie {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ResultVO<Object> bind(Integer roleGroupId, String roleIds) {
+        JudgeException.isNull(roleGroupId,"roleGroupId 不能为空");
         baseMapper.deleteByCondition(OS_REL_GROUP_ROLE, Condition.creatCriteria().andEqual(PK_ID,roleGroupId).build());
         if (StringUtils.isEmpty(roleIds)) {
             return ResultVO.getSuccess();
