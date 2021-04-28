@@ -108,25 +108,31 @@ public class MenuServiceImpl2 implements MenuService {
 	@Override
 	@Transactional
 	public ResultVO<Object> addRoleMenu(Long roleId, List<String> menuIds) {
+		if (null == roleId) {
+			return ResultVO.getFailed("授权角色不能为空");
+		}
+
 		baseMapper.deleteByCondition(OS_REL_ROLE_OS.getTableName(), Condition.creatCriteria().andEqual("ROLE_ID", roleId).build());
 		baseMapper.deleteByCondition(OS_REL_ROLE_MENU.getTableName(), Condition.creatCriteria().andEqual("ROLE_ID", roleId).build());
-		menuIds.forEach(menuId -> {
-			if (menuId.startsWith("OS")) {
-				Map<String, Object> data = new HashMap<>();
-				data.put("ROLE_ID", roleId);
-				data.put("OS_ID", Long.valueOf(menuId.substring(2)));
-				data.put("VERSION", 1);
-				data.put("DELETED", 1);
-				tableService.saveWithDate(OS_REL_ROLE_OS, data);
-			} else {
-				Map<String, Object> data = new HashMap<>();
-				data.put("ROLE_ID", roleId);
-				data.put("MENU_ID", menuId);
-				data.put("VERSION", 1);
-				data.put("DELETED", 1);
-				tableService.saveWithDate(OS_REL_ROLE_MENU, data);
-			}
-		});
+		if (menuIds != null) {
+			menuIds.forEach(menuId -> {
+				if (menuId.startsWith("OS")) {
+					Map<String, Object> data = new HashMap<>();
+					data.put("ROLE_ID", roleId);
+					data.put("OS_ID", Long.valueOf(menuId.substring(2)));
+					data.put("VERSION", 1);
+					data.put("DELETED", 1);
+					tableService.saveWithDate(OS_REL_ROLE_OS, data);
+				} else {
+					Map<String, Object> data = new HashMap<>();
+					data.put("ROLE_ID", roleId);
+					data.put("MENU_ID", menuId);
+					data.put("VERSION", 1);
+					data.put("DELETED", 1);
+					tableService.saveWithDate(OS_REL_ROLE_MENU, data);
+				}
+			});
+		}
 		return ResultVO.getSuccess();
 	}
 

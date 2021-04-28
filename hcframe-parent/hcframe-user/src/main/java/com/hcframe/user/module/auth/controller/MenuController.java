@@ -56,7 +56,7 @@ public class MenuController {
 
 	@PostMapping("addRole")
     @ApiOperation(value = "角色授权", notes = "roleId,menuIds,中间用逗号连接")
-    public ResultVO<Object> addRoleMenu(@RequestParam Long roleId,@RequestParam List<String> menuIds) {
+    public ResultVO<Object> addRoleMenu(@RequestParam Long roleId,@RequestParam(required=false) List<String> menuIds) {
         redisUtil.del("auth");
         return menuService.addRoleMenu(roleId, menuIds);
     }
