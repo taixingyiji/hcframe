@@ -16,7 +16,7 @@ import java.util.Map;
  * @author lhc
  * @date 2021-02-05
  */
-@Api(tags = "用户管理")
+@Api(tags = "馆内用户管理")
 @RequestMapping("manage")
 @RestController
 public class ManageController {

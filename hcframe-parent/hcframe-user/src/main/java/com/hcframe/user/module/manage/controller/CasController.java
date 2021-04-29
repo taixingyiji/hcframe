@@ -73,8 +73,7 @@ public class CasController {
 
     @GetMapping("userinfo")
     @ResponseBody
-    public ResultVO<Object> getUserInfo(String token) {
-//        return ResultVO.getSuccess(redisUtil.hget("session", token));
+    public ResultVO<Object> getUserInfo() {
         return ResultVO.getSuccess(SecurityUtils.getSubject().getPrincipal());
     }
 
