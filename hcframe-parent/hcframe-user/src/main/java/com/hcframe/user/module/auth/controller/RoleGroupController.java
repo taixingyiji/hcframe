@@ -3,6 +3,7 @@ package com.hcframe.user.module.auth.controller;
 import com.github.pagehelper.PageInfo;
 import com.hcframe.base.common.ResultVO;
 import com.hcframe.base.common.WebPageInfo;
+import com.hcframe.base.module.log.annotation.LogAnno;
 import com.hcframe.redis.RedisUtil;
 import com.hcframe.user.module.auth.service.RoleGroupServie;
 import io.swagger.annotations.Api;
@@ -35,12 +36,14 @@ public class RoleGroupController {
     }
 
     @PostMapping()
+    @LogAnno(operateType="新增角色组信息",moduleName="系统管理-权限管理-角色组管理")
     @ApiOperation(value = "新增角色组", notes = "给后台传key-value对象模式即可")
     public ResultVO<Map<String,Object>>  addRole(@RequestParam Map<String, Object> roleGroup) {
         return roleGroupServie.add(roleGroup);
     }
 
     @PutMapping("/{version}")
+    @LogAnno(operateType="更新角色组信息",moduleName="系统管理-权限管理-角色组管理")
     @ApiOperation(value = "更新角色组")
     public ResultVO<Integer> updateRole(@RequestParam Map<String, Object> roleGroup, @PathVariable Integer version) {
         redisUtil.del("auth");
@@ -48,6 +51,7 @@ public class RoleGroupController {
     }
 
     @DeleteMapping("/{ids}")
+    @LogAnno(operateType="删除角色组信息",moduleName="系统管理-权限管理-角色组管理")
     @ApiOperation(value = "删除角色组", notes = "删除后关联表数据也会被删除")
     public ResultVO<Integer> deleteOrg(@PathVariable String ids) {
         redisUtil.del("auth");
@@ -61,6 +65,7 @@ public class RoleGroupController {
     }
 
     @PostMapping("bind")
+    @LogAnno(operateType="绑定角色组信息",moduleName="系统管理-权限管理-角色组管理")
     @ApiOperation(value = "绑定角色组")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "groupId", value = "角色组ID",required = true),

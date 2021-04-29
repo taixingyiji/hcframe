@@ -3,6 +3,7 @@ package com.hcframe.user.module.manage.controller;
 import com.github.pagehelper.PageInfo;
 import com.hcframe.base.common.ResultVO;
 import com.hcframe.base.common.WebPageInfo;
+import com.hcframe.base.module.log.annotation.LogAnno;
 import com.hcframe.user.module.manage.service.ManageService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -34,18 +35,21 @@ public class ManageController {
     }
 
     @PostMapping()
+    @LogAnno(operateType="新增用户信息",moduleName="身份管理-管内用户管理")
     @ApiOperation(value = "新增用户信息", notes = "将自动传承ey-value对象模式即可")
     public ResultVO<Map<String,Object>> addUser(@RequestParam Map<String,Object> user) {
         return manageService.addUser(user);
     }
 
     @PutMapping("/{version}")
+    @LogAnno(operateType="更新用户信息",moduleName="身份管理-管内用户管理")
     @ApiOperation(value = "更新用户信息")
     public ResultVO<Integer> updateUser(@RequestParam Map<String,Object> user,@PathVariable Integer version) {
         return manageService.updateUser(user,version);
     }
 
     @DeleteMapping("/{ids}")
+    @LogAnno(operateType="删除用户信息",moduleName="身份管理-管内用户管理")
     @ApiOperation(value = "删除用户（逻辑删除）", notes = "删除后职位也会被删除")
     public ResultVO<Integer> deleteUser(@PathVariable String ids) {
         return manageService.deleteUser(ids);
@@ -59,12 +63,14 @@ public class ManageController {
     }
 
     @PutMapping("disable/{version}")
+    @LogAnno(operateType="用户启用禁用",moduleName="身份管理-管内用户管理")
     @ApiOperation(value = "启用/禁用",notes = "用户启用禁用")
     public ResultVO<Integer> disable(Boolean enabled,String userId,@PathVariable Integer version) {
         return manageService.disable(enabled,userId,version);
     }
 
     @PutMapping("/resetPassword/{version}")
+    @LogAnno(operateType="重置密码",moduleName="身份管理-管内用户管理")
     @ApiOperation(value = "重置密码")
     @RequiresPermissions(value = { "systemManage","system:list" },logical = Logical.AND)
     public ResultVO<Integer> resetPassword(String userId,@PathVariable Integer version) {
@@ -72,6 +78,7 @@ public class ManageController {
     }
 
     @PutMapping("changePassword")
+    @LogAnno(operateType="修改密码",moduleName="身份管理-管内用户管理")
     @ApiOperation(value = "修改密码",notes = "用户输入原密码和新密码")
     public ResultVO<Integer> changePassword(String pwd,String npwd,String npwd2) {
         return manageService.changePassword(pwd,npwd,npwd2);

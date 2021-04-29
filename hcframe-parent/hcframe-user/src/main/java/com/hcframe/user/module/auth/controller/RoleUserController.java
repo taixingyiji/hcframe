@@ -1,6 +1,7 @@
 package com.hcframe.user.module.auth.controller;
 
 import com.hcframe.base.common.ResultVO;
+import com.hcframe.base.module.log.annotation.LogAnno;
 import com.hcframe.redis.RedisUtil;
 import com.hcframe.user.module.auth.service.RoleUserService;
 import io.swagger.annotations.Api;
@@ -32,6 +33,7 @@ public class RoleUserController {
     }
 
     @PostMapping("role")
+    @LogAnno(operateType="用户角色绑定",moduleName="系统管理-权限管理-用户授权")
     @ApiOperation(value = "用户角色绑定")
     public ResultVO<Object> roleUserBind(String userId, String roleIds) {
         redisUtil.del("auth");
@@ -45,6 +47,7 @@ public class RoleUserController {
     }
 
     @PostMapping("roleGroup")
+    @LogAnno(operateType="用户角色组绑定",moduleName="系统管理-权限管理-用户授权")
     @ApiOperation(value = "用户角色组绑定")
     public ResultVO<Object> roleGroupBind(String userId, String groupIds) {
         redisUtil.del("auth");
