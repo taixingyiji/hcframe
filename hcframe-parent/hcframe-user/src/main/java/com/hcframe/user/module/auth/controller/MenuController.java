@@ -32,14 +32,14 @@ public class MenuController {
     }
 
 	@PostMapping("add")
-	@LogAnno(operateType="新增功能权限",moduleName="系统管理-权限管理-功能权限管理-新增功能权限")
+	@LogAnno(operateType="新增功能权限",moduleName="系统管理-权限管理-功能权限管理")
     @ApiOperation(value = "新增功能级权限", notes = "给后台传key-value对象模式即可")
     public ResultVO<Object> addMenu(@RequestParam Map<String, Object> data) {
         return menuService.addMenu(data);
     }
 
 	@PostMapping("delete")
-	@LogAnno(operateType="删除功能权限",moduleName="系统管理-权限管理-功能权限管理-删除功能权限")
+	@LogAnno(operateType="删除功能权限",moduleName="系统管理-权限管理-功能权限管理")
     @ApiOperation(value = "删除功能级权限", notes = "删除后关联表数据也会被删除")
     public ResultVO<Object> deleteMenu(@RequestParam List<Long> ids) {
         redisUtil.del("auth");
@@ -47,7 +47,7 @@ public class MenuController {
     }
 
 	@PutMapping("/{version}")
-	@LogAnno(operateType="更新功能权限",moduleName="系统管理-权限管理-功能权限管理-更新功能权限")
+	@LogAnno(operateType="更新功能权限",moduleName="系统管理-权限管理-功能权限管理")
     @ApiOperation(value = "更新功能级权限")
     public ResultVO<Integer> updateMenu(@RequestParam Map<String, Object> data, @PathVariable Integer version) {
         redisUtil.del("auth");
@@ -61,7 +61,7 @@ public class MenuController {
     }
 
 	@PostMapping("addRole")
-	@LogAnno(operateType="角色授权",moduleName="系统管理-授权管理-角色授权")
+	@LogAnno(operateType="角色授权",moduleName="系统管理-授权管理")
     @ApiOperation(value = "角色授权", notes = "roleId,menuIds,中间用逗号连接")
     public ResultVO<Object> addRoleMenu(@RequestParam Long roleId,@RequestParam(required=false) List<String> menuIds) {
         redisUtil.del("auth");

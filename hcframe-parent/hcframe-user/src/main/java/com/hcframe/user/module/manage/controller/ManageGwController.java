@@ -25,21 +25,21 @@ public class ManageGwController {
 	@Autowired ManageGwService service;
 
 	@PostMapping()
-	@LogAnno(operateType="新增馆外用户",moduleName="系统管理-用户管理-馆外用户信息管理-新增馆外用户")
+	@LogAnno(operateType="新增馆外用户",moduleName="系统管理-用户管理-馆外用户信息管理")
     @ApiOperation(value = "新增用户信息", notes = "将自动传承ey-value对象模式即可")
     public ResultVO<Map<String,Object>> addUser(@RequestParam Map<String,Object> user) {
         return service.addUser(user);
     }
 
 	@PutMapping("/{version}")
-	@LogAnno(operateType="编辑馆外用户信息",moduleName="系统管理-用户管理-馆外用户信息管理-编辑馆外用户信息")
+	@LogAnno(operateType="编辑馆外用户信息",moduleName="系统管理-用户管理-馆外用户信息管理")
     @ApiOperation(value = "更新用户信息")
     public ResultVO<Integer> updateUser(@RequestParam Map<String,Object> user,@PathVariable Integer version) {
         return service.updateUser(user,version);
     }
 
     @DeleteMapping("/{ids}")
-    @LogAnno(operateType="删除馆外用户",moduleName="系统管理-用户管理-馆外用户信息管理-删除馆外用户")
+    @LogAnno(operateType="删除馆外用户",moduleName="系统管理-用户管理-馆外用户信息管理")
     @ApiOperation(value = "删除用户（逻辑删除）", notes = "删除后职位也会被删除")
     public ResultVO<Integer> deleteUser(@PathVariable String ids) {
         return service.deleteUser(ids);
@@ -52,14 +52,14 @@ public class ManageGwController {
     }
 
     @PutMapping("disable/{version}")
-    @LogAnno(operateType="启用/禁用馆外用户",moduleName="系统管理-用户管理-馆外用户信息管理-启用/禁用馆外用户")
+    @LogAnno(operateType="启用/禁用馆外用户",moduleName="系统管理-用户管理-馆外用户信息管理")
     @ApiOperation(value = "启用/禁用馆外用户",notes = "用户启用禁用")
     public ResultVO<Integer> disable(Boolean enabled,String userId,@PathVariable Integer version) {
         return service.disable(enabled,userId,version);
     }
 
     @PutMapping("/resetPassword/{version}")
-    @LogAnno(operateType="馆外用户重置密码",moduleName="系统管理-用户管理-馆外用户信息管理-馆外用户重置密码")
+    @LogAnno(operateType="馆外用户重置密码",moduleName="系统管理-用户管理-馆外用户信息管理")
     @ApiOperation(value = "馆外用户重置密码",notes = "用户启用禁用")
     public ResultVO<Integer> resetPassword(String userId,@PathVariable Integer version) {
         return service.resetPassword(userId,version);
