@@ -9,6 +9,8 @@ import com.hcframe.user.module.auth.service.RoleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,6 +40,7 @@ public class RoleController {
     @PostMapping()
     @LogAnno(operateType="新增角色信息",moduleName="系统管理-权限管理-角色管理")
     @ApiOperation(value = "新增role", notes = "给后台传key-value对象模式即可")
+    @RequiresPermissions(value = {"system:auth:role:add"})
     public ResultVO<Object> addRole(@RequestParam Map<String, Object> role) {
         return roleService.addRole(role);
     }
@@ -45,6 +48,7 @@ public class RoleController {
     @PutMapping("/{version}")
     @LogAnno(operateType="更新角色信息",moduleName="系统管理-权限管理-角色管理")
     @ApiOperation(value = "更新role")
+    @RequiresPermissions(value = {"system:auth:role:edit"})
     public ResultVO<Integer> updateRole(@RequestParam Map<String, Object> role, @PathVariable Integer version) {
         redisUtil.del("auth");
         return roleService.updateRole(role, version);
@@ -53,6 +57,7 @@ public class RoleController {
     @DeleteMapping("/{ids}")
     @LogAnno(operateType="删除角色信息",moduleName="系统管理-权限管理-角色管理")
     @ApiOperation(value = "删除role", notes = "删除后关联表数据也会被删除")
+    @RequiresPermissions(value = {"system:auth:role:delete"})
     public ResultVO<Object> deleteRole(@PathVariable String ids) {
         redisUtil.del("auth");
         return roleService.deleteRole(ids);
@@ -60,6 +65,7 @@ public class RoleController {
 
     @GetMapping()
     @ApiOperation(value = "获取角色列表")
+    @RequiresPermissions(value = {"role","system:auth:role:list","roleAuth","system:empower:role:list"},logical = Logical.OR)
     public ResultVO<PageInfo<Map<String, Object>>> getOrgList(String data, WebPageInfo webPageInfo) {
         return roleService.getRoleList(data, webPageInfo);
     }

@@ -184,7 +184,7 @@
                 <discovery.server-addr>192.168.100.98:8848</discovery.server-addr>
                 <!-- redis 配置-->
                 <redis.database>0</redis.database>
-                <redis.host>192.168.4.119</redis.host>
+                <redis.host>192.168.100.98</redis.host>
                 <redis.port>6379</redis.port>
                 <redis.password/>
                 <!-- cas配置 -->

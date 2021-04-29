@@ -6,6 +6,7 @@ import com.hcframe.redis.RedisUtil;
 import com.hcframe.user.module.auth.service.RoleDeptService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,6 +35,7 @@ public class RoleDeptController {
     }
 
     @PostMapping("role")
+    @RequiresPermissions(value = {"system:empower:org:role"})
     @LogAnno(operateType="角色机构绑定",moduleName="系统管理-权限管理-机构授权")
     @ApiOperation(value = "角色机构绑定")
     public ResultVO<Object> roleDeptBind(String deptId, String roleIds) {
@@ -50,6 +52,7 @@ public class RoleDeptController {
     @PostMapping("roleGroup")
     @LogAnno(operateType="角色机构组绑定",moduleName="系统管理-权限管理-机构授权")
     @ApiOperation(value = "角色机构组绑定")
+    @RequiresPermissions(value = {"system:empower:org:roleGroup"})
     public ResultVO<Object> roleGroupBind(String deptId, String groupIds) {
         redisUtil.del("auth");
         return roleDeptService.roleGroupBind(deptId,groupIds);

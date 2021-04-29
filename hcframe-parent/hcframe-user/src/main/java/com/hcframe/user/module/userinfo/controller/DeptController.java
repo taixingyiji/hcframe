@@ -6,6 +6,8 @@ import com.hcframe.base.common.WebPageInfo;
 import com.hcframe.user.module.userinfo.service.DeptService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,6 +48,7 @@ public class DeptController {
 
     @GetMapping()
     @ApiOperation(value = "获取机构列表", notes = "删除后职位也会被删除")
+    @RequiresPermissions(value = {"orgManage","empowerOrg","system:empower:org:list"},logical = Logical.OR)
     public ResultVO<PageInfo<Map<String, Object>>> getDeptList(String data, WebPageInfo webPageInfo) {
         return deptService.getDeptList(data, webPageInfo);
     }

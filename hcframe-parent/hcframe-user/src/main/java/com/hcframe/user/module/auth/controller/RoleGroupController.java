@@ -10,6 +10,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -38,6 +40,7 @@ public class RoleGroupController {
     @PostMapping()
     @LogAnno(operateType="新增角色组信息",moduleName="系统管理-权限管理-角色组管理")
     @ApiOperation(value = "新增角色组", notes = "给后台传key-value对象模式即可")
+    @RequiresPermissions(value = {"system:auth:roleGroup:add"})
     public ResultVO<Map<String,Object>>  addRole(@RequestParam Map<String, Object> roleGroup) {
         return roleGroupServie.add(roleGroup);
     }
@@ -45,12 +48,14 @@ public class RoleGroupController {
     @PutMapping("/{version}")
     @LogAnno(operateType="更新角色组信息",moduleName="系统管理-权限管理-角色组管理")
     @ApiOperation(value = "更新角色组")
+    @RequiresPermissions(value = {"system:auth:roleGroup:edit"})
     public ResultVO<Integer> updateRole(@RequestParam Map<String, Object> roleGroup, @PathVariable Integer version) {
         redisUtil.del("auth");
         return roleGroupServie.update(roleGroup, version);
     }
 
     @DeleteMapping("/{ids}")
+    @RequiresPermissions(value = {"system:auth:roleGroup:delete"})
     @LogAnno(operateType="删除角色组信息",moduleName="系统管理-权限管理-角色组管理")
     @ApiOperation(value = "删除角色组", notes = "删除后关联表数据也会被删除")
     public ResultVO<Integer> deleteOrg(@PathVariable String ids) {
@@ -60,6 +65,7 @@ public class RoleGroupController {
 
     @GetMapping()
     @ApiOperation(value = "获取角色组列表")
+    @RequiresPermissions(value = {"roleGroup","system:auth:roleGroup:list"},logical = Logical.OR)
     public ResultVO<PageInfo<Map<String, Object>>> getOrgList(String data, WebPageInfo webPageInfo) {
         return roleGroupServie.getList(data, webPageInfo);
     }
@@ -71,6 +77,7 @@ public class RoleGroupController {
             @ApiImplicitParam(name = "groupId", value = "角色组ID",required = true),
             @ApiImplicitParam(name = "roleIds", value = "角色ID数组",required = true)
     })
+    @RequiresPermissions(value = {"system:auth:roleGroup:bind"})
     public ResultVO<Object> bind(Integer groupId, String roleIds) {
         redisUtil.del("auth");
         return roleGroupServie.bind(groupId, roleIds);

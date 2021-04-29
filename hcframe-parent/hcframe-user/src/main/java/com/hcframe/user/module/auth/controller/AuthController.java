@@ -6,6 +6,8 @@ import com.hcframe.base.module.data.module.BaseMapper;
 import com.hcframe.base.module.data.module.BaseMapperImpl;
 import com.hcframe.user.module.auth.service.AuthService;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
@@ -62,6 +64,7 @@ public class AuthController {
     }
 
     @GetMapping("menuList")
+    @RequiresPermissions(value = {"system:auth:function:list","menu"},logical = Logical.OR)
     public ResultVO<List<Map<String,Object>>> getMenuList(OsSysMenu osSysMenu) {
         return ResultVO.getSuccess(authService.getMenuResultList(osSysMenu));
     }
