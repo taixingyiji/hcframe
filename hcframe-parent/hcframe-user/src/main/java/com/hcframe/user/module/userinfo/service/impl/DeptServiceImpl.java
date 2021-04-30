@@ -126,7 +126,7 @@ public class DeptServiceImpl implements DeptService {
                     map.put("labelNum", index);
                     map.put("labelIndex", labelIndex);
                     // 把rootMap中
-                    String rootMapPath = String.valueOf(path).substring(0, path.length() - 4);
+                    String rootMapPath = path.substring(0, path.length() - 4);
                     // 从orgAccountIdMap中获取所有pathMap为rootMapId的List取出添加到rootMap下，
                     // 只到某Map的Id在orgAccountId在orgAccountIdMap检索不到为止
                     List<Map<String, Object>> childrenMapList = new ArrayList<>();
