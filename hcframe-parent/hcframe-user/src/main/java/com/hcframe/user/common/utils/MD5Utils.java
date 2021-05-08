@@ -26,4 +26,8 @@ public class MD5Utils {
 		digest.update(data.getBytes("UTF8"));
 		return StringUtils.bytesToString(digest.digest());
 	}
+
+	public static void main(String[] args) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+		System.out.println(MD5Utils.encode("Guobo@123"));
+	}
 }

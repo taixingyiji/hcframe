@@ -22,7 +22,7 @@ import tk.mybatis.spring.annotation.MapperScan;
 @EnableCaching
 @MapperScan(basePackages = "com.hcframe.**.dao")
 @ComponentScan(basePackages = {"com.hcframe.**"},excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {DataSourceConfiguration.class}))
-//@EnableDiscoveryClient
+@EnableDiscoveryClient
 @Import(CasClientConfigurationProperties.class)
 //@EnableCasClient
 public class UserApplication {

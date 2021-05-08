@@ -38,6 +38,7 @@ public class MenuController {
 	@LogAnno(operateType="新增功能权限",moduleName="系统管理-权限管理-功能权限管理")
     @ApiOperation(value = "新增功能级权限", notes = "给后台传key-value对象模式即可")
     public ResultVO<Object> addMenu(@RequestParam Map<String, Object> data) {
+        data.remove("children");
         return menuService.addMenu(data);
     }
 
@@ -56,6 +57,7 @@ public class MenuController {
     @ApiOperation(value = "更新功能级权限")
     public ResultVO<Integer> updateMenu(@RequestParam Map<String, Object> data, @PathVariable Integer version) {
         redisUtil.del("auth");
+        data.remove("children");
         return menuService.updateMenu(data, version);
     }
 

@@ -30,7 +30,7 @@ public class ManageMapperImpl implements ManageMapper {
         String sql = "SELECT GB_CAS_MEMBER.ID,GB_CAS_MEMBER.NAME,GB_CAS_DEPT.NAME \n" +
                 "FROM GBCAS.GB_CAS_MEMBER \n" +
                 "LEFT JOIN GBCAS.GB_CAS_DEPT ON GB_CAS_MEMBER.DEPT_CODE = GB_CAS_DEPT.CODE\n" +
-                "WHERE GB_CAS_MEMBER.NAME = '" + name + "' AND GB_CAS_DEPT.NAME = '"+department+"' AND DELETED = 1";
+                "WHERE GB_CAS_MEMBER.NAME = '" + name + "' AND GB_CAS_DEPT.NAME = '"+department+"' AND GB_CAS_MEMBER.DELETED = 1";
         return baseMapper.selectSql(sql);
     }
 }
