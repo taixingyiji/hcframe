@@ -16,7 +16,7 @@
     <result column="IS_BATCH" jdbcType="INTEGER" property="isBatch" />
     <result column="FK_TABLE" jdbcType="VARCHAR" property="fkTable" />
     <result column="LOGIC" jdbcType="VARCHAR" property="logic" />
-    <result column="SIGN" jdbcType="VARCHAR" property="sign" />
+    <result column="FIELD_SIGN" jdbcType="VARCHAR" property="sign" />
     <result column="IS_SEARCH" jdbcType="VARCHAR" property="isSearch" />
     <result column="FK_KEY" jdbcType="VARCHAR" property="fkKey" />
     <result column="FK_VALUE" jdbcType="VARCHAR" property="fkValue" />

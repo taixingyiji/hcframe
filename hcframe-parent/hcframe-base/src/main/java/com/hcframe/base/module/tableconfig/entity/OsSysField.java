@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import tk.mybatis.mapper.annotation.ColumnType;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -72,6 +73,7 @@ public class OsSysField implements Serializable {
 
     private Integer isBatch;
 
+    @ColumnType(column = "FIELD_SIGN")
     private Integer sign;
 
     private Integer logic;
