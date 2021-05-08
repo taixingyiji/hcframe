@@ -1,18 +1,25 @@
 package com.hcframe.user.module.userinfo.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.github.pagehelper.PageInfo;
 import com.hcframe.base.common.ResultVO;
+import com.hcframe.base.common.ServiceException;
 import com.hcframe.base.common.WebPageInfo;
 import com.hcframe.base.module.data.module.BaseMapper;
 import com.hcframe.base.module.data.module.BaseMapperImpl;
 import com.hcframe.base.module.data.module.Condition;
+import com.hcframe.base.module.data.module.DataMap;
 import com.hcframe.base.module.data.service.TableService;
 import com.hcframe.base.module.tableconfig.entity.OsSysTable;
 import com.hcframe.user.module.userinfo.service.DeptService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.*;
 
 /**
@@ -67,8 +74,23 @@ public class DeptServiceImpl implements DeptService {
     }
 
     @Override
-    public ResultVO<PageInfo<Map<String, Object>>> getDeptList(String data, WebPageInfo webPageInfo) {
-        PageInfo<Map<String, Object>> pageInfo = tableService.searchSingleTables(data, TABLE_INFO, webPageInfo);
+    public ResultVO<PageInfo<Map<String, Object>>> getDeptList(String data, WebPageInfo webPageInfo, String code) {
+        DataMap<Object> dataMap = DataMap.builder().sysOsTable(TABLE_INFO).build();
+        Condition.ConditionBuilder builder = Condition.creatCriteria(dataMap);
+        if (!StringUtils.isEmpty(data)) {
+            try {
+                data = URLDecoder.decode(data, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                throw new ServiceException(e);
+            }
+            JSONArray jsonArray = JSON.parseArray(data);
+            builder = tableService.getQueryBuilder(jsonArray, builder);
+        }
+        if (!StringUtils.isEmpty(code)) {
+            builder.andLike("CODE", code + "%");
+        }
+        builder.andEqual("DELETED", 1);
+        PageInfo<Map<String, Object>> pageInfo = baseMapper.selectByCondition(builder.build(), webPageInfo);;
         return ResultVO.getSuccess(pageInfo);
     }
 

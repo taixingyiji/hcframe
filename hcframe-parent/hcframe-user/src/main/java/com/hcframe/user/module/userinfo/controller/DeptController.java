@@ -49,8 +49,8 @@ public class DeptController {
     @GetMapping()
     @ApiOperation(value = "获取机构列表", notes = "删除后职位也会被删除")
     @RequiresPermissions(value = {"orgManage","empowerOrg","system:empower:org:list"},logical = Logical.OR)
-    public ResultVO<PageInfo<Map<String, Object>>> getDeptList(String data, WebPageInfo webPageInfo) {
-        return deptService.getDeptList(data, webPageInfo);
+    public ResultVO<PageInfo<Map<String, Object>>> getDeptList(String data, WebPageInfo webPageInfo,String code) {
+        return deptService.getDeptList(data, webPageInfo,code);
     }
 
     @GetMapping("/tree")
