@@ -7,14 +7,16 @@ import com.hcframe.base.common.ResultVO;
 import com.hcframe.base.common.WebPageInfo;
 
 public interface OsService {
-	
-	    ResultVO<Object> checkExistOs(String oscode);
 
-	    ResultVO<Object> addOs(Map<String, Object> os);
+    ResultVO<Object> checkExistOs(String oscode);
 
-	    ResultVO<Integer> updateOs(Map<String, Object> os, Integer version);
+    ResultVO<Object> addOs(Map<String, Object> os);
 
-	    ResultVO<Object> deleteOs(String ids);
+    ResultVO<Integer> updateOs(Map<String, Object> os, Integer version);
 
-	    ResultVO<PageInfo<Map<String, Object>>> getOsList(String data, WebPageInfo webPageInfo);
+    ResultVO<Object> deleteOs(String ids);
+
+    ResultVO<PageInfo<Map<String, Object>>> getOsList(String data, WebPageInfo webPageInfo);
+
+    ResultVO<Object> validUrl(String url);
 }
