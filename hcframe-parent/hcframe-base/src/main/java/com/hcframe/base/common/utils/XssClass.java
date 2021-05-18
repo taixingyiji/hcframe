@@ -27,4 +27,10 @@ public class XssClass {
         }
         return false;
     }
+
+    public static void main(String[] args) {
+        String str = "http://10.12.0.65";
+        System.out.println(sqlInj(str));
+
+    }
 }

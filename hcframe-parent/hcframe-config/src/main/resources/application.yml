@@ -54,8 +54,8 @@ spring:
     druid:
       # 配置sqlite文件路径，需要填写绝对路径，推荐将sqlite文件放入到服务器上，而非程序jar包或war包中
       driver-class-name: org.sqlite.JDBC
-      url: jdbc:sqlite:/Volumes/DATA/ideaProject/common-frame/hcframe/hcframe-parent/hcframe-config/src/main/resources/datasource.db
-#      url: jdbc:sqlite:D:/cloud/datasource.db
+#      url: jdbc:sqlite:/Volumes/DATA/ideaProject/common-frame/hcframe/hcframe-parent/hcframe-config/src/main/resources/datasource.db
+      url: jdbc:sqlite:D:/cloud/datasource.db
 #      url: jdbc:sqlite:/home/it/user/gateway/datasource.db
       username:
       password:

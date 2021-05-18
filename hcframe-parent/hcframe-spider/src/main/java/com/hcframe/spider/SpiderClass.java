@@ -15,7 +15,7 @@ import java.util.Set;
 public class SpiderClass {
 
     public static void main(String[] args)  {
-        String str = "000000010001";
+        String str = "&?03f-@o;vwKt2";
         System.out.println(str.length());
 //        login();
 //        WebClient client = getInstance();
