@@ -13,9 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author lhc
@@ -32,6 +30,7 @@ public class RoleUserServiceImpl implements RoleUserService {
     private static final String USER_ROLE_ID = "USER_ROLE_ID";
     private static final String OS_REL_USER_GROUP = "OS_REL_USER_GROUP";
     private static final String COMMA = ",";
+    private static final String  GUOBO_ID= "-3858082048188003782";
 
     final BaseMapper baseMapper;
 
@@ -83,7 +82,10 @@ public class RoleUserServiceImpl implements RoleUserService {
     public ResultVO<Object> getUserRole(String userId) {
         Condition condition = Condition.creatCriteria().andEqual("USER_ID",userId).andEqual("DELETED",1).build();
         List<Map<String,Object>> list = baseMapper.selectByCondition(OS_REL_USER_ROLE, condition);
-        return ResultVO.getSuccess(list);
+        Map<String, Object> result = new HashMap<>(2);
+        result.put("user", list);
+        result.put("org", getOrgRoleList(userId));
+        return ResultVO.getSuccess(result);
     }
 
     @Override
@@ -92,5 +94,32 @@ public class RoleUserServiceImpl implements RoleUserService {
         List<Map<String,Object>> list = baseMapper.selectByCondition(OS_REL_USER_GROUP, condition);
         return ResultVO.getSuccess(list);
     }
+
+    private Set<Map<String, Object>> getOrgRoleList(String userId) {
+        Condition deptCondition = Condition.creatCriteria().andEqual("DEPT_ID",GUOBO_ID).andEqual("DELETED",1).build();
+        List<Map<String,Object>>  guoboList= baseMapper.selectByCondition("OS_REL_DEPT_ROLE", deptCondition);
+        Set<Map<String, Object>> set = new HashSet<>(guoboList);
+        Condition condition = Condition.creatCriteria().andEqual("ID",userId).andEqual("DELETED",1).build();
+        Map<String,Object> user = baseMapper.selectOneByCondition("GB_CAS_MEMBER", condition);
+        String code = (String) user.get("DEPT_CODE");
+        if (code.length() == 4) {
+            getDepList(set, code);
+        } else {
+            getDepList(set, code);
+            getDepList(set,code.substring(0,4));
+        }
+        return set;
+    }
+
+    private void getDepList(Set<Map<String, Object>> set, String code) {
+        Condition deptCondition;
+        Map<String, Object> org = baseMapper.selectOneByCondition("GB_CAS_DEPT", Condition.creatCriteria().andEqual("CODE", code).andEqual("DELETED", 1).build());
+        if (org != null && !org.isEmpty()) {
+            deptCondition = Condition.creatCriteria().andEqual("DEPT_ID", org.get("ID")).andEqual("DELETED", 1).build();
+            List<Map<String, Object>> roleList = baseMapper.selectByCondition("OS_REL_DEPT_ROLE", deptCondition);
+            set.addAll(roleList);
+        }
+    }
+
 
 }
