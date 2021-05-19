@@ -176,12 +176,12 @@ public class AuthDaoImpl implements AuthDao {
         SelectCondition selectCondition = SelectCondition
                 .sqlJoinBuilder("OS_REL_USER_ROLE")
                 .field("count(OS_SYS_OS.OS_CODE)")
-                .join("OS_REL_ROLE_OS")
-                .on("ROLE_ID", "OS_REL_ROLE_OS", "ROLE_ID")
-                .join("OS_SYS_OS")
-                .on("OS_ID", "OS_REL_ROLE_OS", "OS_ID")
                 .join("OS_SYS_ROLE")
                 .on("ROLE_ID", "OS_REL_USER_ROLE", "ROLE_ID")
+                .join("OS_REL_ROLE_OS")
+                .on("ROLE_ID", "OS_SYS_ROLE", "ROLE_ID")
+                .join("OS_SYS_OS")
+                .on("OS_ID", "OS_REL_ROLE_OS", "OS_ID")
                 .build();
         Condition condition = Condition.creatCriteria(selectCondition)
                 .andEqual("OS_SYS_ROLE.DELETED", 1)

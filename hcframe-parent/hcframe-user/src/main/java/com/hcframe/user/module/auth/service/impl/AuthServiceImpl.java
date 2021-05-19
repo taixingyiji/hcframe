@@ -246,9 +246,17 @@ public class AuthServiceImpl implements AuthService {
         Long count = 0L;
         count += getRoleOs(userId);
         count += getGroupOs(userId);
+        count += getOrgOs("guobo");
+        count += getOrgGroupOs("guobo");
         if (!org.springframework.util.StringUtils.isEmpty(user.get("DEPT_CODE"))) {
-            count += getOrgOs(String.valueOf(user.get("DEPT_CODE")));
-            count += getOrgGroupOs(String.valueOf(user.get("DEPT_CODE")));
+            String deptCode = String.valueOf(user.get("DEPT_CODE"));
+            count += getOrgOs(deptCode);
+            count += getOrgGroupOs(deptCode);
+            if (!"guobo".equals(deptCode) && deptCode.length() > 4) {
+                String parentCode = deptCode.substring(0, 4);
+                count += getOrgOs(parentCode);
+                count += getOrgGroupOs(parentCode);
+            }
         }
         return count;
     }
