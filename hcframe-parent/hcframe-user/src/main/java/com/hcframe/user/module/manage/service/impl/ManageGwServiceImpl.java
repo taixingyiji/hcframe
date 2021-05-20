@@ -68,6 +68,7 @@ public class ManageGwServiceImpl implements ManageGwService {
             logger.error("新增用户失败", e);
             throw new ServiceException(e);
         }
+        user.put("SOURCE", 1);
         return tableService.saveWithDate(GB_CAS_MEMBER, user);
     }
 
