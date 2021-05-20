@@ -72,6 +72,7 @@ public class ManageServiceDataImpl implements ManageService {
     public ResultVO<Map<String, Object>> addUser(Map<String, Object> user) {
         JudgeException.isNull(user.get("PASSWORD"), "密码不能为空");
         JudgeException.isNull(user.get("LOGIN_NAME"), "用户名不能为空");
+        user.remove("DEPUTY_POST");
         if (!StringUtils.isEmpty(user.get("ORG_ACCOUNT_ID"))) {
             String orgAcId = String.valueOf(user.get("ORG_ACCOUNT_ID"));
             user.put("ORG_ACCOUNT_ID", orgAcId.replaceAll("\"", ""));
