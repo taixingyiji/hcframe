@@ -30,25 +30,28 @@ public class DeptController {
 
     @PostMapping()
     @ApiOperation(value = "新增dept", notes = "将自动传承key-value对象模式即可")
+    @RequiresPermissions(value = {"system:userManage:orgManage:add"})
     public ResultVO<Object> addDept(@RequestParam Map<String, Object> org) {
         return deptService.addDept(org);
     }
 
     @PutMapping("/{version}")
     @ApiOperation(value = "更新dept")
+    @RequiresPermissions(value = {"system:userManage:orgManage:edit"})
     public ResultVO<Integer> updateDept(@RequestParam Map<String, Object> org, @PathVariable Integer version) {
         return deptService.updateDept(org, version);
     }
 
     @DeleteMapping("/{ids}")
     @ApiOperation(value = "删除dept", notes = "删除后职位也会被删除")
+    @RequiresPermissions(value = {"system:userManage:orgManage:delete"})
     public ResultVO<Object> deleteDept(@PathVariable String ids) {
         return deptService.deleteDept(ids);
     }
 
     @GetMapping()
     @ApiOperation(value = "获取机构列表", notes = "删除后职位也会被删除")
-    @RequiresPermissions(value = {"orgManage","empowerOrg","system:empower:org:list"},logical = Logical.OR)
+    @RequiresPermissions(value = {"orgManage","empowerOrg","system:empower:org:list","system:userManage:orgManage:list"},logical = Logical.OR)
     public ResultVO<PageInfo<Map<String, Object>>> getDeptList(String data, WebPageInfo webPageInfo,String code) {
         return deptService.getDeptList(data, webPageInfo,code);
     }

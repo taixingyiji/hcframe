@@ -228,4 +228,10 @@ public class ManageServiceDataImpl implements ManageService {
         }
         return tableService.updateWithDate(TABLE_INFO, map, version);
     }
+
+    @Override
+    public ResultVO<Object> getUserPost(String userId) {
+        Condition condition = Condition.creatCriteria().andEqual("MEMBER_ID",userId.replaceAll("\"","")).build();
+        return ResultVO.getSuccess(baseMapper.selectByCondition("GB_DEPUTY_POST", condition));
+    }
 }

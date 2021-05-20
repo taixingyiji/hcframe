@@ -151,7 +151,7 @@ public class DeptServiceImpl implements DeptService {
                 .creatCriteria()
                 .andIn(ID, Arrays.asList(idArr))
                 .build();
-        tableService.delete(TABLE_INFO, ids);
+        tableService.logicDelete(TABLE_INFO, ids);
         return ResultVO.getSuccess();
     }
 
