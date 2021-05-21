@@ -52,15 +52,15 @@ spring:
     druid:
       # 配置sqlite文件路径，需要填写绝对路径，推荐将sqlite文件放入到服务器上，而非程序jar包或war包中
       driver-class-name: dm.jdbc.driver.DmDriver
-      url: jdbc:dm://192.168.100.98:5236/GBCAS?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=utf-8
-      username: GBCAS
-      password: 123456789
+#      url: jdbc:dm://192.168.100.98:5236/GBCAS?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=utf-8
+#      username: GBCAS
+#      password: 123456789
 #      url: jdbc:dm://10.211.55.4:5236/GBCAS?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=utf-8
 #      username: GBCAS
 #      password: 123456789
-#      url: jdbc:dm://10.11.65.1:5236/TYSFRZ?useUnicode=true&characterEncoding=UTF-8
-#      username: TYSFRZ
-#      password: TYSFRZ123
+      url: jdbc:dm://DM1/TYSFRZ?useUnicode=true&characterEncoding=UTF-8
+      username: TYSFRZ
+      password: TYSFRZ123
       #使用Druid数据源
       initialSize: 5
       # 初始化大小，最小，最大
