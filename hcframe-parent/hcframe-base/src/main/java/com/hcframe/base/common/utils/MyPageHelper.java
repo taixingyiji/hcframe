@@ -12,4 +12,8 @@ public class MyPageHelper {
             PageHelper.startPage(webPageInfo.getPageNum(), webPageInfo.getPageSize());
         }
     }
+
+    public static void orderBy(String sortField,String order){
+        PageHelper.orderBy(sortField+" "+order);
+    }
 }

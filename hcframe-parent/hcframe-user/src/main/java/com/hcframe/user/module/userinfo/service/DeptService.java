@@ -14,7 +14,7 @@ public interface DeptService {
 
     ResultVO<Object> deleteDept(String ids);
 
-    ResultVO<PageInfo<Map<String, Object>>> getDeptList(String data, WebPageInfo webPageInfo);
+    ResultVO<PageInfo<Map<String, Object>>> getDeptList(String data, WebPageInfo webPageInfo, String code);
 
     ResultVO<List<Map<String, Object>>> getDeptTree();
 }

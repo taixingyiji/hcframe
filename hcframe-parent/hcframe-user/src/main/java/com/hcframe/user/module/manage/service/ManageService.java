@@ -22,4 +22,6 @@ public interface ManageService {
     ResultVO<Object> sync();
 
 	ResultVO<Integer> changePassword(String pwd, String npwd, String npwd2);
+
+    ResultVO<Object> getUserPost(String userId);
 }

@@ -26,44 +26,50 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping("os")
 @Api(tags = "应用系统管理")
 public class OsController {
-	
-	  final OsService osService;
 
-	    public OsController(OsService osService) {
-	        this.osService = osService;
-	    }
+    final OsService osService;
 
-	    @GetMapping("/{oscode}")
-	    @ApiOperation(value = "校验系统编码是否存在", notes = "将自动传承key-value对象模式即可")
-	    public ResultVO<Object> checkExistOs(@PathVariable String oscode) {
-	        return osService.checkExistOs(oscode);
-	    }
-	    
-	    @PostMapping()
-	    @LogAnno(operateType="新增系统信息",moduleName="系统管理-权限管理-系统信息管理")
-	    @ApiOperation(value = "新增系统", notes = "将自动传承key-value对象模式即可")
-	    public ResultVO<Object> addOs(@RequestParam Map<String,Object> os) {
-	        return osService.addOs(os);
-	    }
+    public OsController(OsService osService) {
+        this.osService = osService;
+    }
 
-	    @PutMapping("/{version}")
-	    @LogAnno(operateType="更新系统信息",moduleName="系统管理-权限管理-系统信息管理")
-	    @ApiOperation(value = "更新系统信息")
-	    public ResultVO<Integer> updateOs(@RequestParam Map<String,Object> os,@PathVariable Integer version) {
-	        return osService.updateOs(os,version);
-	    }
+    @GetMapping("/{oscode}")
+    @ApiOperation(value = "校验系统编码是否存在", notes = "将自动传承key-value对象模式即可")
+    public ResultVO<Object> checkExistOs(@PathVariable String oscode) {
+        return osService.checkExistOs(oscode);
+    }
 
-	    @DeleteMapping("/{ids}")
-	    @LogAnno(operateType="删除系统信息",moduleName="系统管理-权限管理-系统信息管理")
-	    @ApiOperation(value = "删除系统信息")
-	    public ResultVO<Object> deleteOs(@PathVariable String ids) {
-	        return osService.deleteOs(ids);
-	    }
+    @GetMapping("validUrl")
+    @ApiOperation(value = "校验系统编码是否存在", notes = "将自动传承key-value对象模式即可")
+    public ResultVO<Object> validUrl(String url) {
+        return osService.validUrl(url);
+    }
 
-	    @GetMapping()
-	    @ApiOperation(value = "获取系统信息列表")
-	    public ResultVO<PageInfo<Map<String,Object>>> getOsList(String data, WebPageInfo webPageInfo) {
-	        return osService.getOsList(data, webPageInfo);
-	    }
+    @PostMapping()
+    @LogAnno(operateType = "新增系统信息", moduleName = "系统管理-权限管理-系统信息管理")
+    @ApiOperation(value = "新增系统", notes = "将自动传承key-value对象模式即可")
+    public ResultVO<Object> addOs(@RequestParam Map<String, Object> os) {
+        return osService.addOs(os);
+    }
+
+    @PutMapping("/{version}")
+    @LogAnno(operateType = "更新系统信息", moduleName = "系统管理-权限管理-系统信息管理")
+    @ApiOperation(value = "更新系统信息")
+    public ResultVO<Integer> updateOs(@RequestParam Map<String, Object> os, @PathVariable Integer version) {
+        return osService.updateOs(os, version);
+    }
+
+    @DeleteMapping("/{ids}")
+    @LogAnno(operateType = "删除系统信息", moduleName = "系统管理-权限管理-系统信息管理")
+    @ApiOperation(value = "删除系统信息")
+    public ResultVO<Object> deleteOs(@PathVariable String ids) {
+        return osService.deleteOs(ids);
+    }
+
+    @GetMapping()
+    @ApiOperation(value = "获取系统信息列表")
+    public ResultVO<PageInfo<Map<String, Object>>> getOsList(String data, WebPageInfo webPageInfo) {
+        return osService.getOsList(data, webPageInfo);
+    }
 
 }

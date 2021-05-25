@@ -15,88 +15,90 @@ import java.util.Set;
 public class SpiderClass {
 
     public static void main(String[] args)  {
+        String str = "&?03f-@o;vwKt2";
+        System.out.println(str.length());
 //        login();
-        WebClient client = getInstance();
-        try {
-//            HtmlPage page  = client.getPage("https://www.letpub.com.cn/index.php?page=grant#opennewwindow");
-            HtmlPage page = client.getPage("https://yswk.csdl.ac.cn/style/module/yswk/page/zylxlist.jsp?id=ZZ");
-            Thread.sleep(10000);
-//            System.out.println("+++++++++++++++++++++++++++++"+page.getTextContent());
-            DomElement domElement = page.getElementById("aa");
-            System.out.println("+++++++++"+domElement.asText());
-
-//            Set<Cookie> cookies=null;
-//            DomNodeList<DomElement> list = page.getElementsByTagName("li");
-//            for (DomElement domElement : list) {
-//                String text = domElement.asText();
-//                System.out.println(text);
-//            }
-//            HtmlSelect selectA = (HtmlSelect) page.getElementById("addcomment_s1_bysubject_s");
-//            selectA.setSelectedAttribute("F", true);
-//            HtmlSelect selectB = (HtmlSelect) page.getElementById("addcomment_s2_bysubject_s");
-//            selectB.setSelectedAttribute("F06", true);
-//            HtmlOption htmlOption = selectB.getOptionByValue("F06");
-//            String selB = htmlOption.asText();
-//            HtmlSelect selectC = (HtmlSelect) page.getElementById("addcomment_s3_bysubject_s");
-//            List<HtmlOption> cList = selectC.getOptions();
-//            int i = 0;
-//            for (HtmlOption c : cList) {
-//                if (i > 0) {
-//                    String selC = c.asText();
-//                    selectC.setSelectedAttribute(c, true);
-//                    HtmlSelect selectD = (HtmlSelect) page.getElementById("addcomment_s4_bysubject_s");
-//                    List<HtmlOption> dList = selectD.getOptions();
-//                    int j = 0;
-//                    for (HtmlOption d : dList) {
-//                        if (j != 0) {
-//                            String selD = d.asText();
-//                            selectD.setSelectedAttribute(d, true);
-//                            DomElement element = page.getElementById("searchform_bysubject_s");
-//                            HtmlInput htmlInput = (HtmlInput) element.querySelector("input[value='advSearch']");
-//                            htmlInput.click();
-//                            DomNodeList<DomElement> buttons = page.getElementsByTagName("button");
-//                            Page p = null;
-//                            for (DomElement domElement : buttons) {
-//                                String str = domElement.asText();
-//                                if (str.contains("下载Excel")) {
-//                                    p = domElement.click();
-//                                    break;
-//                                }
-//                            }
-//                            if (p != null) {
-//                                File file = new File("/Volumes/DATA/letpub/" + selC);
-//                                file.mkdir();
-//                                saveFile(p,"/Volumes/DATA/letpub/"+selC+"/"+selB+"-"+selC+"-"+selD+".xls");
-//                            }
-//                        }
-//                        j++;
-//                        Thread.sleep(10*1000);
-//                    }
-//                }
-//                i++;
-//            }
-//            selectC.setSelectedAttribute("F0101", true);
-//            HtmlSelect selectD = (HtmlSelect) page.getElementById("addcomment_s4_bysubject_s");
-//            selectD.setSelectedAttribute("F010101", true);
-//            DomElement element = page.getElementById("searchform_bysubject_s");
-//            HtmlInput htmlInput = (HtmlInput) element.querySelector("input[value='advSearch']");
-//            htmlInput.click();
-//            System.out.println("++++++");
-//            System.out.println(page.asText());
-//            DomNodeList<DomElement> buttons = page.getElementsByTagName("button");
-//            Page p = null;
-//            for (DomElement domElement : buttons) {
-//                String str = domElement.asText();
-//                if (str.contains("下载Excel")) {
-//                    p = domElement.click();
-//                    break;
-//                }
-//            }
-//            assert p != null;
-//            saveFile(p,"/Volumes/DATA/a.xls");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        WebClient client = getInstance();
+//        try {
+////            HtmlPage page  = client.getPage("https://www.letpub.com.cn/index.php?page=grant#opennewwindow");
+//            HtmlPage page = client.getPage("https://yswk.csdl.ac.cn/style/module/yswk/page/zylxlist.jsp?id=ZZ");
+//            Thread.sleep(10000);
+////            System.out.println("+++++++++++++++++++++++++++++"+page.getTextContent());
+//            DomElement domElement = page.getElementById("aa");
+//            System.out.println("+++++++++"+domElement.asText());
+//
+////            Set<Cookie> cookies=null;
+////            DomNodeList<DomElement> list = page.getElementsByTagName("li");
+////            for (DomElement domElement : list) {
+////                String text = domElement.asText();
+////                System.out.println(text);
+////            }
+////            HtmlSelect selectA = (HtmlSelect) page.getElementById("addcomment_s1_bysubject_s");
+////            selectA.setSelectedAttribute("F", true);
+////            HtmlSelect selectB = (HtmlSelect) page.getElementById("addcomment_s2_bysubject_s");
+////            selectB.setSelectedAttribute("F06", true);
+////            HtmlOption htmlOption = selectB.getOptionByValue("F06");
+////            String selB = htmlOption.asText();
+////            HtmlSelect selectC = (HtmlSelect) page.getElementById("addcomment_s3_bysubject_s");
+////            List<HtmlOption> cList = selectC.getOptions();
+////            int i = 0;
+////            for (HtmlOption c : cList) {
+////                if (i > 0) {
+////                    String selC = c.asText();
+////                    selectC.setSelectedAttribute(c, true);
+////                    HtmlSelect selectD = (HtmlSelect) page.getElementById("addcomment_s4_bysubject_s");
+////                    List<HtmlOption> dList = selectD.getOptions();
+////                    int j = 0;
+////                    for (HtmlOption d : dList) {
+////                        if (j != 0) {
+////                            String selD = d.asText();
+////                            selectD.setSelectedAttribute(d, true);
+////                            DomElement element = page.getElementById("searchform_bysubject_s");
+////                            HtmlInput htmlInput = (HtmlInput) element.querySelector("input[value='advSearch']");
+////                            htmlInput.click();
+////                            DomNodeList<DomElement> buttons = page.getElementsByTagName("button");
+////                            Page p = null;
+////                            for (DomElement domElement : buttons) {
+////                                String str = domElement.asText();
+////                                if (str.contains("下载Excel")) {
+////                                    p = domElement.click();
+////                                    break;
+////                                }
+////                            }
+////                            if (p != null) {
+////                                File file = new File("/Volumes/DATA/letpub/" + selC);
+////                                file.mkdir();
+////                                saveFile(p,"/Volumes/DATA/letpub/"+selC+"/"+selB+"-"+selC+"-"+selD+".xls");
+////                            }
+////                        }
+////                        j++;
+////                        Thread.sleep(10*1000);
+////                    }
+////                }
+////                i++;
+////            }
+////            selectC.setSelectedAttribute("F0101", true);
+////            HtmlSelect selectD = (HtmlSelect) page.getElementById("addcomment_s4_bysubject_s");
+////            selectD.setSelectedAttribute("F010101", true);
+////            DomElement element = page.getElementById("searchform_bysubject_s");
+////            HtmlInput htmlInput = (HtmlInput) element.querySelector("input[value='advSearch']");
+////            htmlInput.click();
+////            System.out.println("++++++");
+////            System.out.println(page.asText());
+////            DomNodeList<DomElement> buttons = page.getElementsByTagName("button");
+////            Page p = null;
+////            for (DomElement domElement : buttons) {
+////                String str = domElement.asText();
+////                if (str.contains("下载Excel")) {
+////                    p = domElement.click();
+////                    break;
+////                }
+////            }
+////            assert p != null;
+////            saveFile(p,"/Volumes/DATA/a.xls");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     private static class innerWebClient{
@@ -163,4 +165,5 @@ public class SpiderClass {
         output.close();
         is.close();
     }
+
 }

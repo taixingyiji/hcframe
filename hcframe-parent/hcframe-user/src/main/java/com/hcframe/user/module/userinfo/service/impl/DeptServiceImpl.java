@@ -1,18 +1,26 @@
 package com.hcframe.user.module.userinfo.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.github.pagehelper.PageInfo;
 import com.hcframe.base.common.ResultVO;
+import com.hcframe.base.common.ServiceException;
 import com.hcframe.base.common.WebPageInfo;
+import com.hcframe.base.common.utils.MyPageHelper;
 import com.hcframe.base.module.data.module.BaseMapper;
 import com.hcframe.base.module.data.module.BaseMapperImpl;
 import com.hcframe.base.module.data.module.Condition;
+import com.hcframe.base.module.data.module.DataMap;
 import com.hcframe.base.module.data.service.TableService;
 import com.hcframe.base.module.tableconfig.entity.OsSysTable;
 import com.hcframe.user.module.userinfo.service.DeptService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.*;
 
 /**
@@ -45,7 +53,89 @@ public class DeptServiceImpl implements DeptService {
 
     @Override
     public ResultVO<Object> addDept(Map<String, Object> org) {
+        String parentCode = (String) org.get("PARENT_CODE");
+        org.remove("PARENT_CODE");
+        String code;
+        String path;
+        if ("guobo".equals(parentCode)) {
+            MyPageHelper.orderBy("CODE", "DESC");
+            List<Map<String, Object>> list = baseMapper.selectAll(GB_CAS_DEPT);
+            List<Map<String, Object>> pathList = new LinkedList<>();
+            List<Map<String, Object>> codeList = new LinkedList<>();
+            for (Map<String, Object> map : list) {
+                if (4 == map.get("CODE").toString().length()) {
+                    codeList.add(map);
+                }
+            }
+            MyPageHelper.orderBy("PATH", "DESC");
+            list = baseMapper.selectAll(GB_CAS_DEPT);
+            for (Map<String, Object> map : list) {
+                if (12 == map.get("PATH").toString().length()) {
+                    pathList.add(map);
+                }
+            }
+            code = getCode(codeList,parentCode);
+            path = getPath(pathList);
+        } else {
+            Condition condition = Condition.creatCriteria().andLike("CODE", parentCode + "%").build();
+            MyPageHelper.orderBy("CODE", "DESC");
+            List<Map<String, Object>> codeList = baseMapper.selectByCondition(GB_CAS_DEPT, condition);
+            code = getCode(codeList, parentCode);
+            MyPageHelper.orderBy("PATH", "DESC");
+            List<Map<String, Object>> pathList = baseMapper.selectByCondition(GB_CAS_DEPT, condition);
+            path = getPath(pathList);
+        }
+        org.put("CODE", code);
+        org.put("PATH", path);
+        MyPageHelper.start(WebPageInfo.builder().pageNum(1).pageSize(1).sortField("SORT_ID").order("DESC").build());
+        List<Map<String, Object>> list = baseMapper.selectAll(GB_CAS_DEPT);
+        org.put("SORT_ID", Integer.parseInt(String.valueOf(list.get(0).get("SORT_ID")))+1);
         return ResultVO.getSuccess(tableService.saveWithDate(TABLE_INFO, org));
+    }
+
+    private String getCode(List<Map<String,Object>> codeList,String parentCode){
+        String tempCode = "";
+        String lastCode = (String) codeList.get(0).get("CODE");
+        int incrementCode = Integer.parseInt(lastCode.substring(lastCode.length() - 2)) + 1;
+        if ("guobo".equals(parentCode)) {
+            parentCode = "D";
+            if (incrementCode < 10) {
+                tempCode = tempCode + "00" + incrementCode;
+            } else if (incrementCode < 100) {
+                tempCode = tempCode + "0" + incrementCode;
+            } else {
+                tempCode = tempCode + incrementCode;
+            }
+        } else {
+            if (incrementCode < 10) {
+                tempCode = tempCode + "0" + incrementCode;
+            } else {
+                tempCode = tempCode + incrementCode;
+            }
+        }
+        return parentCode + tempCode;
+    }
+
+    private String getPath(List<Map<String,Object>> pathList) {
+        String tempPath = "";
+        String lastPath = (String) pathList.get(0).get("PATH");
+        String parentPath = lastPath.substring(0, lastPath.length() - 4);
+        int incrementPath = Integer.parseInt(lastPath.substring(lastPath.length() - 4)) + 1;
+        if (pathList.size() == 1) {
+            parentPath = lastPath;
+            tempPath = "0001";
+        } else {
+            if (incrementPath < 10) {
+                tempPath = tempPath + "000" + incrementPath;
+            } else if (incrementPath < 100) {
+                tempPath = tempPath + "00" + incrementPath;
+            } else if (incrementPath < 1000) {
+                tempPath = tempPath + "0" + incrementPath;
+            } else {
+                tempPath = tempPath + incrementPath;
+            }
+        }
+        return parentPath + tempPath;
     }
 
     @Override
@@ -61,14 +151,29 @@ public class DeptServiceImpl implements DeptService {
                 .creatCriteria()
                 .andIn(ID, Arrays.asList(idArr))
                 .build();
-        baseMapper.deleteByCondition(OS_SYS_POSITION, condition);
-        tableService.delete(TABLE_INFO, ids);
+        tableService.logicDelete(TABLE_INFO, ids);
         return ResultVO.getSuccess();
     }
 
     @Override
-    public ResultVO<PageInfo<Map<String, Object>>> getDeptList(String data, WebPageInfo webPageInfo) {
-        PageInfo<Map<String, Object>> pageInfo = tableService.searchSingleTables(data, TABLE_INFO, webPageInfo);
+    public ResultVO<PageInfo<Map<String, Object>>> getDeptList(String data, WebPageInfo webPageInfo, String code) {
+        DataMap<Object> dataMap = DataMap.builder().sysOsTable(TABLE_INFO).build();
+        Condition.ConditionBuilder builder = Condition.creatCriteria(dataMap);
+        if (!StringUtils.isEmpty(data)) {
+            try {
+                data = URLDecoder.decode(data, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                throw new ServiceException(e);
+            }
+            JSONArray jsonArray = JSON.parseArray(data);
+            builder = tableService.getQueryBuilder(jsonArray, builder);
+        }
+        if (!StringUtils.isEmpty(code)) {
+            builder.andLike("CODE", code + "%");
+        }
+        builder.andEqual("DELETED", 1);
+        PageInfo<Map<String, Object>> pageInfo = baseMapper.selectByCondition(builder.build(), webPageInfo);
+        ;
         return ResultVO.getSuccess(pageInfo);
     }
 

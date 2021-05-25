@@ -58,7 +58,7 @@ spring:
 #      url: jdbc:dm://10.211.55.4:5236/GBCAS?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=utf-8
 #      username: GBCAS
 #      password: 123456789
-#      url: jdbc:dm://10.11.65.1:5236/TYSFRZ?useUnicode=true&characterEncoding=UTF-8
+#      url: jdbc:dm://DM1/TYSFRZ?useUnicode=true&characterEncoding=UTF-8
 #      username: TYSFRZ
 #      password: TYSFRZ123
       #使用Druid数据源

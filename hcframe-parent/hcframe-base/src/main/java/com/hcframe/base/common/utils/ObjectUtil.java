@@ -5,6 +5,7 @@ import com.hcframe.base.common.ServiceException;
 import com.hcframe.base.module.data.annotation.DataIgnore;
 import com.hcframe.base.module.data.exception.BaseMapperException;
 import com.hcframe.base.module.data.module.DataMap;
+import tk.mybatis.mapper.annotation.ColumnType;
 
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -106,7 +107,12 @@ public class ObjectUtil {
                 if (!fieldName.equals(SERIAL_VERSION_UID)) {
                     if (!org.springframework.util.StringUtils.isEmpty(field.get(obj))) {
                         Object value = field.get(obj);
-                        map.put(StringUtils.toUnderScoreUpperCase(fieldName), value);
+                        if (field.getAnnotation(ColumnType.class) != null) {
+                            ColumnType columnType = field.getAnnotation(ColumnType.class);
+                            map.put(columnType.column(), value);
+                        } else {
+                            map.put(StringUtils.toUnderScoreUpperCase(fieldName), value);
+                        }
                     }
                     if (field.getAnnotation(DataIgnore.class) == null) {
                         fieldList.add(StringUtils.toUnderScoreUpperCase(fieldName));

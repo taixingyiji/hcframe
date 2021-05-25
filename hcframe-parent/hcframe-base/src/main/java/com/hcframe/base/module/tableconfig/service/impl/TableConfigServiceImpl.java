@@ -1,5 +1,6 @@
 package com.hcframe.base.module.tableconfig.service.impl;
 
+import com.github.pagehelper.PageHelper;
 import com.hcframe.base.common.ResultVO;
 import com.hcframe.base.common.WebPageInfo;
 import com.hcframe.base.common.utils.MyPageHelper;
@@ -260,6 +261,7 @@ public class TableConfigServiceImpl implements TableConfigService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ResultVO fieldSort(Integer tableId) {
+        MyPageHelper.orderBy("ORDER_ID","ASC");
         List<OsSysField> list = osSysFieldDao.select(OsSysField.builder().tableId(tableId).build());
         for (int i = 0; i < list.size(); i++) {
             OsSysField osSysField = list.get(i);
