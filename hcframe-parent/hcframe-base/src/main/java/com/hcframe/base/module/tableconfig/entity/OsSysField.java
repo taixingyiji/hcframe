@@ -75,7 +75,7 @@ public class OsSysField implements Serializable {
 
     @ColumnType(column = "FIELD_SIGN")
     private Integer sign;
-
+    @ColumnType(column = "FIELD_LOGIC")
     private Integer logic;
     private String fkKey;
     private String fkValue;
