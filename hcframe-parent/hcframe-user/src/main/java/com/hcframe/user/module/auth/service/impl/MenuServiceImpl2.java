@@ -1,24 +1,23 @@
 package com.hcframe.user.module.auth.service.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.StringJoiner;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.github.pagehelper.PageInfo;
 import com.hcframe.base.common.ResultVO;
 import com.hcframe.base.common.WebPageInfo;
+import com.hcframe.base.module.cache.CacheService;
+import com.hcframe.base.module.cache.impl.TableCache;
 import com.hcframe.base.module.data.module.BaseMapper;
 import com.hcframe.base.module.data.module.Condition;
 import com.hcframe.base.module.data.service.TableService;
 import com.hcframe.base.module.tableconfig.entity.OsSysTable;
+import com.hcframe.redis.RedisUtil;
 import com.hcframe.user.module.auth.service.MenuService;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
 
 /**
  * @author wewe
@@ -35,6 +34,11 @@ public class MenuServiceImpl2 implements MenuService {
 
 	@Autowired BaseMapper baseMapper;
 	@Autowired TableService tableService;
+	@Autowired
+	RedisUtil redisUtil;
+	@Autowired
+	@Qualifier(TableCache.TABLE)
+	CacheService tableCache;
 
 	@Override
 	public ResultVO<Object> addMenu(Map<String, Object> data) {
@@ -56,6 +60,7 @@ public class MenuServiceImpl2 implements MenuService {
 			return ResultVO.getFailed("PATH不能重复");
 		}
 		tableService.saveWithDate(OS_SYS_MENU, data);
+		tableCache.delete("menu");
 		return ResultVO.getSuccess();
 	}
 
@@ -72,6 +77,7 @@ public class MenuServiceImpl2 implements MenuService {
 				tableService.logicDelete(OS_REL_ROLE_MENU, rmIds);
 			}
 		});
+		tableCache.delete("menu");
 		return ResultVO.getSuccess();
 	}
 
@@ -97,6 +103,7 @@ public class MenuServiceImpl2 implements MenuService {
 
 	@Override
 	public ResultVO<Integer> updateMenu(Map<String, Object> data, Integer version) {
+		tableCache.delete("menu");
 		return tableService.updateWithDate(OS_SYS_MENU, data, version);
 	}
 
@@ -111,7 +118,6 @@ public class MenuServiceImpl2 implements MenuService {
 		if (null == roleId) {
 			return ResultVO.getFailed("授权角色不能为空");
 		}
-
 		baseMapper.deleteByCondition(OS_REL_ROLE_OS.getTableName(), Condition.creatCriteria().andEqual("ROLE_ID", roleId).build());
 		baseMapper.deleteByCondition(OS_REL_ROLE_MENU.getTableName(), Condition.creatCriteria().andEqual("ROLE_ID", roleId).build());
 		if (menuIds != null) {

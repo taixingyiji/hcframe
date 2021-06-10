@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import com.hcframe.base.common.ResultVO;
 import com.hcframe.base.common.WebPageInfo;
 
+import java.util.List;
 import java.util.Map;
 
 public interface OrgService {
@@ -13,5 +14,11 @@ public interface OrgService {
 
     ResultVO<Object> deleteOrg(String ids);
 
-    ResultVO<PageInfo<Map<String, Object>>> getOrgList(String data, WebPageInfo webPageInfo);
+    ResultVO<PageInfo<Map<String, Object>>> getOrgList(String data, WebPageInfo webPageInfo, String parentId);
+
+    List<Map<String,Object>> getOrgTree();
+
+    ResultVO<Object> getFormat();
+
+    List<Long> getOrgChildIdList(Long parentId);
 }

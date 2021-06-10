@@ -26,8 +26,8 @@
         <module>hcframe-spider</module>
     </modules>
     <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
         <spring-alibaba.version>2.2.5.RELEASE</spring-alibaba.version>
         <spring-cloud.version>Hoxton.SR7</spring-cloud.version>
         <spring-boot.version>2.3.2.RELEASE</spring-boot.version>

@@ -43,8 +43,19 @@ public class OrgController {
     }
 
     @GetMapping()
-    @ApiOperation(value = "获取机构列表", notes = "删除后职位也会被删除")
-    public ResultVO<PageInfo<Map<String,Object>>> getOrgList(String data, WebPageInfo webPageInfo) {
-        return orgService.getOrgList(data, webPageInfo);
+    @ApiOperation(value = "获取机构列表", notes = "删除后职位也会被删除(职位暂未实现)")
+    public ResultVO<PageInfo<Map<String,Object>>> getOrgList(String data, WebPageInfo webPageInfo,String parentId) {
+        return orgService.getOrgList(data, webPageInfo , parentId);
+    }
+
+    @GetMapping(value = "tree")
+    @ApiOperation(value = "获取机构树")
+    public ResultVO<Object> getOrgTree() {
+        return ResultVO.getSuccess(orgService.getOrgTree());
+    }
+
+    @GetMapping(value = "format")
+    public ResultVO<Object> formatOrg() {
+        return orgService.getFormat();
     }
 }

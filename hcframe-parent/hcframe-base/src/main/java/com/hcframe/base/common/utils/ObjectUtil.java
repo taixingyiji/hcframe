@@ -10,6 +10,7 @@ import tk.mybatis.mapper.annotation.ColumnType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -148,6 +149,27 @@ public class ObjectUtil {
             }
         } catch (NoSuchFieldException e) {
             throw new ServiceException("无法找到相应的字段", e);
+        }
+    }
+
+    public static <T> T mapToObj(Map<String, Object> map, Class<?> clazz) {
+        try {
+            Object obj = clazz.newInstance();
+            Field[] fields = obj.getClass().getDeclaredFields();
+            for (Field field : fields) {
+                int mod = field.getModifiers();
+                if (Modifier.isStatic(mod) || Modifier.isFinal(mod)) {
+                    continue;
+                }
+                field.setAccessible(true);
+                String key = StringUtils.toUnderScoreUpperCase(field.getName());
+                if (map.containsKey(key)) {
+                    field.set(obj, map.get(key));
+                }
+            }
+            return (T) obj;
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new ServiceException(e);
         }
     }
 

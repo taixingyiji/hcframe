@@ -17,8 +17,11 @@ import com.hcframe.base.module.data.service.TableService;
 import com.hcframe.base.module.tableconfig.entity.OsSysTable;
 import com.hcframe.user.common.utils.MD5Utils;
 import com.hcframe.user.common.utils.POIUtil;
+import com.hcframe.user.module.config.entity.UserConfig;
+import com.hcframe.user.module.config.service.UserConfigService;
 import com.hcframe.user.module.manage.mapper.ManageMapper;
 import com.hcframe.user.module.manage.service.ManageService;
+import com.hcframe.user.module.userinfo.service.OrgService;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -57,15 +60,22 @@ public class ManageServiceDataImpl implements ManageService {
 
     final POIUtil poiUtil;
 
+    final OrgService orgService;
+
+    final UserConfigService userConfigService;
 
     public ManageServiceDataImpl(@Qualifier(BaseMapperImpl.BASE) BaseMapper baseMapper,
                                  TableService tableService,
                                  ManageMapper manageMapper,
-                                 POIUtil poiUtil) {
+                                 POIUtil poiUtil,
+                                 OrgService orgService,
+                                 UserConfigService userConfigService) {
         this.baseMapper = baseMapper;
         this.tableService = tableService;
         this.manageMapper = manageMapper;
         this.poiUtil = poiUtil;
+        this.orgService = orgService;
+        this.userConfigService = userConfigService;
     }
 
     @Override
@@ -111,17 +121,12 @@ public class ManageServiceDataImpl implements ManageService {
 
     @Override
     public ResultVO<PageInfo<Map<String, Object>>> getUserList(String data, WebPageInfo webPageInfo, String orgId) {
+        UserConfig userConfig = userConfigService.getUserConfig();
         DataMap<Object> dataMap = DataMap.builder().sysOsTable(TABLE_INFO).build();
         Condition.ConditionBuilder builder = Condition.creatCriteria(dataMap);
-        if (!StringUtils.isEmpty(orgId) && !orgId.equals("guobo")) {
-            orgId = orgId.replaceAll("\"", "");
-            String sql = "select CODE from GB_CAS_DEPT where CODE like '" + orgId + "%'";
-            List<Map<String, Object>> list = baseMapper.selectSql(sql);
-            List<Object> idList = new ArrayList<>();
-            for (Map<String, Object> code : list) {
-                idList.add(code.get("CODE"));
-            }
-            builder.andIn("DEPT_CODE", idList);
+        if (!StringUtils.isEmpty(orgId)) {
+            Long parentId = Long.valueOf(orgId.replaceAll("\"", ""));
+            builder.andIn(userConfig.getOrgUserCode(), orgService.getOrgChildIdList(parentId));
         }
         builder.andEqual("USER_TYPE", "GN");
         if (!StringUtils.isEmpty(data)) {
@@ -140,7 +145,7 @@ public class ManageServiceDataImpl implements ManageService {
             map.remove("PASSWORD");
             map.put("PASSWORD", "******");
         }
-        page.setList(list);
+//        page.setList(list);
         return ResultVO.getSuccess(page);
     }
 

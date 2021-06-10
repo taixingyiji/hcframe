@@ -23,7 +23,6 @@ public class DeptController {
 
     final DeptService deptService;
 
-
     public DeptController(DeptService deptService) {
         this.deptService = deptService;
     }

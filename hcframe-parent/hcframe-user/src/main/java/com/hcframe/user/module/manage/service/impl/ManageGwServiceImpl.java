@@ -46,6 +46,7 @@ public class ManageGwServiceImpl implements ManageGwService {
     @Autowired
     TableService tableService;
 
+
     @Override
     public ResultVO<Map<String, Object>> addUser(Map<String, Object> user) {
         JudgeException.isNull(user.get("PASSWORD"), "密码不能为空");

@@ -411,7 +411,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
     }
 
     public static void main(String[] args) {
-        Long l = 1l;
-        System.out.println(l.toString());
+        String str = "USER_ID";
+        System.out.println(toCamelCase(str));
     }
 }
