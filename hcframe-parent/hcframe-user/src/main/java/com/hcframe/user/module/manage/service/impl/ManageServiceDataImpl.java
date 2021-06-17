@@ -97,7 +97,9 @@ public class ManageServiceDataImpl implements ManageService {
             logger.error("新增用户失败", e);
             throw new ServiceException(e);
         }
-        return tableService.saveWithDate(TABLE_INFO, user);
+        UserConfig userConfig = userConfigService.getUserConfig();
+        OsSysTable osSysTable = OsSysTable.builder().tablePk(userConfig.getUserKey()).tableName(userConfig.getUserTableName()).build();
+        return tableService.saveWithDate(osSysTable, user);
     }
 
     @Override
@@ -111,18 +113,23 @@ public class ManageServiceDataImpl implements ManageService {
             String orgDeptId = String.valueOf(user.get("ORG_DEPARTMENT_ID"));
             user.put("ORG_DEPARTMENT_ID", orgDeptId.replaceAll("\"", ""));
         }
-        return tableService.updateWithDate(TABLE_INFO, user, version);
+        UserConfig userConfig = userConfigService.getUserConfig();
+        OsSysTable osSysTable = OsSysTable.builder().tablePk(userConfig.getUserKey()).tableName(userConfig.getUserTableName()).build();
+        return tableService.updateWithDate(osSysTable, user, version);
     }
 
     @Override
     public ResultVO<Integer> deleteUser(String ids) {
-        return tableService.logicDelete(TABLE_INFO, ids);
+        UserConfig userConfig = userConfigService.getUserConfig();
+        OsSysTable osSysTable = OsSysTable.builder().tablePk(userConfig.getUserKey()).tableName(userConfig.getUserTableName()).build();
+        return tableService.logicDelete(osSysTable, ids);
     }
 
     @Override
     public ResultVO<PageInfo<Map<String, Object>>> getUserList(String data, WebPageInfo webPageInfo, String orgId) {
         UserConfig userConfig = userConfigService.getUserConfig();
-        DataMap<Object> dataMap = DataMap.builder().sysOsTable(TABLE_INFO).build();
+        OsSysTable osSysTable = OsSysTable.builder().tablePk(userConfig.getUserKey()).tableName(userConfig.getUserTableName()).build();
+        DataMap<Object> dataMap = DataMap.builder().sysOsTable(osSysTable).build();
         Condition.ConditionBuilder builder = Condition.creatCriteria(dataMap);
         if (!StringUtils.isEmpty(orgId)) {
             Long parentId = Long.valueOf(orgId.replaceAll("\"", ""));
@@ -159,7 +166,9 @@ public class ManageServiceDataImpl implements ManageService {
             logger.error("重置密码失败", e);
             throw new ServiceException(e);
         }
-        return tableService.updateWithDate(TABLE_INFO, map, version);
+        UserConfig userConfig = userConfigService.getUserConfig();
+        OsSysTable osSysTable = OsSysTable.builder().tablePk(userConfig.getUserKey()).tableName(userConfig.getUserTableName()).build();
+        return tableService.updateWithDate(osSysTable, map, version);
     }
 
     @Override
@@ -167,7 +176,9 @@ public class ManageServiceDataImpl implements ManageService {
         Map<String, Object> map = new HashMap<>(2);
         map.put(PK_ID, userId);
         map.put("DISABLED", enabled);
-        return tableService.updateWithDate(TABLE_INFO, map, version);
+        UserConfig userConfig = userConfigService.getUserConfig();
+        OsSysTable osSysTable = OsSysTable.builder().tablePk(userConfig.getUserKey()).tableName(userConfig.getUserTableName()).build();
+        return tableService.updateWithDate(osSysTable, map, version);
     }
 
     @Override
@@ -212,9 +223,11 @@ public class ManageServiceDataImpl implements ManageService {
         if (!npwd.equals(npwd2)) {
             return ResultVO.getFailed("两次新密码输入不一致");
         }
+        UserConfig userConfig = userConfigService.getUserConfig();
+        OsSysTable osSysTable = OsSysTable.builder().tablePk(userConfig.getUserKey()).tableName(userConfig.getUserTableName()).build();
         Map<String, Object> user = (Map<String, Object>) SecurityUtils.getSubject().getPrincipal();
         String id = (String) user.get("ID");
-        Map<String, Object> data = baseMapper.selectByPk(TABLE_NAME, PK_ID, id);
+        Map<String, Object> data = baseMapper.selectByPk(osSysTable.getTableName(), osSysTable.getTablePk(), id);
         Integer version = Integer.parseInt(data.get(FieldConstants.VERSION.toString()).toString());
         try {
             if (!data.get("PASSWORD").equals(MD5Utils.encode(pwd))) {
@@ -225,18 +238,18 @@ public class ManageServiceDataImpl implements ManageService {
             throw new ServiceException(e);
         }
         Map<String, Object> map = new HashMap<>(2);
-        map.put(PK_ID, id);
+        map.put(userConfig.getUserKey(), id);
         try {
             map.put("PASSWORD", MD5Utils.encode(npwd));
         } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
             logger.error("重置密码失败", e);
             throw new ServiceException(e);
         }
-        return tableService.updateWithDate(TABLE_INFO, map, version);
+        return tableService.updateWithDate(osSysTable, map, version);
     }
 
     @Override
-    public ResultVO<Object> getUserPost(String userId) {
+    public ResultVO<Object> getUserPost(@org.jetbrains.annotations.NotNull String userId) {
         Condition condition = Condition.creatCriteria().andEqual("MEMBER_ID",userId.replaceAll("\"","")).build();
         return ResultVO.getSuccess(baseMapper.selectByCondition("GB_DEPUTY_POST", condition));
     }
