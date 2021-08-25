@@ -13,4 +13,5 @@ public class FrameConfig {
     private Boolean showControllerLog = true;
     private Boolean multiDataSource = true;
     private Boolean cas = false;
+    private Boolean singleClientLogin= false;
 }

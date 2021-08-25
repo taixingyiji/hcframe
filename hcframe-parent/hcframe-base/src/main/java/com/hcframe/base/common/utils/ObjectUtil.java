@@ -22,6 +22,7 @@ public class ObjectUtil {
     private static final String STRING = "class java.lang.String";
     private static final String INTEGER = "class java.lang.Integer";
     private static final String LONG = "class java.lang.LONG";
+    private static final String BIG_INTEGER = "class java.math.BigInteger";
 
     public static Map<String, Object> objToMap(Object obj) {
         Class<?> clazz = obj.getClass();
@@ -142,6 +143,10 @@ public class ObjectUtil {
             if (LONG.equals(str)) {
                 value = Long.valueOf(value.toString());
             }
+            if (BIG_INTEGER.equals(str)) {
+                value = Long.valueOf(value.toString());
+            }
+
             try {
                 field.set(obj, value);
             } catch (IllegalAccessException e) {

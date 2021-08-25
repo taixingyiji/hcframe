@@ -66,10 +66,12 @@ public class CustomRealm extends AuthorizingRealm {
             if (userId == null) {
                 throw new IncorrectCredentialsException("token失效，请重新登录");
             }
-            String tokenStr = (String) redisUtil.hget("session", String.valueOf(userId));
-            if (tokenStr == null || !tokenStr.equals(accessToken)) {
-                redisUtil.del(accessToken);
-                throw new IncorrectCredentialsException("token失效，请重新登录");
+            if (frameConfig.getSingleClientLogin()) {
+                String tokenStr = (String) redisUtil.hget("session", String.valueOf(userId));
+                if (tokenStr == null || !tokenStr.equals(accessToken)) {
+                    redisUtil.del(accessToken);
+                    throw new IncorrectCredentialsException("token失效，请重新登录");
+                }
             }
             Date expireTime = (Date) hashMap.get("expireTime");
             System.out.println(expireTime);

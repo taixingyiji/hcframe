@@ -39,10 +39,10 @@ public class AuthFilter extends AuthenticatingFilter {
             HttpServletResponse httpResponse = (HttpServletResponse) response;
             HttpServletRequest httpServletRequest = (HttpServletRequest) request;
             String myOrigin = httpServletRequest.getHeader("origin");
-            httpResponse.setContentType("application/json;charset=utf-8");
-            httpResponse.setHeader("Access-Control-Allow-Credentials", "true");
-            httpResponse.setHeader("Access-Control-Allow-Headers", "x-requested-with, X-Access-Token, datasource-Key");
-            httpResponse.setHeader("Access-Control-Allow-Origin", myOrigin);
+//            httpResponse.setContentType("application/json;charset=utf-8");
+//            httpResponse.setHeader("Access-Control-Allow-Credentials", "true");
+//            httpResponse.setHeader("Access-Control-Allow-Headers", "x-requested-with, X-Access-Token, datasource-Key");
+//            httpResponse.setHeader("Access-Control-Allow-Origin", myOrigin);
             httpResponse.setCharacterEncoding("UTF-8");
             Map<String, Object> result = new HashMap<>(2);
             result.put("code", 3);
@@ -82,9 +82,9 @@ public class AuthFilter extends AuthenticatingFilter {
             HttpServletRequest httpServletRequest = (HttpServletRequest) request;
             String myOrigin = httpServletRequest.getHeader("origin");
             httpResponse.setContentType("application/json;charset=utf-8");
-            httpResponse.setHeader("Access-Control-Allow-Credentials", "true");
-            httpResponse.setHeader("Access-Control-Allow-Headers", "x-requested-with, X-Access-Token, datasource-Key");
-            httpResponse.setHeader("Access-Control-Allow-Origin", myOrigin);
+//            httpResponse.setHeader("Access-Control-Allow-Credentials", "true");
+//            httpResponse.setHeader("Access-Control-Allow-Headers", "x-requested-with, X-Access-Token, datasource-Key");
+//            httpResponse.setHeader("Access-Control-Allow-Origin", myOrigin);
             httpResponse.setCharacterEncoding("UTF-8");
             Map<String, Object> result = new HashMap<>(2);
             result.put("code", 3);
@@ -108,11 +108,11 @@ public class AuthFilter extends AuthenticatingFilter {
         //处理登录失败的异常
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         httpResponse.setContentType("application/json;charset=utf-8");
-        httpResponse.setHeader("Access-Control-Allow-Credentials", "true");
+//        httpResponse.setHeader("Access-Control-Allow-Credentials", "true");
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         String myOrigin = httpServletRequest.getHeader("origin");
-        httpResponse.setHeader("Access-Control-Allow-Headers", "x-requested-with, X-Access-Token, datasource-Key");
-        httpResponse.setHeader("Access-Control-Allow-Origin", myOrigin);
+//        httpResponse.setHeader("Access-Control-Allow-Headers", "x-requested-with, X-Access-Token, datasource-Key");
+//        httpResponse.setHeader("Access-Control-Allow-Origin", myOrigin);
         httpResponse.setCharacterEncoding("UTF-8");
         try {
             //处理登录失败的异常
