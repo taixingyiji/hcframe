@@ -66,7 +66,7 @@ public class ResultVO<T> {
      * @return ResultVO
      */
     public static <T> ResultVO<T> getSuccess() {
-        return new ResultVO<>();
+        return new ResultVO<T>();
     }
     /**
      * 请求成功  状态码 1
@@ -88,7 +88,7 @@ public class ResultVO<T> {
      * @return ResultVO
      */
     public static <T> ResultVO<T> getFailed(String msg) {
-        return new ResultVO<>(FAILED, msg);
+        return new ResultVO<T>(FAILED, msg);
     }
 
     /**

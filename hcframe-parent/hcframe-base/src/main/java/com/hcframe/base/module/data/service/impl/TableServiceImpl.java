@@ -111,7 +111,7 @@ public class TableServiceImpl implements TableService {
 
     @Override
     public ResultVO<Integer> delete(OsSysTable osSysTable, String ids) {
-        JudgeException.isNull(ids,"ids 不能为空");
+        JudgeException.isNull(ids, "ids 不能为空");
         int i = baseMapper.deleteInPk(DataMap.builder().sysOsTable(osSysTable).ids(ids).build());
         SqlException.operation(i, "删除失败");
         return ResultVO.getSuccess(i);
@@ -178,19 +178,7 @@ public class TableServiceImpl implements TableService {
 
     @Override
     public PageInfo<Map<String, Object>> searchSingleTables(String map, OsSysTable tableName, WebPageInfo webPageInfo) {
-        DataMap dataMap = DataMap.builder().sysOsTable(tableName).build();
-        Condition.ConditionBuilder builder = Condition.creatCriteria(dataMap);
-        if (!StringUtils.isEmpty(map)) {
-            try {
-                map = URLDecoder.decode(map, "UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                throw new ServiceException(e);
-            }
-            JSONArray jsonArray = JSON.parseArray(map);
-            builder = getQueryBuilder(jsonArray, builder);
-        }
-        builder.andEqual("DELETED", 1);
-        return baseMapper.selectByCondition(builder.build(), webPageInfo);
+        return baseMapper.selectByCondition(getMapList(tableName, map).build(), webPageInfo);
     }
 
 
@@ -246,6 +234,42 @@ public class TableServiceImpl implements TableService {
             }
             builder = WebCondition.setSign(webCondition, builder);
         }
+        return builder;
+    }
+
+    @Override
+    public Map<String, Object> getOne(OsSysTable tableName, String id) {
+        Condition condition = Condition.creatCriteria().andEqual("DELETED", 1).andEqual(tableName.getTablePk(), id).build();
+        return baseMapper.selectOneByCondition(tableName.getTableName(), condition);
+    }
+
+    @Override
+    public PageInfo<Map<String, Object>> getReference(OsSysTable tableName, String data, WebPageInfo webPageInfo, String target, String id) {
+        Condition.ConditionBuilder builder = getMapList(tableName, data);
+        builder.andEqual(target, id);
+        return baseMapper.selectByCondition(builder.build(), webPageInfo);
+    }
+
+    @Override
+    public List<Map<String, Object>> getMany(OsSysTable tableName, String ids) {
+        DataMap dataMap = DataMap.builder().sysOsTable(tableName).ids(ids).build();
+        Condition condition = Condition.creatCriteria(dataMap).andIn(dataMap.getPkName(), dataMap.getIdList()).build();
+        return baseMapper.selectByCondition(condition);
+    }
+
+    private Condition.ConditionBuilder getMapList(OsSysTable tableName, String data) {
+        DataMap dataMap = DataMap.builder().sysOsTable(tableName).build();
+        Condition.ConditionBuilder builder = Condition.creatCriteria(dataMap);
+        if (!StringUtils.isEmpty(data)) {
+            try {
+                data = URLDecoder.decode(data, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                throw new ServiceException(e);
+            }
+            JSONArray jsonArray = JSON.parseArray(data);
+            builder = getQueryBuilder(jsonArray, builder);
+        }
+        builder.andEqual("DELETED", 1);
         return builder;
     }
 

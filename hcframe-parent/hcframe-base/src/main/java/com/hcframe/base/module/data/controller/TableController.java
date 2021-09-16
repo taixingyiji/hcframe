@@ -42,20 +42,38 @@ public class TableController {
 
     @ApiOperation(value = "保存接口（带保存日期）")
     @PostMapping("/{typeName}/date")
-    public ResultVO<Map<String,Object>> saveWithDate(@PathVariable String typeName, @RequestParam Map<String, Object> map) {
+    public ResultVO<Map<String, Object>> saveWithDate(@PathVariable String typeName, @RequestParam Map<String, Object> map) {
         return tableService.saveWithDate(tableNameUtil.getTableName(typeName), map);
     }
 
+    @ApiOperation(value = "获取单条数据")
+    @GetMapping("/{typeName}/one/{id}")
+    public ResultVO<Map<String, Object>> getOne(@PathVariable String typeName, @PathVariable String id) {
+        return ResultVO.getSuccess(tableService.getOne(tableNameUtil.getTableName(typeName), id));
+    }
+
+    @ApiOperation(value = "获取多条数据")
+    @GetMapping("/{typeName}/many/{ids}")
+    public ResultVO<List<Map<String, Object>>> getMany(@PathVariable String typeName, @PathVariable String ids) {
+        return ResultVO.getSuccess(tableService.getMany(tableNameUtil.getTableName(typeName), ids));
+    }
+
+    @ApiOperation(value = "获取多条数据")
+    @GetMapping("/{typeName}/reference/{id}")
+    public ResultVO<PageInfo<Map<String, Object>>> getReference(@PathVariable String typeName, String target, String data, WebPageInfo webPageInfo,@PathVariable String id) {
+        return ResultVO.getSuccess(tableService.getReference(tableNameUtil.getTableName(typeName), data, webPageInfo, target,id));
+    }
+
     @ApiOperation(value = "更新接口")
-    @PutMapping({"/{typeName}/{version}","/{typeName}"})
-    public ResultVO<Integer> update(@PathVariable String typeName, @RequestParam Map<String, Object> map,@PathVariable(required = false) Integer version) {
-        return tableService.update(tableNameUtil.getTableName(typeName), map,version);
+    @PutMapping({"/{typeName}/{version}", "/{typeName}"})
+    public ResultVO<Integer> update(@PathVariable String typeName, @RequestParam Map<String, Object> map, @PathVariable(required = false) Integer version) {
+        return tableService.update(tableNameUtil.getTableName(typeName), map, version);
     }
 
     @ApiOperation(value = "更新接口(带更改日期)")
-    @PutMapping({"/{typeName}/{version}/date","/{typeName}/date"})
-    public ResultVO<Integer> updateWithDate(@PathVariable String typeName, @RequestParam Map<String, Object> map,@PathVariable(required = false) Integer version) {
-        return tableService.updateWithDate(tableNameUtil.getTableName(typeName), map,version);
+    @PutMapping({"/{typeName}/{version}/date", "/{typeName}/date"})
+    public ResultVO<Integer> updateWithDate(@PathVariable String typeName, @RequestParam Map<String, Object> map, @PathVariable(required = false) Integer version) {
+        return tableService.updateWithDate(tableNameUtil.getTableName(typeName), map, version);
     }
 
     @ApiOperation(value = "删除接口（可批量）")
@@ -69,7 +87,7 @@ public class TableController {
     @ApiOperation(value = "逻辑删除（可批量）")
     @DeleteMapping("/{typeName}/logic")
     @ApiImplicitParam(name = "ids", value = "id主键的数组的toString", required = true)
-    public ResultVO<Integer> logicDelete(@PathVariable String typeName,String ids) {
+    public ResultVO<Integer> logicDelete(@PathVariable String typeName, String ids) {
         return tableService.logicDelete(tableNameUtil.getTableName(typeName), ids);
     }
 
@@ -79,7 +97,7 @@ public class TableController {
             @ApiImplicitParam(name = "typeName", value = " 类型", type = "path", required = true),
             @ApiImplicitParam(name = "data", value = " JSON.stringify()后的数据，主要为查询条件"),
     })
-    public ResultVO<PageInfo<Map<String,Object>>> searchTables(@PathVariable String typeName, String data, WebPageInfo webPageInfo) {
+    public ResultVO<PageInfo<Map<String, Object>>> searchTables(@PathVariable String typeName, String data, WebPageInfo webPageInfo) {
         return ResultVO.getSuccess(tableService.searchSingleTables(data, tableNameUtil.getTableName(typeName), webPageInfo));
     }
 
@@ -89,13 +107,13 @@ public class TableController {
             @ApiImplicitParam(name = "typeName", value = " 类型", type = "path", required = true),
             @ApiImplicitParam(name = "data", value = " JSON.stringify()后的数据，主要为查询条件"),
     })
-    public ResultVO<PageInfo<Map<String,Object>>> searchJoinTables(@PathVariable String typeName, String data, WebPageInfo webPageInfo) {
-        return ResultVO.getSuccess(tableService.searchJoinTables(data, webPageInfo,tableNameUtil.getTableName(typeName)));
+    public ResultVO<PageInfo<Map<String, Object>>> searchJoinTables(@PathVariable String typeName, String data, WebPageInfo webPageInfo) {
+        return ResultVO.getSuccess(tableService.searchJoinTables(data, webPageInfo, tableNameUtil.getTableName(typeName)));
     }
 
     @ApiOperation(value = "获取单表接口（不带分页）")
     @GetMapping("/getListNoPage/{typeName}")
-    public ResultVO<List<Map<String,Object>>> getListNoPage(@PathVariable String typeName, @RequestParam Map<String, Object> map) {
+    public ResultVO<List<Map<String, Object>>> getListNoPage(@PathVariable String typeName, @RequestParam Map<String, Object> map) {
         return tableService.getListNoPage(tableNameUtil.getTableName(typeName), map);
     }
 
@@ -131,7 +149,7 @@ public class TableController {
 
     @ApiOperation(value = "获取基表信息")
     @GetMapping("/getBaseTableInfo")
-    public ResultVO<Map<String,Object>> getBaseTableInfo(String tableNames) {
+    public ResultVO<Map<String, Object>> getBaseTableInfo(String tableNames) {
         return tableService.getBaseTableInfo(tableNames);
     }
 
