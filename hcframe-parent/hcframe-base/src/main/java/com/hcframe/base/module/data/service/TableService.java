@@ -16,9 +16,9 @@ public interface TableService {
 
     ResultVO<Map<String, Object>> saveWithDate(OsSysTable osSysTable, Map<String, Object> map);
 
-    ResultVO<Integer> update(OsSysTable osSysTable, Map<String, Object> map, Integer version);
+    ResultVO<Map<String,Object>> update(OsSysTable osSysTable, Map<String, Object> map, Integer version);
 
-    ResultVO<Integer> updateWithDate(OsSysTable tableName, Map<String, Object> map, Integer version);
+    ResultVO<Map<String,Object>> updateWithDate(OsSysTable tableName, Map<String, Object> map, Integer version);
 
     ResultVO<Integer> delete(OsSysTable tableName, String ids);
 

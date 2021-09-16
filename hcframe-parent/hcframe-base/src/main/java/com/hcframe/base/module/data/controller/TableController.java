@@ -66,13 +66,13 @@ public class TableController {
 
     @ApiOperation(value = "更新接口")
     @PutMapping({"/{typeName}/{version}", "/{typeName}"})
-    public ResultVO<Integer> update(@PathVariable String typeName, @RequestParam Map<String, Object> map, @PathVariable(required = false) Integer version) {
+    public ResultVO<Map<String,Object>> update(@PathVariable String typeName, @RequestParam Map<String, Object> map, @PathVariable(required = false) Integer version) {
         return tableService.update(tableNameUtil.getTableName(typeName), map, version);
     }
 
     @ApiOperation(value = "更新接口(带更改日期)")
     @PutMapping({"/{typeName}/{version}/date", "/{typeName}/date"})
-    public ResultVO<Integer> updateWithDate(@PathVariable String typeName, @RequestParam Map<String, Object> map, @PathVariable(required = false) Integer version) {
+    public ResultVO<Map<String,Object>> updateWithDate(@PathVariable String typeName, @RequestParam Map<String, Object> map, @PathVariable(required = false) Integer version) {
         return tableService.updateWithDate(tableNameUtil.getTableName(typeName), map, version);
     }
 

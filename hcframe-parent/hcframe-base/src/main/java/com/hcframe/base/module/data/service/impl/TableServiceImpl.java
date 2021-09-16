@@ -67,14 +67,14 @@ public class TableServiceImpl implements TableService {
     }
 
     @Override
-    public ResultVO<Integer> update(OsSysTable osSysTable, Map<String, Object> map, Integer version) {
+    public ResultVO<Map<String,Object>> update(OsSysTable osSysTable, Map<String, Object> map, Integer version) {
         Object pk = map.get(osSysTable.getTablePk());
         map.remove(osSysTable.getTablePk());
         return versionValid(osSysTable, map, version, pk);
     }
 
     @Override
-    public ResultVO<Integer> updateWithDate(OsSysTable osSysTable, Map<String, Object> map, Integer version) {
+    public ResultVO<Map<String,Object>> updateWithDate(OsSysTable osSysTable, Map<String, Object> map, Integer version) {
         Object pk = map.get(osSysTable.getTablePk());
         map.put(FieldConstants.UPDATE_TIME.toString(), new Date());
         map.remove(osSysTable.getTablePk());
@@ -82,7 +82,7 @@ public class TableServiceImpl implements TableService {
         return versionValid(osSysTable, map, version, pk);
     }
 
-    private ResultVO<Integer> versionValid(OsSysTable osSysTable, Map<String, Object> map, Integer version, Object pk) {
+    private ResultVO<Map<String,Object>> versionValid(OsSysTable osSysTable, Map<String, Object> map, Integer version, Object pk) {
         if (!StringUtils.isEmpty(version)) {
             DataMap dataMap = DataMap.builder().sysOsTable(osSysTable).pkValue(pk).data(map).build();
             Map<String, Object> data = baseMapper.selectByPk(dataMap);
@@ -96,7 +96,7 @@ public class TableServiceImpl implements TableService {
         return updateByPk(osSysTable, map, pk);
     }
 
-    private ResultVO<Integer> updateByPk(OsSysTable osSysTable, Map<String, Object> map, Object pk) {
+    private ResultVO<Map<String,Object>> updateByPk(OsSysTable osSysTable, Map<String, Object> map, Object pk) {
         map.remove("ROW_ID");
         // 设置更新项
         DataMap dataMap = DataMap.builder()
@@ -106,7 +106,8 @@ public class TableServiceImpl implements TableService {
                 .build();
         int i = baseMapper.updateByPk(dataMap);
         SqlException.operation(i, "更新失败");
-        return ResultVO.getSuccess(i);
+        Map<String,Object> result = baseMapper.selectByPk(osSysTable,pk);
+        return ResultVO.getSuccess(result);
     }
 
     @Override
