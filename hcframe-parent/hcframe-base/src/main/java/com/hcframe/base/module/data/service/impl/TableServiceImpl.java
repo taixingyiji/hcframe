@@ -246,6 +246,12 @@ public class TableServiceImpl implements TableService {
 
     @Override
     public PageInfo<Map<String, Object>> getReference(OsSysTable tableName, String data, WebPageInfo webPageInfo, String target, String id) {
+        if (StringUtils.isEmpty(target)) {
+            return new PageInfo<>();
+        }
+        if (StringUtils.isEmpty(id)) {
+            return new PageInfo<>();
+        }
         Condition.ConditionBuilder builder = getMapList(tableName, data);
         builder.andEqual(target, id);
         return baseMapper.selectByCondition(builder.build(), webPageInfo);

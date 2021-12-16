@@ -75,7 +75,6 @@ public class BaseMapperImpl implements BaseMapper {
             dataMap.setPkValue(id);
         }
         SqlException.base(i, "保存失败");
-        dataMap.toBuilder().remove("id");
         return i;
     }
 
@@ -117,7 +116,6 @@ public class BaseMapperImpl implements BaseMapper {
             data.put(pkName, data.get("id"));
         }
         SqlException.base(i, "保存失败");
-        data.remove("id");
         return i;
     }
 
