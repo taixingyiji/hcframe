@@ -1,7 +1,7 @@
 package com.hcframe.base.module.datasource.config;
 
 import com.alibaba.druid.pool.DruidDataSource;
-import com.hcframe.base.common.Mapper;
+import com.hcframe.base.common.MyMapper;
 import com.hcframe.base.module.datasource.dynamic.MyDynamicDataSource;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
@@ -31,7 +31,7 @@ import java.util.Map;
 // 配置tk.mybatis参数及通用mapper,指定sqlSession工厂Bean
 @tk.mybatis.spring.annotation.MapperScan(basePackages = "com.hcframe.**.dao",  //这里扫描dao层的接口
         sqlSessionFactoryRef = "sqlSessionFactoryBean222",
-        markerInterface = Mapper.class   //指定tkmybatis 中的通用mapper
+        markerInterface = MyMapper.class   //指定tkmybatis 中的通用mapper
 )
 // 配置mybatis参数，指定sqlSession工厂Bean
 @MapperScan(basePackages = "com.hcframe.**.dao",sqlSessionFactoryRef = "sqlSessionFactoryBean222")

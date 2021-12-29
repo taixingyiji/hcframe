@@ -1,6 +1,6 @@
 package com.hcframe.base.module.datasource.dao;
 
-import com.hcframe.base.common.Mapper;
+import com.hcframe.base.common.MyMapper;
 import com.hcframe.base.module.datasource.entity.DatasourceConfig;
 
 /**
@@ -9,7 +9,7 @@ import com.hcframe.base.module.datasource.entity.DatasourceConfig;
  * @author lhc
  * @since 2020-09-23 09:28:03
  */
-public interface DatasourceConfigDao extends Mapper<DatasourceConfig> {
+public interface DatasourceConfigDao extends MyMapper<DatasourceConfig> {
 
 
     int  getCount();

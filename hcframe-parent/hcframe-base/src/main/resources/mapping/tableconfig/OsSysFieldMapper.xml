@@ -18,6 +18,7 @@
     <result column="FIELD_LOGIC" jdbcType="VARCHAR" property="logic" />
     <result column="FIELD_SIGN" jdbcType="VARCHAR" property="sign" />
     <result column="IS_SEARCH" jdbcType="VARCHAR" property="isSearch" />
+    <result column="IS_DETAILS" jdbcType="INTEGER" property="isDetails" />
     <result column="FK_KEY" jdbcType="VARCHAR" property="fkKey" />
     <result column="FK_VALUE" jdbcType="VARCHAR" property="fkValue" />
     <result column="WIDTH" jdbcType="INTEGER" property="width" />

@@ -1,6 +1,6 @@
 package com.hcframe.base.module.auth.dao;
 
-import com.hcframe.base.common.Mapper;
+import com.hcframe.base.common.MyMapper;
 import com.hcframe.base.module.auth.entity.OsSysMenu;
 import org.apache.ibatis.annotations.Param;
 
@@ -13,7 +13,7 @@ import java.util.Set;
  * @author makejava
  * @since 2020-12-09 09:57:20
  */
-public interface OsSysMenuDao extends Mapper<OsSysMenu> {
+public interface OsSysMenuDao extends MyMapper<OsSysMenu> {
 
     List<OsSysMenu> selectMenu();
 

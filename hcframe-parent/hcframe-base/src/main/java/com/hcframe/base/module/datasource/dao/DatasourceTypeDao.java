@@ -1,6 +1,6 @@
 package com.hcframe.base.module.datasource.dao;
 
-import com.hcframe.base.common.Mapper;
+import com.hcframe.base.common.MyMapper;
 import com.hcframe.base.module.datasource.entity.DatasourceType;
 
 /**
@@ -9,7 +9,7 @@ import com.hcframe.base.module.datasource.entity.DatasourceType;
  * @author lhc
  * @since 2020-09-28 15:18:29
  */
-public interface DatasourceTypeDao extends Mapper<DatasourceType> {
+public interface DatasourceTypeDao extends MyMapper<DatasourceType> {
 
 
 }
