@@ -23,6 +23,7 @@
     <result column="FK_VALUE" jdbcType="VARCHAR" property="fkValue" />
     <result column="WIDTH" jdbcType="INTEGER" property="width" />
     <result column="ORDER_ID" jdbcType="INTEGER" property="orderId" />
+    <result column="TABLE_TYPE" jdbcType="INTEGER" property="tableType" />
     <collection property="selectList" resultMap="com.hcframe.base.module.tableconfig.dao.OsSysSelectDao.OsSysSelectMap"/>
   </resultMap>
     <select id="getTableAlise" resultType="java.lang.String">
