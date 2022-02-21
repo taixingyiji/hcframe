@@ -27,6 +27,8 @@ public class Condition implements Serializable {
     public static String IN = "IN";
     public static String AND = "AND";
     public static String OR = "OR";
+    public static String NOT_EQUAL = "!=";
+    public static String NOT = "NOT";
     public static String BETWEEN = "BETWEEN";
     public static String LT = "<";
     public static String GT = ">";
@@ -341,6 +343,26 @@ public class Condition implements Serializable {
 
         public ConditionBuilder orLt(String key, Object value) {
             this.or().lt(key, value);
+            return this;
+        }
+
+        public ConditionBuilder not() {
+            this.conditionSql += " " + NOT + " ";
+            return this;
+        }
+        public ConditionBuilder notEqual(String key, Object value) {
+            sqlCheck(value);
+            this.conditionSql += " " + key + " " + NOT_EQUAL + " '" + value.toString() + "' ";
+            return this;
+        }
+
+        public ConditionBuilder andNotEqual(String key, Object value) {
+            this.and().notEqual(key, value);
+            return this;
+        }
+
+        public ConditionBuilder orNotEqual(String key, Object value) {
+            this.or().notEqual(key, value);
             return this;
         }
 
