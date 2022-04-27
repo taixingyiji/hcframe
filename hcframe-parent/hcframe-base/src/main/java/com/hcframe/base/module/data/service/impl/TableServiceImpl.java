@@ -82,7 +82,7 @@ public class TableServiceImpl implements TableService {
         return versionValid(osSysTable, map, version, pk);
     }
 
-    private ResultVO<Map<String,Object>> versionValid(OsSysTable osSysTable, Map<String, Object> map, Integer version, Object pk) {
+    public ResultVO<Map<String,Object>> versionValid(OsSysTable osSysTable, Map<String, Object> map, Integer version, Object pk) {
         if (!StringUtils.isEmpty(version)) {
             DataMap dataMap = DataMap.builder().sysOsTable(osSysTable).pkValue(pk).data(map).build();
             Map<String, Object> data = baseMapper.selectByPk(dataMap);
@@ -96,7 +96,7 @@ public class TableServiceImpl implements TableService {
         return updateByPk(osSysTable, map, pk);
     }
 
-    private ResultVO<Map<String,Object>> updateByPk(OsSysTable osSysTable, Map<String, Object> map, Object pk) {
+    public ResultVO<Map<String,Object>> updateByPk(OsSysTable osSysTable, Map<String, Object> map, Object pk) {
         map.remove("ROW_ID");
         // 设置更新项
         DataMap dataMap = DataMap.builder()
@@ -264,7 +264,7 @@ public class TableServiceImpl implements TableService {
         return baseMapper.selectByCondition(condition);
     }
 
-    private Condition.ConditionBuilder getMapList(OsSysTable tableName, String data) {
+    public Condition.ConditionBuilder getMapList(OsSysTable tableName, String data) {
         DataMap dataMap = DataMap.builder().sysOsTable(tableName).build();
         Condition.ConditionBuilder builder = Condition.creatCriteria(dataMap);
         if (!StringUtils.isEmpty(data)) {

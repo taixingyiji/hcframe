@@ -1,5 +1,6 @@
 package com.hcframe.base.module.data.module;
 
+import com.github.pagehelper.PageInfo;
 import com.hcframe.base.common.WebPageInfo;
 import com.hcframe.base.common.utils.MyPageHelper;
 import com.hcframe.base.common.utils.StringUtils;
@@ -11,10 +12,8 @@ import com.hcframe.base.module.datasource.entity.DatasourceConfig;
 import com.hcframe.base.module.datasource.utils.DataSourceUtil;
 import com.hcframe.base.module.datasource.utils.DataUnit;
 import com.hcframe.base.module.tableconfig.entity.OsSysTable;
-import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -34,7 +33,6 @@ public class BaseMapperImpl implements BaseMapper {
     }
 
     @Override
-    @Transactional
     public  <E> int save(DataMap<E> dataMap) {
         String key;
         DatasourceConfig datasourceConfig = new DatasourceConfig();
@@ -79,7 +77,6 @@ public class BaseMapperImpl implements BaseMapper {
     }
 
     @Override
-    @Transactional
     public int save(String tableName, String pkName, Map<String, Object> data) {
         JudgesNull(tableName, "data can not be null!");
         JudgesNull(data, "tableName can not be null!");
@@ -613,7 +610,7 @@ public class BaseMapperImpl implements BaseMapper {
         }
     }
 
-    private Object getSequence(String tableName, String pkName) {
+    public Object getSequence(String tableName, String pkName) {
         Object id;
         try {
             id = tableMapper.getSequence(tableName);
