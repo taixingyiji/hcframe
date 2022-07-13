@@ -54,7 +54,7 @@ public class CasController {
                     break;
                 }
             }
-            Map<Object, Object> hashMap = (Map<Object, Object>) redisUtil.hget("session", token);
+            Map<Object, Object> hashMap = (Map<Object, Object>) redisUtil.get("session:"+token);
             AssertionImpl assertion = (AssertionImpl) hashMap.get("_const_cas_assertion_");
             AttributePrincipal attributePrincipal = assertion.getPrincipal();
             Map<String, Object> user = attributePrincipal.getAttributes();
@@ -83,8 +83,8 @@ public class CasController {
         Cookie cookie = new Cookie("X-Access-Token", null);
         cookie.setMaxAge(0);
         String headerToken = request.getHeader("X-Access-Token");
-        redisUtil.hdel("session", token);
-        redisUtil.hdel("session", headerToken);
+        redisUtil.del("session:"+ token);
+        redisUtil.del("session:"+ headerToken);
         Subject subject = SecurityUtils.getSubject();
         subject.logout();
         return ResultVO.getSuccess(casClientConfigurationProperties.getServerUrlPrefix()+"/logout");

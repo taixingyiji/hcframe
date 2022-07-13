@@ -55,12 +55,16 @@ public class ShiroServiceImpl implements ShiroService {
         Date now = new Date();
         // 是否使用redis存入token
         if (isRedisLogin) {
-            boolean flag = redisUtil.hset("session", String.valueOf(userId), token, EXPIRE / 1000);
+            boolean flag = redisUtil.set("session:"+userId, token, EXPIRE / 1000);
             if (flag) {
                 Map<String, Object> map = new HashMap<>(2);
                 map.put("userId", userId);
                 map.put("expireTime", expireTime);
-                flag = redisUtil.hset("tokenSession",token, map, EXPIRE / 1000);
+                flag = redisUtil.hset("tokenSession:" + token, "userId", userId, EXPIRE / 1000);
+                if (!flag) {
+                    throw new ServiceException("登陆失败");
+                }
+                flag = redisUtil.hset("tokenSession:" + token, "expireTime", String.valueOf(expireTime.getTime()), EXPIRE / 1000);
                 if (!flag) {
                     throw new ServiceException("登陆失败");
                 }
@@ -97,10 +101,10 @@ public class ShiroServiceImpl implements ShiroService {
     @Override
     public ResultVO logout(String accessToken) {
         if (isRedisLogin) {
-            Map<Object, Object> map = (Map<Object, Object>) redisUtil.hget("tokenSession",accessToken);
+            Map<Object, Object> map = (Map<Object, Object>) redisUtil.get("tokenSession:"+accessToken);
             String userId = (String) map.get("userId");
-            redisUtil.hdel("tokenSession",accessToken);
-            redisUtil.hdel("session", userId);
+            redisUtil.del("tokenSession:"+accessToken);
+            redisUtil.del("session:"+userId);
             return ResultVO.getSuccess();
         } else {
             //生成一个token

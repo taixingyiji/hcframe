@@ -48,7 +48,7 @@ public class CasController {
     @GetMapping("userinfo")
     @ResponseBody
     public ResultVO<Object> getUserInfo(String token) {
-        return ResultVO.getSuccess(redisUtil.hget("session", token));
+        return ResultVO.getSuccess(redisUtil.get("session:"+token));
     }
 
     @GetMapping("/cas/logout")
@@ -56,7 +56,7 @@ public class CasController {
     public ResultVO<String> logout(HttpServletResponse response, @CookieValue("X-Access-Token") String token) {
         Cookie cookie = new Cookie("X-Access-Token", null);
         cookie.setMaxAge(0);
-        redisUtil.hdel("session", token);
+        redisUtil.del("session:"+ token);
         return ResultVO.getSuccess("http://192.168.1.131:8080/cas/logout");
     }
 

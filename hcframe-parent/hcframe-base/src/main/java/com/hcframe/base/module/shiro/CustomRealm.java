@@ -50,7 +50,7 @@ public class CustomRealm extends AuthorizingRealm {
         String accessToken = (String) token.getPrincipal();
         String userId;
         if (frameConfig.getCas()) {
-            Map<Object, Object> hashMap = (Map<Object, Object>) redisUtil.hget("session", accessToken);
+            Map<Object, Object> hashMap = (Map<Object, Object>) redisUtil.get("session:"+accessToken);
             Long expireTime = (Long) hashMap.get("expireTime");
             expireTime = expireTime * 1000;
             AssertionImpl assertion = (AssertionImpl) hashMap.get("_const_cas_assertion_");
@@ -61,21 +61,19 @@ public class CustomRealm extends AuthorizingRealm {
             }
             return new SimpleAuthenticationInfo(attributePrincipal.getAttributes(), accessToken, this.getName());
         } else if (frameConfig.getIsRedisLogin()) {
-            Map<Object, Object> hashMap = (Map<Object, Object>) redisUtil.hget("tokenSession", accessToken);
-            userId = (String) hashMap.get("userId");
+            userId= (String) redisUtil.hget("tokenSession:"+accessToken,"userId");
             if (userId == null) {
                 throw new IncorrectCredentialsException("token失效，请重新登录");
             }
             if (frameConfig.getSingleClientLogin()) {
-                String tokenStr = (String) redisUtil.hget("session", String.valueOf(userId));
+                String tokenStr = (String) redisUtil.get("session:"+userId);
                 if (tokenStr == null || !tokenStr.equals(accessToken)) {
                     redisUtil.del(accessToken);
                     throw new IncorrectCredentialsException("token失效，请重新登录");
                 }
             }
-            Date expireTime = (Date) hashMap.get("expireTime");
-            System.out.println(expireTime);
-            if (expireTime.getTime() < System.currentTimeMillis()) {
+            long time = Long.parseLong((String) redisUtil.hget("tokenSession:" + accessToken, "expireTime"));
+            if (time < System.currentTimeMillis()) {
                 redisUtil.del(accessToken);
                 throw new IncorrectCredentialsException("token失效，请重新登录");
             }

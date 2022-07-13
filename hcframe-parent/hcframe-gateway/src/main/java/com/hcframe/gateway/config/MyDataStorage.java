@@ -1,11 +1,12 @@
 package com.hcframe.gateway.config;
 
 import com.hcframe.gateway_cas_stater.data.DataStorage;
-import com.hcframe.redis.RedisUtil;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author lhc
@@ -18,7 +19,7 @@ public class MyDataStorage implements DataStorage {
     private Long expireTime;
 
     @Resource
-    private RedisUtil redisUtil;
+    private RedisTemplate redisTemplate;
 
     public MyDataStorage(Long expireTime) {
         if (expireTime==null){
@@ -29,7 +30,7 @@ public class MyDataStorage implements DataStorage {
 
     @Override
     public Object getValue(String userKey, String key) {
-        Map<String,Object> map = (Map<String, Object>) redisUtil.hget(SESSION, userKey);
+        Map<String,Object> map = (Map<String, Object>) redisTemplate.opsForHash().get(SESSION, userKey);
         if (map == null) {
             return null;
         }
@@ -41,15 +42,15 @@ public class MyDataStorage implements DataStorage {
 
     @Override
     public void setValue(String userKey, String key, Object attr) {
-        Map<String,Object> map = (Map<String, Object>) redisUtil.hget(SESSION, userKey);
+        Map<String,Object> map = (Map<String, Object>) redisTemplate.opsForHash().get(SESSION, userKey);
         if (map != null) {
             map.put(key, attr);
-            redisUtil.hset("session", userKey, map, expireTime);
+            redisTemplate.opsForValue().set("session:"+userKey, map, expireTime, TimeUnit.SECONDS);
         } else {
             map = new HashMap<>(2);
             map.put(key, attr);
             map.put(EXPIRE_TIME, expireTime);
-            redisUtil.hset("session", userKey, map, expireTime);
+            redisTemplate.opsForValue().set("session:"+userKey, map, expireTime, TimeUnit.SECONDS);
         }
     }
 }
