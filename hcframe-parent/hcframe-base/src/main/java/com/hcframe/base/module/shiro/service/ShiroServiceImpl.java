@@ -101,8 +101,9 @@ public class ShiroServiceImpl implements ShiroService {
     @Override
     public ResultVO logout(String accessToken) {
         if (isRedisLogin) {
-            Map<Object, Object> map = (Map<Object, Object>) redisUtil.get("tokenSession:"+accessToken);
-            String userId = (String) map.get("userId");
+//            Map<Object, Object> map = (Map<Object, Object>) redisUtil.get("tokenSession:"+accessToken);
+            String userId = (String) redisUtil.hget("tokenSession:" + accessToken, "userId");
+//            String userId = (String) map.get("userId");
             redisUtil.del("tokenSession:"+accessToken);
             redisUtil.del("session:"+userId);
             return ResultVO.getSuccess();
