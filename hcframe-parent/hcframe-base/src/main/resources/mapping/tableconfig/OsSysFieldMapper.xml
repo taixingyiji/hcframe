@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hcframe.base.module.tableconfig.dao.OsSysFieldDao">
-  <resultMap id="BaseResultMap" type="com.hcframe.base.module.tableconfig.entity.OsSysField">
+<mapper namespace="com.taixingyiji.base.module.tableconfig.dao.OsSysFieldDao">
+  <resultMap id="BaseResultMap" type="com.taixingyiji.base.module.tableconfig.entity.OsSysField">
     <result column="FIELD_ID" jdbcType="INTEGER" property="fieldId" />
     <result column="FIELD_NAME" jdbcType="VARCHAR" property="fieldName" />
     <result column="NAME_CN" jdbcType="VARCHAR" property="nameCn" />
@@ -24,7 +24,7 @@
     <result column="WIDTH" jdbcType="INTEGER" property="width" />
     <result column="ORDER_ID" jdbcType="INTEGER" property="orderId" />
     <result column="TABLE_TYPE" jdbcType="INTEGER" property="tableType" />
-    <collection property="selectList" resultMap="com.hcframe.base.module.tableconfig.dao.OsSysSelectDao.OsSysSelectMap"/>
+    <collection property="selectList" resultMap="com.taixingyiji.base.module.tableconfig.dao.OsSysSelectDao.OsSysSelectMap"/>
   </resultMap>
     <select id="getTableAlise" resultType="java.lang.String">
       SELECT DISTINCT

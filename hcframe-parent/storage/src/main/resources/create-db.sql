@@ -1,3 +1,0 @@
-CREATE DATABASE `backend` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-GRANT ALL ON *.* TO 'root'@'localhost' IDENTIFIED BY '123456';
-GRANT ALL ON *.* TO 'root'@'%' IDENTIFIED BY '123456';

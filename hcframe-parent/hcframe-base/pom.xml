@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>parent</artifactId>
-        <groupId>com.hcframe</groupId>
+        <groupId>com.taixingyiji</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -64,7 +64,7 @@
             <version>1.17.1</version>
         </dependency>
         <dependency>
-            <groupId>com.hcframe</groupId>
+            <groupId>com.taixingyiji</groupId>
             <artifactId>hcframe-redis-starter</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
@@ -109,7 +109,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.2.70</version>
+            <version>1.2.83</version>
         </dependency>
         <dependency>
             <groupId>com.github.xiaoymin</groupId>
@@ -223,13 +223,13 @@
             <groupId>net.sf.ehcache</groupId>
             <artifactId>ehcache</artifactId>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.dm</groupId>-->
+<!--            <artifactId>Dm7JdbcDriver</artifactId>-->
+<!--            <version>1.8</version>-->
+<!--        </dependency>-->
         <dependency>
-            <groupId>com.dm</groupId>
-            <artifactId>Dm7JdbcDriver</artifactId>
-            <version>1.8</version>
-        </dependency>
-        <dependency>
-            <groupId>com.oracle</groupId>
+            <groupId>com.oracle.database.jdbc</groupId>
             <artifactId>ojdbc6</artifactId>
             <version>11.2.0.4</version>
         </dependency>
