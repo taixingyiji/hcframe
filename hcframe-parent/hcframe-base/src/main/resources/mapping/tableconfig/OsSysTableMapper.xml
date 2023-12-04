@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hcframe.base.module.tableconfig.dao.OsSysTableMapper">
-    <resultMap id="BaseResultMap" type="com.hcframe.base.module.tableconfig.entity.OsSysTable">
+<mapper namespace="com.taixingyiji.base.module.tableconfig.dao.OsSysTableMapper">
+    <resultMap id="BaseResultMap" type="com.taixingyiji.base.module.tableconfig.entity.OsSysTable">
         <result column="table_id" jdbcType="INTEGER" property="tableId"/>
         <result column="table_name" jdbcType="VARCHAR" property="tableName"/>
         <result column="table_alias" jdbcType="VARCHAR" property="tableAlias"/>
         <result column="table_pk" jdbcType="VARCHAR" property="tablePk"/>
         <result column="table_content" jdbcType="VARCHAR" property="tableContent"/>
-        <collection property="fieldList" resultMap="com.hcframe.base.module.tableconfig.dao.OsSysFieldDao.BaseResultMap">
+        <collection property="fieldList" resultMap="com.taixingyiji.base.module.tableconfig.dao.OsSysFieldDao.BaseResultMap">
         </collection>
     </resultMap>
     <select id="getTableAllInfo" resultMap="BaseResultMap">

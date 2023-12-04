@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.hcframe.base.module.tableconfig.dao.TableGenMapper">
-    <resultMap type="com.hcframe.base.module.tableconfig.entity.TableInfo" id="tableInfo">
+<mapper namespace="com.taixingyiji.base.module.tableconfig.dao.TableGenMapper">
+    <resultMap type="com.taixingyiji.base.module.tableconfig.entity.TableInfo" id="tableInfo">
         <result property="tableName" column="TABLE_NAME" jdbcType="VARCHAR"/>
         <result property="tableComment" column="TABLE_COMMENT" jdbcType="VARCHAR"/>
     </resultMap>
-    <resultMap type="com.hcframe.base.module.tableconfig.entity.FieldInfo" id="fieldInfo">
+    <resultMap type="com.taixingyiji.base.module.tableconfig.entity.FieldInfo" id="fieldInfo">
         <result property="columnName" column="COLUMN_NAME" jdbcType="VARCHAR"/>
         <result property="dataType" column="DATA_TYPE" jdbcType="VARCHAR"/>
         <result property="columnKey" column="COLUMN_KEY" jdbcType="INTEGER"/>

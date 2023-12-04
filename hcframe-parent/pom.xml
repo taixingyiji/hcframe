@@ -9,14 +9,13 @@
         <version>2.3.2.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.hcframe</groupId>
+    <groupId>com.taixingyiji</groupId>
     <artifactId>parent</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>hcframe-base</module>
         <module>hcframe-user</module>
-        <module>storage</module>
         <module>hcframe-activiti</module>
         <module>hcframe-es</module>
         <module>hcframe-config</module>
@@ -163,7 +162,7 @@
                 <cas.cas-context-path>/cas</cas.cas-context-path>
                 <cas.white-url>^.*(/logout/?)$</cas.white-url>
                 <cas.service-url>http://localhost:8084</cas.service-url>
-                <cas.cookie-holder-pattern>com.hcframe.gateway.config.MyDataStorage</cas.cookie-holder-pattern>
+                <cas.cookie-holder-pattern>config.com.taixingyiji.gateway.MyDataStorage</cas.cookie-holder-pattern>
                 <cas.login-url>/login</cas.login-url>
                 <cas.logout-url>/logout</cas.logout-url>
             </properties>
@@ -193,7 +192,7 @@
                 <cas.cas-context-path>/cas</cas.cas-context-path>
                 <cas.white-url>^.*(/logout?)$</cas.white-url>
                 <cas.service-url>http://192.168.100.98:8084</cas.service-url>
-                <cas.cookie-holder-pattern>com.hcframe.gateway.config.MyDataStorage</cas.cookie-holder-pattern>
+                <cas.cookie-holder-pattern>config.com.taixingyiji.gateway.MyDataStorage</cas.cookie-holder-pattern>
                 <cas.login-url>/login</cas.login-url>
                 <cas.logout-url>/logout</cas.logout-url>
             </properties>
@@ -224,7 +223,7 @@
                 <cas.cas-context-path>/cas</cas.cas-context-path>
                 <cas.white-url>^.*(/logout?)$</cas.white-url>
                 <cas.service-url>http://192.168.100.98:8084</cas.service-url>
-                <cas.cookie-holder-pattern>com.hcframe.gateway.config.MyDataStorage</cas.cookie-holder-pattern>
+                <cas.cookie-holder-pattern>config.com.taixingyiji.gateway.MyDataStorage</cas.cookie-holder-pattern>
                 <cas.login-url>/login</cas.login-url>
                 <cas.logout-url>/logout</cas.logout-url>
             </properties>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.common.com.hcframe.activiti.dao.CandidateUserDao">
+<mapper namespace="com.common.com.taixingyiji.activiti.dao.CandidateUserDao">
 
     <resultMap type="com.hcframe.activiti.entity.CandidateUser" id="CandidateUserMap">
         <result property="caId" column="ca_id" jdbcType="INTEGER"/>

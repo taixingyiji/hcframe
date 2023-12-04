@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>parent</artifactId>
-        <groupId>com.hcframe</groupId>
+        <groupId>com.taixingyiji</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <packaging>war</packaging>
@@ -23,17 +23,17 @@
             <version>2.2.0-GA</version>
         </dependency>
         <dependency>
-            <groupId>com.hcframe</groupId>
+            <groupId>com.taixingyiji</groupId>
             <artifactId>hcframe-base</artifactId>
             <version>1.2.1-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.hcframe</groupId>
+            <groupId>com.taixingyiji</groupId>
             <artifactId>hcframe-boot-starter</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.hcframe</groupId>
+            <groupId>com.taixingyiji</groupId>
             <artifactId>hcframe-cloud-starter</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
