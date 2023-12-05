@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.github.pagehelper.PageInfo;
-import com.hcframe.base.common.ResultVO;
-import com.hcframe.base.common.WebPageInfo;
+import com.taixingyiji.base.common.ResultVO;
+import com.taixingyiji.base.common.WebPageInfo;
 
 /**
  * @author wewe
@@ -18,7 +18,7 @@ public interface MenuService {
 
 	ResultVO<Object> deleteMenu(List<Long> ids);
 
-	ResultVO<Integer> updateMenu(Map<String, Object> data, Integer version);
+	ResultVO<Map<String,Object>> updateMenu(Map<String, Object> data, Integer version);
 
 	ResultVO<PageInfo<Map<String, Object>>> getMenuList(String data, WebPageInfo webPageInfo);
 

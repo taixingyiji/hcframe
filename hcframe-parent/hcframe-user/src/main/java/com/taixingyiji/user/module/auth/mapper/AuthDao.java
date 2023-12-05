@@ -1,6 +1,6 @@
 package com.taixingyiji.user.module.auth.mapper;
 
-import com.hcframe.base.module.auth.entity.OsSysMenu;
+import com.taixingyiji.base.module.auth.entity.OsSysMenu;
 
 import java.util.List;
 import java.util.Map;

@@ -3,18 +3,18 @@ package com.taixingyiji.user.module.manage.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.github.pagehelper.PageInfo;
-import com.hcframe.base.common.ResultVO;
-import com.hcframe.base.common.ServiceException;
-import com.hcframe.base.common.WebPageInfo;
-import com.hcframe.base.common.utils.DateUtil;
-import com.hcframe.base.common.utils.JudgeException;
-import com.hcframe.base.module.data.constants.FieldConstants;
-import com.hcframe.base.module.data.module.BaseMapper;
-import com.hcframe.base.module.data.module.BaseMapperImpl;
-import com.hcframe.base.module.data.module.Condition;
-import com.hcframe.base.module.data.module.DataMap;
-import com.hcframe.base.module.data.service.TableService;
-import com.hcframe.base.module.tableconfig.entity.OsSysTable;
+import com.taixingyiji.base.common.ResultVO;
+import com.taixingyiji.base.common.ServiceException;
+import com.taixingyiji.base.common.WebPageInfo;
+import com.taixingyiji.base.common.utils.DateUtil;
+import com.taixingyiji.base.common.utils.JudgeException;
+import com.taixingyiji.base.module.data.constants.FieldConstants;
+import com.taixingyiji.base.module.data.module.BaseMapper;
+import com.taixingyiji.base.module.data.module.BaseMapperImpl;
+import com.taixingyiji.base.module.data.module.Condition;
+import com.taixingyiji.base.module.data.module.DataMap;
+import com.taixingyiji.base.module.data.service.TableService;
+import com.taixingyiji.base.module.tableconfig.entity.OsSysTable;
 import com.taixingyiji.user.common.utils.MD5Utils;
 import com.taixingyiji.user.common.utils.POIUtil;
 import com.taixingyiji.user.module.config.entity.UserConfig;
@@ -103,7 +103,7 @@ public class ManageServiceDataImpl implements ManageService {
     }
 
     @Override
-    public ResultVO<Integer> updateUser(Map<String, Object> user, Integer version) {
+    public ResultVO<Map<String,Object>> updateUser(Map<String, Object> user, Integer version) {
         user.remove("PASSWORD");
         if (!StringUtils.isEmpty(user.get("ORG_ACCOUNT_ID"))) {
             String orgAcId = String.valueOf(user.get("ORG_ACCOUNT_ID"));
@@ -157,7 +157,7 @@ public class ManageServiceDataImpl implements ManageService {
     }
 
     @Override
-    public ResultVO<Integer> resetPassword(String userId, Integer version) {
+    public ResultVO<Map<String,Object>> resetPassword(String userId, Integer version) {
         Map<String, Object> map = new HashMap<>(2);
         map.put(PK_ID, userId.replaceAll("\"", ""));
         try {
@@ -172,7 +172,7 @@ public class ManageServiceDataImpl implements ManageService {
     }
 
     @Override
-    public ResultVO<Integer> disable(Boolean enabled, String userId, Integer version) {
+    public ResultVO<Map<String,Object>> disable(Boolean enabled, String userId, Integer version) {
         Map<String, Object> map = new HashMap<>(2);
         map.put(PK_ID, userId);
         map.put("DISABLED", enabled);
@@ -217,7 +217,7 @@ public class ManageServiceDataImpl implements ManageService {
     }
 
     @Override
-    public ResultVO<Integer> changePassword(String pwd, String npwd, String npwd2) {
+    public ResultVO<Map<String,Object>> changePassword(String pwd, String npwd, String npwd2) {
         JudgeException.isNull(pwd, "密码不能为空");
         JudgeException.isNull(npwd, "新密码不能为空");
         if (!npwd.equals(npwd2)) {

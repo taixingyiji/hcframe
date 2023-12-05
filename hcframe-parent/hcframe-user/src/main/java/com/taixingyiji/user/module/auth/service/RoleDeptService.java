@@ -1,6 +1,6 @@
 package com.taixingyiji.user.module.auth.service;
 
-import com.hcframe.base.common.ResultVO;
+import com.taixingyiji.base.common.ResultVO;
 
 /**
  * 

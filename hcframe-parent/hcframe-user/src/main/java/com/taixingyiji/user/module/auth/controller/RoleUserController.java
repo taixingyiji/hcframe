@@ -1,8 +1,8 @@
 package com.taixingyiji.user.module.auth.controller;
 
-import com.hcframe.base.common.ResultVO;
-import com.hcframe.base.module.log.annotation.LogAnno;
-import com.hcframe.redis.RedisUtil;
+import com.taixingyiji.base.common.ResultVO;
+import com.taixingyiji.base.module.log.annotation.LogAnno;
+import com.taixingyiji.redis.RedisUtil;
 import com.taixingyiji.user.module.auth.service.RoleUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

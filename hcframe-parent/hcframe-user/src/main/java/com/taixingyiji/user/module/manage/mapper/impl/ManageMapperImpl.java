@@ -1,7 +1,7 @@
 package com.taixingyiji.user.module.manage.mapper.impl;
 
-import com.hcframe.base.module.data.module.BaseMapper;
-import com.hcframe.base.module.data.module.BaseMapperImpl;
+import com.taixingyiji.base.module.data.module.BaseMapper;
+import com.taixingyiji.base.module.data.module.BaseMapperImpl;
 import com.taixingyiji.user.module.manage.mapper.ManageMapper;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;

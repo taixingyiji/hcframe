@@ -1,9 +1,9 @@
 package com.taixingyiji.activiti.activiti;
 
-import com.hcframe.base.common.ResultPageInfo;
-import com.hcframe.base.common.ServiceException;
-import com.hcframe.base.common.WebPageInfo;
-import com.hcframe.base.common.utils.EmptyCheckUtils;
+import com.taixingyiji.base.common.ResultPageInfo;
+import com.taixingyiji.base.common.ServiceException;
+import com.taixingyiji.base.common.WebPageInfo;
+import com.taixingyiji.base.common.utils.EmptyCheckUtils;
 import org.activiti.engine.*;
 import org.activiti.engine.impl.ProcessInstanceQueryProperty;
 import org.activiti.engine.impl.TaskQueryProperty;

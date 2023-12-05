@@ -1,9 +1,9 @@
 package com.hcframe.es.config;
 
-import com.hcframe.base.module.auth.dao.FtUserDao;
-import com.hcframe.base.module.auth.entity.FtUser;
-import com.hcframe.base.module.shiro.service.ShiroType;
-import com.hcframe.base.module.shiro.service.SystemRealm;
+import com.taixingyiji.base.module.auth.dao.FtUserDao;
+import com.taixingyiji.base.module.auth.entity.FtUser;
+import com.taixingyiji.base.module.shiro.service.ShiroType;
+import com.taixingyiji.base.module.shiro.service.SystemRealm;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.springframework.stereotype.Component;
 

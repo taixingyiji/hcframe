@@ -1,13 +1,13 @@
 package com.taixingyiji.user.module.auth.service.impl;
 
 import com.github.pagehelper.PageInfo;
-import com.hcframe.base.common.ResultVO;
-import com.hcframe.base.common.WebPageInfo;
-import com.hcframe.base.module.data.module.BaseMapper;
-import com.hcframe.base.module.data.module.BaseMapperImpl;
-import com.hcframe.base.module.data.module.Condition;
-import com.hcframe.base.module.data.service.TableService;
-import com.hcframe.base.module.tableconfig.entity.OsSysTable;
+import com.taixingyiji.base.common.ResultVO;
+import com.taixingyiji.base.common.WebPageInfo;
+import com.taixingyiji.base.module.data.module.BaseMapper;
+import com.taixingyiji.base.module.data.module.BaseMapperImpl;
+import com.taixingyiji.base.module.data.module.Condition;
+import com.taixingyiji.base.module.data.service.TableService;
+import com.taixingyiji.base.module.tableconfig.entity.OsSysTable;
 import com.taixingyiji.user.module.auth.mapper.RoleDao;
 import com.taixingyiji.user.module.auth.service.RoleService;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -52,7 +52,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public ResultVO<Integer> updateRole(Map<String, Object> role, Integer version) {
+    public ResultVO<Map<String,Object>> updateRole(Map<String, Object> role, Integer version) {
         return tableService.updateWithDate(TABLE_INFO, role, version);
     }
 

@@ -1,6 +1,6 @@
 package com.taixingyiji.activiti;
 
-import com.hcframe.base.module.datasource.config.DataSourceConfiguration;
+import com.taixingyiji.base.module.datasource.config.DataSourceConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;

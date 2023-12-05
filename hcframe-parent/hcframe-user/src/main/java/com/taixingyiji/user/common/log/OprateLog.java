@@ -16,13 +16,13 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.hcframe.base.common.ResultVO;
-import com.hcframe.base.module.auth.entity.FtUser;
-import com.hcframe.base.module.data.module.BaseMapper;
-import com.hcframe.base.module.data.module.BaseMapperImpl;
-import com.hcframe.base.module.data.service.TableService;
-import com.hcframe.base.module.log.annotation.LogAnno;
-import com.hcframe.base.module.tableconfig.entity.OsSysTable;
+import com.taixingyiji.base.common.ResultVO;
+import com.taixingyiji.base.module.auth.entity.FtUser;
+import com.taixingyiji.base.module.data.module.BaseMapper;
+import com.taixingyiji.base.module.data.module.BaseMapperImpl;
+import com.taixingyiji.base.module.data.service.TableService;
+import com.taixingyiji.base.module.log.annotation.LogAnno;
+import com.taixingyiji.base.module.tableconfig.entity.OsSysTable;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;

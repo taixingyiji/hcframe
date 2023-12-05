@@ -1,8 +1,8 @@
 package com.taixingyiji.config.module.cms;
 
-import com.hcframe.base.common.ResultVO;
-import com.hcframe.base.module.data.module.BaseMapper;
-import com.hcframe.base.module.data.module.BaseMapperImpl;
+import com.taixingyiji.base.common.ResultVO;
+import com.taixingyiji.base.module.data.module.BaseMapper;
+import com.taixingyiji.base.module.data.module.BaseMapperImpl;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

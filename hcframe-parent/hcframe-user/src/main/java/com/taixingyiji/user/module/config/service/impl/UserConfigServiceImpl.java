@@ -1,11 +1,11 @@
 package com.taixingyiji.user.module.config.service.impl;
 
-import com.hcframe.base.common.ResultVO;
-import com.hcframe.base.common.utils.JudgeException;
-import com.hcframe.base.common.utils.ObjectUtil;
-import com.hcframe.base.module.data.module.BaseMapper;
-import com.hcframe.base.module.data.module.BaseMapperImpl;
-import com.hcframe.redis.RedisUtil;
+import com.taixingyiji.base.common.ResultVO;
+import com.taixingyiji.base.common.utils.JudgeException;
+import com.taixingyiji.base.common.utils.ObjectUtil;
+import com.taixingyiji.base.module.data.module.BaseMapper;
+import com.taixingyiji.base.module.data.module.BaseMapperImpl;
+import com.taixingyiji.redis.RedisUtil;
 import com.taixingyiji.user.common.config.UserConstant;
 import com.taixingyiji.user.module.config.entity.UserConfig;
 import com.taixingyiji.user.module.config.service.UserConfigService;

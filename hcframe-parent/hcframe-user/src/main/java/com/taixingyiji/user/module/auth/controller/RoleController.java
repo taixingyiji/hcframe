@@ -1,10 +1,10 @@
 package com.taixingyiji.user.module.auth.controller;
 
 import com.github.pagehelper.PageInfo;
-import com.hcframe.base.common.ResultVO;
-import com.hcframe.base.common.WebPageInfo;
-import com.hcframe.base.module.log.annotation.LogAnno;
-import com.hcframe.redis.RedisUtil;
+import com.taixingyiji.base.common.ResultVO;
+import com.taixingyiji.base.common.WebPageInfo;
+import com.taixingyiji.base.module.log.annotation.LogAnno;
+import com.taixingyiji.redis.RedisUtil;
 import com.taixingyiji.user.module.auth.service.RoleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -49,7 +49,7 @@ public class RoleController {
     @LogAnno(operateType="更新角色信息",moduleName="系统管理-权限管理-角色管理")
     @ApiOperation(value = "更新role")
     @RequiresPermissions(value = {"system:auth:role:edit"})
-    public ResultVO<Integer> updateRole(@RequestParam Map<String, Object> role, @PathVariable Integer version) {
+    public ResultVO<Map<String,Object>> updateRole(@RequestParam Map<String, Object> role, @PathVariable Integer version) {
         redisUtil.del("auth");
         return roleService.updateRole(role, version);
     }

@@ -2,7 +2,7 @@ package com.taixingyiji.activiti.dao;
 
 
 import com.taixingyiji.activiti.entity.CandidateUser;
-import com.hcframe.base.common.Mapper;
+import tk.mybatis.mapper.common.Mapper;
 
 /**
  * (CandidateUser)表数据库访问层

@@ -1,9 +1,9 @@
 package com.taixingyiji.user.module.auth.controller;
 
-import com.hcframe.base.common.ResultVO;
-import com.hcframe.base.module.auth.entity.OsSysMenu;
-import com.hcframe.base.module.data.module.BaseMapper;
-import com.hcframe.base.module.data.module.BaseMapperImpl;
+import com.taixingyiji.base.common.ResultVO;
+import com.taixingyiji.base.module.auth.entity.OsSysMenu;
+import com.taixingyiji.base.module.data.module.BaseMapper;
+import com.taixingyiji.base.module.data.module.BaseMapperImpl;
 import com.taixingyiji.user.module.auth.service.AuthService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.Logical;

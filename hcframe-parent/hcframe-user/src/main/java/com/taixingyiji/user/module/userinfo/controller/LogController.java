@@ -1,8 +1,8 @@
 package com.taixingyiji.user.module.userinfo.controller;
 
 import com.github.pagehelper.PageInfo;
-import com.hcframe.base.common.ResultVO;
-import com.hcframe.base.common.WebPageInfo;
+import com.taixingyiji.base.common.ResultVO;
+import com.taixingyiji.base.common.WebPageInfo;
 import com.taixingyiji.user.module.userinfo.service.LogService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

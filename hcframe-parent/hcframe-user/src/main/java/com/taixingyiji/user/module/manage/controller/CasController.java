@@ -1,7 +1,7 @@
 package com.taixingyiji.user.module.manage.controller;
 
-import com.hcframe.base.common.ResultVO;
-import com.hcframe.redis.RedisUtil;
+import com.taixingyiji.base.common.ResultVO;
+import com.taixingyiji.redis.RedisUtil;
 import com.taixingyiji.user.module.auth.service.AuthService;
 import net.unicon.cas.client.configuration.CasClientConfigurationProperties;
 import org.apache.shiro.SecurityUtils;
@@ -43,7 +43,7 @@ public class CasController {
 
 
     @GetMapping("valid")
-    public ResultVO<String> casValid(HttpServletResponse response, HttpServletRequest request,String webUrl) {
+    public ResultVO<String> casValid(HttpServletResponse response, HttpServletRequest request, String webUrl) {
         String token = "";
         try {
             Cookie[] cookies = request.getCookies();

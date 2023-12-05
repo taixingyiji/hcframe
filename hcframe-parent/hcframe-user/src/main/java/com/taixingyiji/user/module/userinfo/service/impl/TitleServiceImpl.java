@@ -1,15 +1,15 @@
 package com.taixingyiji.user.module.userinfo.service.impl;
 
 import com.github.pagehelper.PageInfo;
-import com.hcframe.base.common.ResultVO;
-import com.hcframe.base.common.WebPageInfo;
-import com.hcframe.base.module.cache.CacheService;
-import com.hcframe.base.module.cache.impl.TableCache;
-import com.hcframe.base.module.data.module.BaseMapper;
-import com.hcframe.base.module.data.module.BaseMapperImpl;
-import com.hcframe.base.module.data.module.Condition;
-import com.hcframe.base.module.data.service.TableService;
-import com.hcframe.base.module.tableconfig.entity.OsSysTable;
+import com.taixingyiji.base.common.ResultVO;
+import com.taixingyiji.base.common.WebPageInfo;
+import com.taixingyiji.base.module.cache.CacheService;
+import com.taixingyiji.base.module.cache.impl.TableCache;
+import com.taixingyiji.base.module.data.module.BaseMapper;
+import com.taixingyiji.base.module.data.module.BaseMapperImpl;
+import com.taixingyiji.base.module.data.module.Condition;
+import com.taixingyiji.base.module.data.service.TableService;
+import com.taixingyiji.base.module.tableconfig.entity.OsSysTable;
 import com.taixingyiji.user.module.userinfo.service.TitleService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -55,7 +55,7 @@ public class TitleServiceImpl implements TitleService {
     }
 
     @Override
-    public ResultVO<Integer> updateTitle(Map<String, Object> title, Integer version) {
+    public ResultVO<Map<String,Object>> updateTitle(Map<String, Object> title, Integer version) {
         tableCache.delete("title");
         return tableService.updateWithDate(TABLE_INFO, title, version);
     }

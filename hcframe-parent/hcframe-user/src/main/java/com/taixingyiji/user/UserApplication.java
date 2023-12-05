@@ -1,6 +1,6 @@
 package com.taixingyiji.user;
 
-import com.hcframe.base.module.datasource.config.DataSourceConfiguration;
+import com.taixingyiji.base.module.datasource.config.DataSourceConfiguration;
 import net.unicon.cas.client.configuration.CasClientConfigurationProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

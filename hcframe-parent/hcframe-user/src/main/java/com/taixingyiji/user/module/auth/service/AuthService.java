@@ -1,7 +1,8 @@
 package com.taixingyiji.user.module.auth.service;
 
-import com.hcframe.base.module.auth.entity.OsSysMenu;
-import com.hcframe.base.module.auth.vo.RouterVo;
+
+import com.taixingyiji.base.module.auth.entity.OsSysMenu;
+import com.taixingyiji.base.module.auth.vo.RouterVo;
 
 import java.util.List;
 import java.util.Map;

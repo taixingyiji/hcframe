@@ -2,8 +2,8 @@ package com.taixingyiji.activiti.controller;
 
 import com.taixingyiji.activiti.activiti.CommonProcessDefinition;
 import com.taixingyiji.activiti.service.ProcessService;
-import com.hcframe.base.common.ResultVO;
-import com.hcframe.base.common.WebPageInfo;
+import com.taixingyiji.base.common.ResultVO;
+import com.taixingyiji.base.common.WebPageInfo;
 import io.lettuce.core.dynamic.annotation.Param;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;

@@ -1,7 +1,7 @@
 package com.taixingyiji.activiti.dao;
 
 import com.taixingyiji.activiti.entity.BackReason;
-import com.hcframe.base.common.Mapper;
+import tk.mybatis.mapper.common.Mapper;
 
 /**
  * (BackReason)表数据库访问层

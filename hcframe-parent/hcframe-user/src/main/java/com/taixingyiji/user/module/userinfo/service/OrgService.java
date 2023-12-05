@@ -1,8 +1,8 @@
 package com.taixingyiji.user.module.userinfo.service;
 
 import com.github.pagehelper.PageInfo;
-import com.hcframe.base.common.ResultVO;
-import com.hcframe.base.common.WebPageInfo;
+import com.taixingyiji.base.common.ResultVO;
+import com.taixingyiji.base.common.WebPageInfo;
 
 import java.util.List;
 import java.util.Map;
@@ -10,7 +10,7 @@ import java.util.Map;
 public interface OrgService {
     ResultVO<Object> addOrg(Map<String, Object> org);
 
-    ResultVO<Integer> updateOrg(Map<String, Object> org, Integer version);
+    ResultVO<Map<String,Object>> updateOrg(Map<String, Object> org, Integer version);
 
     ResultVO<Object> deleteOrg(String ids);
 

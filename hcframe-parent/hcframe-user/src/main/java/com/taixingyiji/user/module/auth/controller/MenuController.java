@@ -1,10 +1,10 @@
 package com.taixingyiji.user.module.auth.controller;
 
 import com.github.pagehelper.PageInfo;
-import com.hcframe.base.common.ResultVO;
-import com.hcframe.base.common.WebPageInfo;
-import com.hcframe.base.module.log.annotation.LogAnno;
-import com.hcframe.redis.RedisUtil;
+import com.taixingyiji.base.common.ResultVO;
+import com.taixingyiji.base.common.WebPageInfo;
+import com.taixingyiji.base.module.log.annotation.LogAnno;
+import com.taixingyiji.redis.RedisUtil;
 import com.taixingyiji.user.module.auth.service.MenuService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -56,7 +56,7 @@ public class MenuController {
     @RequiresPermissions(value = {"system:auth:function:edit"})
 	@LogAnno(operateType="更新功能权限",moduleName="系统管理-权限管理-功能权限管理")
     @ApiOperation(value = "更新功能级权限")
-    public ResultVO<Integer> updateMenu(@RequestParam Map<String, Object> data, @PathVariable Integer version) {
+    public ResultVO<Map<String,Object>> updateMenu(@RequestParam Map<String, Object> data, @PathVariable Integer version) {
         redisUtil.del("auth");
         data.remove("children");
         return menuService.updateMenu(data, version);

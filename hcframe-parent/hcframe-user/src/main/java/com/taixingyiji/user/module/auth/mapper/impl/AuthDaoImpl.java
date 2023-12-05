@@ -1,7 +1,7 @@
 package com.taixingyiji.user.module.auth.mapper.impl;
 
-import com.hcframe.base.module.auth.entity.OsSysMenu;
-import com.hcframe.base.module.data.module.*;
+import com.taixingyiji.base.module.auth.entity.OsSysMenu;
+import com.taixingyiji.base.module.data.module.*;
 import com.taixingyiji.user.module.auth.mapper.AuthDao;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;

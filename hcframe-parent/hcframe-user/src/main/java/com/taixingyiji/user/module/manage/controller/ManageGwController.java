@@ -1,9 +1,9 @@
 package com.taixingyiji.user.module.manage.controller;
 
 import com.github.pagehelper.PageInfo;
-import com.hcframe.base.common.ResultVO;
-import com.hcframe.base.common.WebPageInfo;
-import com.hcframe.base.module.log.annotation.LogAnno;
+import com.taixingyiji.base.common.ResultVO;
+import com.taixingyiji.base.common.WebPageInfo;
+import com.taixingyiji.base.module.log.annotation.LogAnno;
 import com.taixingyiji.user.module.manage.service.ManageGwService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -39,7 +39,7 @@ public class ManageGwController {
 	@LogAnno(operateType="编辑馆外用户信息",moduleName="系统管理-用户管理-馆外用户信息管理")
     @ApiOperation(value = "更新用户信息")
     @RequiresPermissions(value = {"system:userManage:outerUser:edit"})
-    public ResultVO<Integer> updateUser(@RequestParam Map<String,Object> user,@PathVariable Integer version) {
+    public ResultVO<Map<String,Object>> updateUser(@RequestParam Map<String,Object> user,@PathVariable Integer version) {
         return service.updateUser(user,version);
     }
 
@@ -62,7 +62,7 @@ public class ManageGwController {
     @LogAnno(operateType="启用/禁用馆外用户",moduleName="系统管理-用户管理-馆外用户信息管理")
     @ApiOperation(value = "启用/禁用馆外用户",notes = "用户启用禁用")
     @RequiresPermissions(value = {"system:userManage:outerUser:enable"})
-    public ResultVO<Integer> disable(Boolean enabled,String userId,@PathVariable Integer version) {
+    public ResultVO<Map<String,Object>> disable(Boolean enabled,String userId,@PathVariable Integer version) {
         return service.disable(enabled,userId,version);
     }
 
@@ -70,7 +70,7 @@ public class ManageGwController {
     @LogAnno(operateType="馆外用户重置密码",moduleName="系统管理-用户管理-馆外用户信息管理")
     @ApiOperation(value = "馆外用户重置密码",notes = "用户启用禁用")
     @RequiresPermissions(value = {"system:userManage:outerUser:resetPassword"})
-    public ResultVO<Integer> resetPassword(String userId,@PathVariable Integer version) {
+    public ResultVO<Map<String,Object>> resetPassword(String userId,@PathVariable Integer version) {
         return service.resetPassword(userId,version);
     }
 

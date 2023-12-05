@@ -1,6 +1,6 @@
 package com.taixingyiji.config.module.cloud;
 
-import com.hcframe.base.common.ResultVO;
+import com.taixingyiji.base.common.ResultVO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

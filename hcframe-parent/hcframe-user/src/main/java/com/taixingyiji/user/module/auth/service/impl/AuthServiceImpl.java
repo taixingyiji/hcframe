@@ -1,13 +1,13 @@
 package com.taixingyiji.user.module.auth.service.impl;
 
-import com.hcframe.base.common.utils.StringUtils;
-import com.hcframe.base.module.auth.constants.AuthConstants;
-import com.hcframe.base.module.auth.dao.OsSysMenuDao;
-import com.hcframe.base.module.auth.entity.OsSysMenu;
-import com.hcframe.base.module.auth.vo.MetaVo;
-import com.hcframe.base.module.auth.vo.RouterVo;
-import com.hcframe.base.module.data.module.*;
-import com.hcframe.redis.RedisUtil;
+import com.taixingyiji.base.common.utils.StringUtils;
+import com.taixingyiji.base.module.auth.constants.AuthConstants;
+import com.taixingyiji.base.module.auth.dao.OsSysMenuDao;
+import com.taixingyiji.base.module.auth.entity.OsSysMenu;
+import com.taixingyiji.base.module.auth.vo.MetaVo;
+import com.taixingyiji.base.module.auth.vo.RouterVo;
+import com.taixingyiji.base.module.data.module.*;
+import com.taixingyiji.redis.RedisUtil;
 import com.taixingyiji.user.module.auth.mapper.AuthDao;
 import com.taixingyiji.user.module.auth.service.AuthService;
 import org.springframework.beans.factory.annotation.Qualifier;

@@ -1,8 +1,8 @@
 package com.taixingyiji.activiti.service;
 
 import com.taixingyiji.activiti.activiti.CommonProcessDefinition;
-import com.hcframe.base.common.ResultVO;
-import com.hcframe.base.common.WebPageInfo;
+import com.taixingyiji.base.common.ResultVO;
+import com.taixingyiji.base.common.WebPageInfo;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;

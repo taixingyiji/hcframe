@@ -7,13 +7,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.github.pagehelper.PageInfo;
-import com.hcframe.base.common.ResultVO;
-import com.hcframe.base.common.WebPageInfo;
-import com.hcframe.base.module.data.module.BaseMapper;
-import com.hcframe.base.module.data.module.BaseMapperImpl;
-import com.hcframe.base.module.data.module.Condition;
-import com.hcframe.base.module.data.service.TableService;
-import com.hcframe.base.module.tableconfig.entity.OsSysTable;
+import com.taixingyiji.base.common.ResultVO;
+import com.taixingyiji.base.common.WebPageInfo;
+import com.taixingyiji.base.module.data.module.BaseMapper;
+import com.taixingyiji.base.module.data.module.BaseMapperImpl;
+import com.taixingyiji.base.module.data.module.Condition;
+import com.taixingyiji.base.module.data.service.TableService;
+import com.taixingyiji.base.module.tableconfig.entity.OsSysTable;
 import com.taixingyiji.user.module.userinfo.service.OsService;
 
 @Service
@@ -49,7 +49,7 @@ public class OsServiceImpl implements OsService {
     }
 
     @Override
-    public ResultVO<Integer> updateOs(Map<String, Object> os, Integer version) {
+    public ResultVO<Map<String,Object>> updateOs(Map<String, Object> os, Integer version) {
         return tableService.updateWithDate(TABLE_INFO, os, version);
     }
 

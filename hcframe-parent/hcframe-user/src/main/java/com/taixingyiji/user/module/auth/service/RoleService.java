@@ -1,8 +1,8 @@
 package com.taixingyiji.user.module.auth.service;
 
 import com.github.pagehelper.PageInfo;
-import com.hcframe.base.common.ResultVO;
-import com.hcframe.base.common.WebPageInfo;
+import com.taixingyiji.base.common.ResultVO;
+import com.taixingyiji.base.common.WebPageInfo;
 
 import java.util.List;
 import java.util.Map;
@@ -17,7 +17,7 @@ import java.util.Map;
 public interface RoleService {
     ResultVO<Object> addRole(Map<String, Object> role);
 
-    ResultVO<Integer> updateRole(Map<String, Object> role, Integer version);
+    ResultVO<Map<String,Object>> updateRole(Map<String, Object> role, Integer version);
 
     ResultVO<Object> deleteRole(String ids);
 

@@ -1,7 +1,7 @@
 package com.taixingyiji.config.module.controller;
 
-import com.hcframe.base.common.ResultVO;
-import com.hcframe.base.module.data.module.BaseMapper;
+import com.taixingyiji.base.common.ResultVO;
+import com.taixingyiji.base.module.data.module.BaseMapper;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.jasig.cas.client.authentication.AttributePrincipal;

@@ -1,8 +1,8 @@
 package com.taixingyiji.activiti.service;
 
 import com.taixingyiji.activiti.activiti.CommonTask;
-import com.hcframe.base.common.ResultVO;
-import com.hcframe.base.common.WebPageInfo;
+import com.taixingyiji.base.common.ResultVO;
+import com.taixingyiji.base.common.WebPageInfo;
 
 import java.util.Map;
 

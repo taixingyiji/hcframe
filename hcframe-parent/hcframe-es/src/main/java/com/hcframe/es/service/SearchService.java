@@ -1,7 +1,7 @@
 package com.hcframe.es.service;
 
 
-import com.hcframe.base.common.ResultVO;
+import com.taixingyiji.base.common.ResultVO;
 
 import javax.servlet.http.HttpServletRequest;
 

@@ -1,9 +1,9 @@
 package com.taixingyiji.user.module.userinfo.controller;
 
 import com.github.pagehelper.PageInfo;
-import com.hcframe.base.common.ResultVO;
-import com.hcframe.base.common.WebPageInfo;
-import com.hcframe.base.module.log.annotation.LogAnno;
+import com.taixingyiji.base.common.ResultVO;
+import com.taixingyiji.base.common.WebPageInfo;
+import com.taixingyiji.base.module.log.annotation.LogAnno;
 import com.taixingyiji.user.module.userinfo.service.TitleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -42,7 +42,7 @@ public class TitleController {
 	    @LogAnno(operateType="更新职称信息",moduleName="系统管理-用户管理-职称管理")
 	    @ApiOperation(value = "更新title")
 		@RequiresPermissions(value = {"system:userManage:title:edit"})
-	    public ResultVO<Integer> updateTitle(@RequestParam Map<String,Object> title,@PathVariable Integer version) {
+	    public ResultVO<Map<String,Object>> updateTitle(@RequestParam Map<String,Object> title,@PathVariable Integer version) {
 	        return titleService.updateTitle(title,version);
 	    }
 

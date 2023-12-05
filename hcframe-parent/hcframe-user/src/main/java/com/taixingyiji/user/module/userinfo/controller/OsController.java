@@ -2,6 +2,9 @@ package com.taixingyiji.user.module.userinfo.controller;
 
 import java.util.Map;
 
+import com.taixingyiji.base.common.ResultVO;
+import com.taixingyiji.base.common.WebPageInfo;
+import com.taixingyiji.base.module.log.annotation.LogAnno;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,9 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.github.pagehelper.PageInfo;
-import com.hcframe.base.common.ResultVO;
-import com.hcframe.base.common.WebPageInfo;
-import com.hcframe.base.module.log.annotation.LogAnno;
 import com.taixingyiji.user.module.userinfo.service.OsService;
 
 import io.swagger.annotations.Api;
@@ -53,7 +53,7 @@ public class OsController {
     @PutMapping("/{version}")
     @LogAnno(operateType = "更新系统信息", moduleName = "系统管理-权限管理-系统信息管理")
     @ApiOperation(value = "更新系统信息")
-    public ResultVO<Integer> updateOs(@RequestParam Map<String, Object> os, @PathVariable Integer version) {
+    public ResultVO<Map<String,Object>> updateOs(@RequestParam Map<String, Object> os, @PathVariable Integer version) {
         return osService.updateOs(os, version);
     }
 

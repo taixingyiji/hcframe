@@ -1,6 +1,6 @@
 package com.taixingyiji.user.module.config.controller;
 
-import com.hcframe.base.common.ResultVO;
+import com.taixingyiji.base.common.ResultVO;
 import com.taixingyiji.user.module.config.entity.UserConfig;
 import com.taixingyiji.user.module.config.service.UserConfigService;
 import org.springframework.web.bind.annotation.GetMapping;

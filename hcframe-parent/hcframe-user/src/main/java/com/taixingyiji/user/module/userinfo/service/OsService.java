@@ -3,8 +3,8 @@ package com.taixingyiji.user.module.userinfo.service;
 import java.util.Map;
 
 import com.github.pagehelper.PageInfo;
-import com.hcframe.base.common.ResultVO;
-import com.hcframe.base.common.WebPageInfo;
+import com.taixingyiji.base.common.ResultVO;
+import com.taixingyiji.base.common.WebPageInfo;
 
 public interface OsService {
 
@@ -12,7 +12,7 @@ public interface OsService {
 
     ResultVO<Object> addOs(Map<String, Object> os);
 
-    ResultVO<Integer> updateOs(Map<String, Object> os, Integer version);
+    ResultVO<Map<String,Object>> updateOs(Map<String, Object> os, Integer version);
 
     ResultVO<Object> deleteOs(String ids);
 

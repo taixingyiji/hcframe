@@ -1,15 +1,15 @@
 package com.taixingyiji.user.module.auth.service.impl;
 
 import com.github.pagehelper.PageInfo;
-import com.hcframe.base.common.ResultVO;
-import com.hcframe.base.common.WebPageInfo;
-import com.hcframe.base.module.cache.CacheService;
-import com.hcframe.base.module.cache.impl.TableCache;
-import com.hcframe.base.module.data.module.BaseMapper;
-import com.hcframe.base.module.data.module.Condition;
-import com.hcframe.base.module.data.service.TableService;
-import com.hcframe.base.module.tableconfig.entity.OsSysTable;
-import com.hcframe.redis.RedisUtil;
+import com.taixingyiji.base.common.ResultVO;
+import com.taixingyiji.base.common.WebPageInfo;
+import com.taixingyiji.base.module.cache.CacheService;
+import com.taixingyiji.base.module.cache.impl.TableCache;
+import com.taixingyiji.base.module.data.module.BaseMapper;
+import com.taixingyiji.base.module.data.module.Condition;
+import com.taixingyiji.base.module.data.service.TableService;
+import com.taixingyiji.base.module.tableconfig.entity.OsSysTable;
+import com.taixingyiji.redis.RedisUtil;
 import com.taixingyiji.user.module.auth.service.MenuService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ import java.util.*;
  */
 
 @Service("userMenuService")
-public class MenuServiceImpl2 implements MenuService {
+public class MenuServiceImpl implements MenuService {
 
 	private static final OsSysTable OS_SYS_MENU = OsSysTable.builder().tableName("OS_SYS_MENU").tablePk("MENU_ID").build();
 	private static final OsSysTable OS_REL_ROLE_MENU = OsSysTable.builder().tableName("OS_REL_ROLE_MENU").tablePk("ROLE_MENU_ID").build();
@@ -102,7 +102,7 @@ public class MenuServiceImpl2 implements MenuService {
 	}
 
 	@Override
-	public ResultVO<Integer> updateMenu(Map<String, Object> data, Integer version) {
+	public ResultVO<Map<String,Object>> updateMenu(Map<String, Object> data, Integer version) {
 		tableCache.delete("menu");
 		return tableService.updateWithDate(OS_SYS_MENU, data, version);
 	}

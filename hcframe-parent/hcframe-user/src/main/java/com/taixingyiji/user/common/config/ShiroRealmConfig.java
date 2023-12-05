@@ -1,9 +1,9 @@
 package com.taixingyiji.user.common.config;
 
-import com.hcframe.base.module.data.module.BaseMapper;
-import com.hcframe.base.module.data.module.BaseMapperImpl;
-import com.hcframe.base.module.shiro.service.ShiroType;
-import com.hcframe.base.module.shiro.service.SystemRealm;
+import com.taixingyiji.base.module.data.module.BaseMapper;
+import com.taixingyiji.base.module.data.module.BaseMapperImpl;
+import com.taixingyiji.base.module.shiro.service.ShiroType;
+import com.taixingyiji.base.module.shiro.service.SystemRealm;
 import com.taixingyiji.user.module.auth.service.AuthService;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.springframework.beans.factory.annotation.Qualifier;

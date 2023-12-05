@@ -1,8 +1,8 @@
 package com.taixingyiji.user.module.userinfo.controller;
 
 import com.github.pagehelper.PageInfo;
-import com.hcframe.base.common.ResultVO;
-import com.hcframe.base.common.WebPageInfo;
+import com.taixingyiji.base.common.ResultVO;
+import com.taixingyiji.base.common.WebPageInfo;
 import com.taixingyiji.user.module.userinfo.service.DeptService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -37,7 +37,7 @@ public class DeptController {
     @PutMapping("/{version}")
     @ApiOperation(value = "更新dept")
     @RequiresPermissions(value = {"system:userManage:orgManage:edit"})
-    public ResultVO<Integer> updateDept(@RequestParam Map<String, Object> org, @PathVariable Integer version) {
+    public ResultVO<Map<String,Object>> updateDept(@RequestParam Map<String, Object> org, @PathVariable Integer version) {
         return deptService.updateDept(org, version);
     }
 

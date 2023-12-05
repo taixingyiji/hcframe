@@ -2,7 +2,7 @@ package com.taixingyiji.activiti.dao;
 
 
 import com.taixingyiji.activiti.entity.DataTask;
-import com.hcframe.base.common.Mapper;
+import tk.mybatis.mapper.common.Mapper;
 
 /**
  * (DataTask)表数据库访问层
