@@ -162,7 +162,7 @@
                 <cas.cas-context-path>/cas</cas.cas-context-path>
                 <cas.white-url>^.*(/logout/?)$</cas.white-url>
                 <cas.service-url>http://localhost:8084</cas.service-url>
-                <cas.cookie-holder-pattern>config.com.taixingyiji.gateway.MyDataStorage</cas.cookie-holder-pattern>
+                <cas.cookie-holder-pattern>com.taixingyiji.gateway.MyDataStorage</cas.cookie-holder-pattern>
                 <cas.login-url>/login</cas.login-url>
                 <cas.logout-url>/logout</cas.logout-url>
             </properties>
@@ -192,7 +192,7 @@
                 <cas.cas-context-path>/cas</cas.cas-context-path>
                 <cas.white-url>^.*(/logout?)$</cas.white-url>
                 <cas.service-url>http://192.168.100.98:8084</cas.service-url>
-                <cas.cookie-holder-pattern>config.com.taixingyiji.gateway.MyDataStorage</cas.cookie-holder-pattern>
+                <cas.cookie-holder-pattern>com.taixingyiji.gateway.MyDataStorage</cas.cookie-holder-pattern>
                 <cas.login-url>/login</cas.login-url>
                 <cas.logout-url>/logout</cas.logout-url>
             </properties>
@@ -223,7 +223,7 @@
                 <cas.cas-context-path>/cas</cas.cas-context-path>
                 <cas.white-url>^.*(/logout?)$</cas.white-url>
                 <cas.service-url>http://10.11.64.16:8084</cas.service-url>
-                <cas.cookie-holder-pattern>config.com.taixingyiji.gateway.MyDataStorage</cas.cookie-holder-pattern>
+                <cas.cookie-holder-pattern>com.taixingyiji.gateway.MyDataStorage</cas.cookie-holder-pattern>
                 <cas.login-url>/login</cas.login-url>
                 <cas.logout-url>/logout</cas.logout-url>
             </properties>
