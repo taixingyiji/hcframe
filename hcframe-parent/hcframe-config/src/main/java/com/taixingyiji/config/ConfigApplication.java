@@ -19,7 +19,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableDiscoveryClient
 @EnableFeignClients
 //@EnableCasClient
-@ComponentScan(basePackages = {"com.hcframe.**"})
+@ComponentScan(basePackages = {"com.taixingyiji.**"})
 public class ConfigApplication {
     public static void main(String[] args) {
         SpringApplication.run(ConfigApplication.class, args);

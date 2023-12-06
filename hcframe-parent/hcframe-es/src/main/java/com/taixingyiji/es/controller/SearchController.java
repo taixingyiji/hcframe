@@ -1,7 +1,7 @@
-package com.hcframe.es.controller;
+package com.taixingyiji.es.controller;
 
 import com.taixingyiji.base.common.ResultVO;
-import com.hcframe.es.service.SearchService;
+import com.taixingyiji.es.service.SearchService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;

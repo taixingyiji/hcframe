@@ -1,4 +1,4 @@
-package com.hcframe.es.esmapper;
+package com.taixingyiji.es.esmapper;
 
 import org.elasticsearch.action.search.SearchResponse;
 

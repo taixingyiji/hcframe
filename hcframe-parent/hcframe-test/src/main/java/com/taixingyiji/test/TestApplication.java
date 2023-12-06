@@ -16,7 +16,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableCaching
 //@EnableDiscoveryClient
 //@EnableFeignClients
-@ComponentScan(basePackages = {"com.hcframe.**"})
+@ComponentScan(basePackages = {"com.taixingyiji.**"})
 public class TestApplication {
 
     public static void main(String[] args) {

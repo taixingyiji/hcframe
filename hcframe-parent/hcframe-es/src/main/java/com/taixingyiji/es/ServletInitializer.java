@@ -1,4 +1,4 @@
-package com.hcframe.es;
+package com.taixingyiji.es;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;

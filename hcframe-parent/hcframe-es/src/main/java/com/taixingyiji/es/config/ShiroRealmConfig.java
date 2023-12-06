@@ -1,4 +1,4 @@
-package com.hcframe.es.config;
+package com.taixingyiji.es.config;
 
 import com.taixingyiji.base.module.auth.dao.FtUserDao;
 import com.taixingyiji.base.module.auth.entity.FtUser;

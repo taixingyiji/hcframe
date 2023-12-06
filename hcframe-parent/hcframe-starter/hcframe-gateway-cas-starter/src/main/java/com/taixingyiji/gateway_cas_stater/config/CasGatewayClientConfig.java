@@ -29,7 +29,7 @@ public class CasGatewayClientConfig {
 
     public String ignoreUrlPatternType="REGEX";
 
-    public String cookieHolderPattern="com.hcframe.gateway_cas_stater.data.DataStorageImpl";
+    public String cookieHolderPattern="com.taixingyiji.gateway_cas_stater.data.DataStorageImpl";
 
     public String authKey="X-Access-Token";
 

@@ -1,9 +1,9 @@
-package com.hcframe.es.service.impl;
+package com.taixingyiji.es.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.taixingyiji.base.common.ResultVO;
-import com.hcframe.es.esmapper.EsMapper;
-import com.hcframe.es.service.SearchService;
+import com.taixingyiji.es.esmapper.EsMapper;
+import com.taixingyiji.es.service.SearchService;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.common.text.Text;
 import org.elasticsearch.search.SearchHit;

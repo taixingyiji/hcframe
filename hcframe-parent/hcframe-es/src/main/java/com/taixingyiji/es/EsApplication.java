@@ -1,4 +1,4 @@
-package com.hcframe.es;
+package com.taixingyiji.es;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,7 +16,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableCaching
 //@EnableDiscoveryClient
 //@EnableFeignClients
-@ComponentScan(basePackages = {"com.hcframe.**"})
+@ComponentScan(basePackages = {"com.taixingyiji.**"})
 public class EsApplication {
 
     public static void main(String[] args) {

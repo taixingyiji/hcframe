@@ -1,4 +1,4 @@
-package com.hcframe.es.service;
+package com.taixingyiji.es.service;
 
 
 import com.taixingyiji.base.common.ResultVO;

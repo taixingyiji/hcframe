@@ -1,4 +1,4 @@
-package com.hcframe.es.entity;
+package com.taixingyiji.es.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;

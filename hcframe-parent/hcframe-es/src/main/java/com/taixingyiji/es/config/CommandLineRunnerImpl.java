@@ -1,7 +1,6 @@
-package com.hcframe.es.config;
+package com.taixingyiji.es.config;
 
 import com.taixingyiji.base.module.cache.CacheService;
-import com.taixingyiji.base.module.datasource.utils.DataSourceUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

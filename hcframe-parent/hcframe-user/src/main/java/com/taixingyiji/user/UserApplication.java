@@ -20,8 +20,8 @@ import tk.mybatis.spring.annotation.MapperScan;
 @EnableSwagger2
 @ServletComponentScan
 @EnableCaching
-@MapperScan(basePackages = "com.hcframe.**.dao")
-@ComponentScan(basePackages = {"com.hcframe.**"}, excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {DataSourceConfiguration.class}))
+@MapperScan(basePackages = "com.taixingyiji.**.dao")
+@ComponentScan(basePackages = {"com.taixingyiji.**"}, excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {DataSourceConfiguration.class}))
 @EnableDiscoveryClient
 @Import(CasClientConfigurationProperties.class)
 //@EnableCasClient

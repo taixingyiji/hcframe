@@ -21,8 +21,8 @@ import tk.mybatis.spring.annotation.MapperScan;
 @EnableCaching
 //@EnableDiscoveryClient
 //@EnableFeignClients
-@MapperScan(basePackages = "com.hcframe.**.dao")
-@ComponentScan(basePackages = {"com.hcframe.**"},excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {DataSourceConfiguration.class}))
+@MapperScan(basePackages = "com.taixingyiji.**.dao")
+@ComponentScan(basePackages = {"com.taixingyiji.**"},excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {DataSourceConfiguration.class}))
 public class ActivitiApplication {
 
     public static void main(String[] args) {

@@ -1,7 +1,7 @@
-package com.hcframe.es.esmapper.impl;
+package com.taixingyiji.es.esmapper.impl;
 
 import com.taixingyiji.base.common.ServiceException;
-import com.hcframe.es.esmapper.EsMapper;
+import com.taixingyiji.es.esmapper.EsMapper;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.RequestOptions;

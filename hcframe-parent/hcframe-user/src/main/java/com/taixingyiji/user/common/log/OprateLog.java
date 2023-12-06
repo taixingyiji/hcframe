@@ -55,7 +55,7 @@ public class OprateLog {
 		this.tableService = tableService;
 	}
 
-    @Around("@annotation(com.hcframe.base.module.log.annotation.LogAnno)")
+    @Around("@annotation(com.taixingyiji.base.module.log.annotation.LogAnno)")
     public Object aroundAdvice(ProceedingJoinPoint pjp) throws Throwable {
     	ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         assert attributes != null;
