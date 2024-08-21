@@ -5,6 +5,10 @@
         select *
         FROM ${tableName}
     </select>
+    <select id="findAllTablesWithField" resultType="java.util.Map">
+        select ${fields}
+        FROM ${tableName}
+    </select>
     <select id="findByEqual" resultType="map" parameterType="map">
         select *
         FROM ${tableName}
@@ -45,10 +49,7 @@
             ${item}
         </foreach>
     </delete>
-    <delete id="deleteByWhere">
-        DELETE
-        FROM ${tableName} ${sql}
-    </delete>
+
 
     <insert id="saveInfo" parameterType="map" useGeneratedKeys="true" keyProperty="info.id" keyColumn="id">
         INSERT INTO ${tableName}
@@ -84,16 +85,6 @@
         <foreach collection="info.entrySet()" open="(" close=")" separator="," index="key" item="value">
             #{value}
         </foreach>
-    </insert>
-    <insert id="createSequence">
-        CREATE
-            SEQUENCE ${tableName}_seq
-        MINVALUE 1
-        NOMAXVALUE
-        START
-            WITH ${lastId}
-        INCREMENT BY 1
-        NOCACHE
     </insert>
 
     <update id="updateInfo" parameterType="map" useGeneratedKeys="true" keyProperty="info.id" keyColumn="id">
@@ -138,8 +129,17 @@
         </set>
         where ${sql}
     </update>
-
-    <select id="useSql" resultType="map">
+    <delete id="deleteByWhere">
+        DELETE
+        FROM ${tableName} ${sql}
+    </delete>
+    <select id="useSql" resultType="java.util.Map">
+        ${sql}
+    </select>
+    <select id="userSqlByOne" resultType="java.util.Map">
+        ${sql}
+    </select>
+    <select id="useSqlByTest" resultType="java.lang.Object">
         ${sql}
     </select>
     <select id="getListNoPage" resultType="java.util.Map">
@@ -149,25 +149,47 @@
             and ${key} = #{value}
         </foreach>
     </select>
-    <select id="findAllTablesWithField" resultType="java.util.Map">
-        select ${fields}
-        FROM ${tableName}
-    </select>
-    <select id="useSqlByTest" resultType="java.lang.Object">
-        ${sql}
-    </select>
 
-    <select id="userSqlByOne" resultType="java.util.Map">
-        ${sql}
-    </select>
+
+
+
     <select id="getSequence" resultType="java.lang.Object">
         select ${tableName}_seq.nextval
         from dual
     </select>
+    <insert id="createSequence">
+        CREATE
+        SEQUENCE ${tableName}_seq
+        MINVALUE 1
+        NOMAXVALUE
+        START
+        WITH ${lastId}
+        INCREMENT BY 1
+        NOCACHE
+    </insert>
     <select id="count" resultType="java.lang.Long">
         SELECT count(0) FROM ${tableName} ${sql}
     </select>
     <select id="countBySql" resultType="java.lang.Long">
         ${sql}
     </select>
+    <insert id="insertBatch" parameterType="map">
+        INSERT INTO ${tableName}
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <foreach collection="list[0].keySet()" item="column" separator=",">
+                ${column}
+            </foreach>
+        </trim>
+        VALUES
+        <foreach collection="list" item="row" separator=",">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <foreach collection="row" item="value">
+                    #{value},
+                </foreach>
+            </trim>
+        </foreach>
+    </insert>
+    <update id="updateBatchByPk" parameterType="map">
+        ${sql}
+    </update>
 </mapper>

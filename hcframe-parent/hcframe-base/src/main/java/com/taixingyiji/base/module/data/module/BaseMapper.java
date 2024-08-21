@@ -119,11 +119,17 @@ public interface BaseMapper {
     List<Map<String, Object>> selectSql(String sql);
 
     PageInfo<Map<String, Object>> selectSqlByPage(String sql, WebPageInfo webPageInfo);
+    List<Map<String, Object>> selectSql(String sql,Map<String,Object> params);
+
+    PageInfo<Map<String, Object>> selectSqlByPage(String sql,Map<String,Object> params, WebPageInfo webPageInfo);
 
     Map<String, Object> selectOneSql(String sql);
-
+    Map<String, Object> selectOneSql(String sql,Map<String,Object> params);
     Long count(String tableName, Condition condition);
 
     Long count(Condition condition);
+    int saveBatch(String tableName,String pkName, List<Map<String,Object>> list);
+
+    int updateBatchByPk(String tableName,String pkName,List<Map<String,Object>> list);
 
 }

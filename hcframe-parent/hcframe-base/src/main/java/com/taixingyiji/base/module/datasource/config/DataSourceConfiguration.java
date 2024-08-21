@@ -3,7 +3,9 @@ package com.taixingyiji.base.module.datasource.config;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.taixingyiji.base.common.MyMapper;
 import com.taixingyiji.base.module.datasource.dynamic.MyDynamicDataSource;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
 import org.mybatis.spring.boot.autoconfigure.MybatisProperties;
 import org.slf4j.Logger;
@@ -74,7 +76,7 @@ public class DataSourceConfiguration {
     @Bean(value = "sqlSessionFactoryBean222")
     public SqlSessionFactoryBean sqlSessionFactoryBean() throws IOException {
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
-        sqlSessionFactoryBean.setTypeAliasesPackage("com.common.**.entity");
+        sqlSessionFactoryBean.setTypeAliasesPackage("com.**.**.entity");
         if (!ObjectUtils.isEmpty(this.properties.resolveMapperLocations())) {
             sqlSessionFactoryBean.setMapperLocations(this.properties.resolveMapperLocations());
         }
@@ -89,4 +91,9 @@ public class DataSourceConfiguration {
     public PlatformTransactionManager transactionManager() {
         return new DataSourceTransactionManager(dynamicDataSource());
     }
+    @Bean
+    public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory) {
+        return new SqlSessionTemplate(sqlSessionFactory);
+    }
+
 }
