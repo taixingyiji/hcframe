@@ -310,7 +310,7 @@ public class Condition implements Serializable {
             int i = 1;
             for (Object object : value) {
                 String sqlKey = "item_" + IdUtil.fastUUID();
-                this.paramMap.put(sqlKey, value);
+                this.paramMap.put(sqlKey, object);
                 inStr.append("#{").append(sqlKey).append("}");
                 if (i != value.size()) {
                     inStr.append(",");

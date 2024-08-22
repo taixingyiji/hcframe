@@ -650,6 +650,10 @@ public class BaseMapperImpl implements BaseMapper {
     @Override
     public int saveBatch(String tableName, String pkName, List<Map<String, Object>> list) {
         JudgesNull(tableName, "tableName can not be null!");
+        JudgesNull(pkName, "pkName can not be null!");
+        if(list==null|| list.isEmpty()){
+            throw new ServiceException("list can not empty");
+        }
 //        JudgesNull(data, "tableName can not be null!");
         String key;
         DatasourceConfig datasourceConfig = new DatasourceConfig();
@@ -687,6 +691,11 @@ public class BaseMapperImpl implements BaseMapper {
 
     @Override
     public int updateBatchByPk(String tableName, String pkName, List<Map<String, Object>> list) {
+        JudgesNull(tableName, "tableName can not be null!");
+        JudgesNull(pkName, "pkName can not be null!");
+        if(list==null|| list.isEmpty()){
+            throw new ServiceException("list can not empty");
+        }
         StringBuilder sql = new StringBuilder();
         Map<String, Object> paramMap = new HashMap<>();
         int index = 0;
