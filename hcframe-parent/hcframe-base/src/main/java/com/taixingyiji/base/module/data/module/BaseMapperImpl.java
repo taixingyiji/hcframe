@@ -136,7 +136,6 @@ public class BaseMapperImpl implements BaseMapper {
         params.put("info", data);
         params.put("sql", condition.getSql());
         int i = sqlSessionTemplate.update(TABLE_MAPPER_PACKAGE + "updateByWhere", params);
-        SqlException.base(i, "更新失败");
         return i;
     }
 
@@ -247,9 +246,7 @@ public class BaseMapperImpl implements BaseMapper {
         Map<String, Object> params = condition.getParamMap();
         params.put("tableName", tableName);
         params.put("sql", condition.getSql());
-        int i = sqlSessionTemplate.delete(TABLE_MAPPER_PACKAGE + "deleteByWhere", params);
-        SqlException.base(i, "更新失败");
-        return i;
+        return sqlSessionTemplate.delete(TABLE_MAPPER_PACKAGE + "deleteByWhere", params);
     }
 
     @Override
