@@ -30,8 +30,8 @@ public class DruidConfig implements WebMvcConfigurer {
         ServletRegistrationBean<StatViewServlet> bean = new ServletRegistrationBean<>(new StatViewServlet(), "/druid/*");
         Map<String,String> initParams = new HashMap<>();
         DruidAuth druidAuth = auth();
-        initParams.put("loginUsername",druidAuth.getUsername());
-        initParams.put("loginPassword",druidAuth.getPassword());
+//        initParams.put("loginUsername",druidAuth.getUsername());
+//        initParams.put("loginPassword",druidAuth.getPassword());
         //默认就是允许所有访问
         initParams.put("allow",druidAuth.getAllow());
         initParams.put("deny",druidAuth.getDeny());
