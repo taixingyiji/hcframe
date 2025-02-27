@@ -11,5 +11,6 @@ public enum CacheType {
     // 基表信息缓存
     baseCache,
     // 数据库连接缓存
-    datasourceCache
+    datasourceCache,
+    pageCache,
 }

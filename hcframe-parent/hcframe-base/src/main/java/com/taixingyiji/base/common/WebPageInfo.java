@@ -51,6 +51,11 @@ public class WebPageInfo implements Serializable {
             example = "asc")
     private String order = ASC;
 
+    @ApiModelProperty(
+            value = "开启缓存"
+    )
+    private boolean enableCache = false;
+
     public static boolean hasSort(WebPageInfo webPageInfo) {
         return !StringUtils.isBlank(webPageInfo.getSortField());
     }

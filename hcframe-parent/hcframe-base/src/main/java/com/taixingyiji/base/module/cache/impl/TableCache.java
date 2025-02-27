@@ -85,12 +85,12 @@ public class TableCache implements CacheService {
                 case tableCache:
                     OsSysTable osSysTable = osSysTableMapper.getTableAllInfo((String) key);
                     JudgeException.isNull(osSysTable, "can not find key " + key + " in cache which cache name is " + name);
-                    baseCache.add(name.toString(), key, osSysTableMapper.getTableAllInfo((String)key), OsSysTable.class);
+                    baseCache.add(name.toString(), key, osSysTableMapper.getTableAllInfo((String) key), OsSysTable.class);
                     break;
                 case baseCache:
                     OsSysTable osSysTable1 = getCacheValue(CacheType.tableCache, key, OsSysTable.class);
-                    Condition condition = Condition.creatCriteria().andEqual("DELETED",1).build();
-                    List<Map<String, Object>> baseList = baseMapper.selectByCondition(osSysTable1.getTableName(),condition);
+                    Condition condition = Condition.creatCriteria().andEqual("DELETED", 1).build();
+                    List<Map<String, Object>> baseList = baseMapper.selectByCondition(osSysTable1.getTableName(), condition);
                     JudgeException.isNull(baseList, "can not find key " + key + " in cache which cache name is " + name);
                     baseCache.add(name.toString(), key, baseList, List.class);
                     break;

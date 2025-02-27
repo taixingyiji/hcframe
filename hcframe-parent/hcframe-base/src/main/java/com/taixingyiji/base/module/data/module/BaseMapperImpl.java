@@ -376,16 +376,22 @@ public class BaseMapperImpl implements BaseMapper {
     @Override
     public <E> PageInfo<Map<String, Object>> selectByEqual(DataMap<E> dataMap, Map<String, Object> map, WebPageInfo webPageInfo) {
         JudgesNull(dataMap.getTableName(), "tableName can not be null!");
-        MyPageHelper.start(webPageInfo);
         Condition condition = equal(dataMap, map);
+        if(webPageInfo.isEnableCache()){
+           return MyPageHelper.start(webPageInfo,condition.getSql(),() -> selectList(condition));
+        }
+        MyPageHelper.start(webPageInfo);
         return new PageInfo<>(selectList(condition));
     }
 
     @Override
     public PageInfo<Map<String, Object>> selectByEqual(String tableName, Map<String, Object> map, WebPageInfo webPageInfo) {
         JudgesNull(tableName, "tableName can not be null!");
-        MyPageHelper.start(webPageInfo);
         Condition condition = equal(DataMap.builder().tableName(tableName).build(), map);
+        if(webPageInfo.isEnableCache()){
+            return MyPageHelper.start(webPageInfo,condition.getSql(),() -> selectList(condition));
+        }
+        MyPageHelper.start(webPageInfo);
         return new PageInfo<>(selectList(condition));
     }
 
@@ -466,38 +472,57 @@ public class BaseMapperImpl implements BaseMapper {
     @Override
     public PageInfo<Map<String, Object>> selectByCondition(Condition condition, WebPageInfo webPageInfo) {
         MyPageHelper.start(webPageInfo);
+        if(webPageInfo.isEnableCache()){
+            return MyPageHelper.start(webPageInfo,condition.getSql(),() -> selectList(condition));
+        }
         return new PageInfo<>(selectList(condition));
     }
 
     @Override
     public <E> PageInfo<Map<String, Object>> selectByCondition(DataMap<E> dataMap, Condition condition, WebPageInfo webPageInfo) {
         JudgesNull(dataMap.getTableName(), "tableName can not be null!");
-        MyPageHelper.start(webPageInfo);
         condition = condition.toCreatCriteria(dataMap).build();
+        if(webPageInfo.isEnableCache()){
+            Condition finalCondition = condition;
+            return MyPageHelper.start(webPageInfo,condition.getSql(),() -> selectList(finalCondition));
+        }
+        MyPageHelper.start(webPageInfo);
         return new PageInfo<>(selectList(condition));
     }
 
     @Override
     public PageInfo<Map<String, Object>> selectByCondition(String tableName, Condition condition, WebPageInfo webPageInfo) {
         JudgesNull(tableName, "tableName can not be null!");
-        MyPageHelper.start(webPageInfo);
         condition = condition.toCreatCriteria(DataMap.builder().tableName(tableName).build()).build();
+        if(webPageInfo.isEnableCache()){
+            Condition finalCondition = condition;
+            return MyPageHelper.start(webPageInfo,condition.getSql(),() -> selectList(finalCondition));
+        }
+        MyPageHelper.start(webPageInfo);
         return new PageInfo<>(selectList(condition));
     }
 
     @Override
     public PageInfo<Map<String, Object>> selectByCondition(String tableName, List<String> fieldList, Condition condition, WebPageInfo webPageInfo) {
         JudgesNull(tableName, "tableName can not be null!");
-        MyPageHelper.start(webPageInfo);
         condition = condition.toCreatCriteria(DataMap.builder().tableName(tableName).fieldList(fieldList).build()).build();
+        if(webPageInfo.isEnableCache()){
+            Condition finalCondition = condition;
+            return MyPageHelper.start(webPageInfo,condition.getSql(),() -> selectList(finalCondition));
+        }
+        MyPageHelper.start(webPageInfo);
         return new PageInfo<>(selectList(condition));
     }
 
     @Override
     public PageInfo<Map<String, Object>> selectByCondition(String tableName, String fieldList, Condition condition, WebPageInfo webPageInfo) {
         JudgesNull(tableName, "tableName can not be null!");
-        MyPageHelper.start(webPageInfo);
         condition = condition.toCreatCriteria(DataMap.builder().tableName(tableName).fields(fieldList).build()).build();
+        if(webPageInfo.isEnableCache()){
+            Condition finalCondition = condition;
+            return MyPageHelper.start(webPageInfo,condition.getSql(),() -> selectList(finalCondition));
+        }
+        MyPageHelper.start(webPageInfo);
         return new PageInfo<>(selectList(condition));
     }
 
@@ -602,6 +627,9 @@ public class BaseMapperImpl implements BaseMapper {
 
     @Override
     public PageInfo<Map<String, Object>> selectSqlByPage(String sql, WebPageInfo webPageInfo) {
+        if(webPageInfo.isEnableCache()){
+            return MyPageHelper.start(webPageInfo,sql,() -> (tableMapper.useSql(sql)));
+        }
         MyPageHelper.start(webPageInfo);
         return new PageInfo<>(tableMapper.useSql(sql));
     }
@@ -614,8 +642,11 @@ public class BaseMapperImpl implements BaseMapper {
 
     @Override
     public PageInfo<Map<String, Object>> selectSqlByPage(String sql, Map<String, Object> params, WebPageInfo webPageInfo) {
-        MyPageHelper.start(webPageInfo);
         params.put("sql",sql);
+        if(webPageInfo.isEnableCache()){
+            return MyPageHelper.start(webPageInfo,sql,() -> sqlSessionTemplate.selectList(TABLE_MAPPER_PACKAGE + "useSql", params));
+        }
+        MyPageHelper.start(webPageInfo);
         return new PageInfo<>(sqlSessionTemplate.selectList(TABLE_MAPPER_PACKAGE + "useSql", params));
     }
 
