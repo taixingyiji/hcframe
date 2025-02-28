@@ -5,6 +5,7 @@ import cn.hutool.json.JSONUtil;
 import com.github.pagehelper.PageInfo;
 import com.taixingyiji.base.common.WebPageInfo;
 import com.github.pagehelper.PageHelper;
+import com.taixingyiji.base.common.config.FrameConfig;
 import com.taixingyiji.base.module.cache.CacheService;
 import com.taixingyiji.base.module.cache.base.BaseCache;
 import com.taixingyiji.base.module.cache.emum.CacheType;
@@ -23,6 +24,9 @@ public class MyPageHelper {
     private static MyPageHelper myPageHelper;
     @Autowired
     BaseCache baseCache;
+
+    @Autowired
+    FrameConfig frameConfig;
 
     @PostConstruct
     public void init() {
@@ -69,13 +73,15 @@ public class MyPageHelper {
             PageInfo<Map<String, Object>> result = myStart(webPageInfo, querySupplier);
             jsonObject.set("time", currentTime);
             jsonObject.set("count", result.getTotal());
-            myPageHelper.baseCache.add(CacheType.pageCache.toString(), sql, jsonObject.toString(), String.class);
+            if(result.getTotal() > myPageHelper.frameConfig.getPageMaxCache()){
+                myPageHelper.baseCache.add(CacheType.pageCache.toString(), sql, jsonObject.toString(), String.class);
+            }
             return result;
         } else {
             JSONObject cacheJson = JSONUtil.parseObj(data);
             Long saveTime = (Long) cacheJson.get("time");
             long timeDiffInSeconds = (currentTime - saveTime) / 1000;
-            if (timeDiffInSeconds > 60) {
+            if (timeDiffInSeconds > myPageHelper.frameConfig.getPageCacheTime()) {
                 Thread thread = new Thread(new Runnable() {
                     @Override
                     public void run() {

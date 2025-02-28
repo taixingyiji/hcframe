@@ -14,4 +14,6 @@ public class FrameConfig {
     private Boolean multiDataSource = true;
     private Boolean cas = false;
     private Boolean singleClientLogin= false;
+    private Integer pageMaxCache = 100000;
+    private Integer pageCacheTime = 60;
 }
