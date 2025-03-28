@@ -67,17 +67,17 @@ public class BaseMapperImpl implements BaseMapper {
 
     @Override
     public <E> int save(DataMap<E> dataMap) {
-        String dataType = getDataConfig();
+        String dataTypeConfig = getDataConfig();
         JudgesNull(dataMap.getData(), "data can not be null!");
         JudgesNull(dataMap.getTableName(), "tableName can not be null!");
-        if(DataUnit.HANGO.equals(dataType)){
+        if (DataUnit.HANGO.equals(dataTypeConfig)) {
             dataMap.setData(formatMap(dataMap.getData()));
         }
         if (StringUtils.isEmpty(dataMap.getPkName())) {
             dataMap.setPkName("ID");
         }
         int i;
-        if (DataUnit.ORACLE.equals(dataType) || DataUnit.DAMENG.equals(dataType) || DataUnit.HANGO.equals(dataType)) {
+        if (DataUnit.ORACLE.equals(dataTypeConfig) || DataUnit.DAMENG.equals(dataTypeConfig) || DataUnit.HANGO.equals(dataTypeConfig)) {
             if (org.springframework.util.StringUtils.isEmpty(dataMap.get(dataMap.getPkName()))) {
                 Object id = getSequence(dataMap.getTableName(), dataMap.getPkName());
                 dataMap.toBuilder().add(dataMap.getPkName(), id);
@@ -94,7 +94,7 @@ public class BaseMapperImpl implements BaseMapper {
         return i;
     }
 
-    public Map<String, Object> formatMap(Map<String, Object> data){
+    public Map<String, Object> formatMap(Map<String, Object> data) {
         // 遍历 Map 并转换值
         for (Map.Entry<String, Object> entry : data.entrySet()) {
             Object value = entry.getValue();
@@ -116,15 +116,15 @@ public class BaseMapperImpl implements BaseMapper {
     public int save(String tableName, String pkName, Map<String, Object> data) {
         JudgesNull(tableName, "data can not be null!");
         JudgesNull(data, "tableName can not be null!");
-        String dataType = getDataConfig();
-        if(DataUnit.HANGO.equals(dataType)){
+        String dataTypeConfig = getDataConfig();
+        if (DataUnit.HANGO.equals(dataTypeConfig)) {
             data = formatMap(data);
         }
         if (StringUtils.isEmpty(pkName)) {
             pkName = "ID";
         }
         int i;
-        if (DataUnit.ORACLE.equals(dataType) || DataUnit.DAMENG.equals(dataType) || DataUnit.HANGO.equals(dataType)) {
+        if (DataUnit.ORACLE.equals(dataTypeConfig) || DataUnit.DAMENG.equals(dataTypeConfig) || DataUnit.HANGO.equals(dataTypeConfig)) {
             if (org.springframework.util.StringUtils.isEmpty(data.get(pkName))) {
                 data.put(pkName, getSequence(tableName, pkName));
             }
@@ -350,12 +350,20 @@ public class BaseMapperImpl implements BaseMapper {
 
     private List<Map<String, Object>> selectList(Condition condition) {
         Map<String, Object> params = condition.getParamMap();
+        String dataTypeConfig = getDataConfig();
+        if (DataUnit.HANGO.equals(dataTypeConfig)) {
+            params = formatMap(params);
+        }
         params.put("sql", condition.getSql());
         return sqlSessionTemplate.selectList(TABLE_MAPPER_PACKAGE + "useSql", params);
     }
 
     private Map<String, Object> selectOne(Condition condition) {
         Map<String, Object> params = condition.getParamMap();
+        String dataTypeConfig = getDataConfig();
+        if (DataUnit.HANGO.equals(dataTypeConfig)) {
+            params = formatMap(params);
+        }
         params.put("sql", condition.getSql());
         return sqlSessionTemplate.selectOne(TABLE_MAPPER_PACKAGE + "userSqlByOne", params);
     }
@@ -650,15 +658,24 @@ public class BaseMapperImpl implements BaseMapper {
 
     @Override
     public List<Map<String, Object>> selectSql(String sql, Map<String, Object> params) {
+        String dataTypeConfig = getDataConfig();
+        if (DataUnit.HANGO.equals(dataTypeConfig)) {
+            params = formatMap(params);
+        }
         params.put("sql", sql);
         return sqlSessionTemplate.selectList(TABLE_MAPPER_PACKAGE + "useSql", params);
     }
 
     @Override
     public PageInfo<Map<String, Object>> selectSqlByPage(String sql, Map<String, Object> params, WebPageInfo webPageInfo) {
+        String dataTypeConfig = getDataConfig();
+        if (DataUnit.HANGO.equals(dataTypeConfig)) {
+            params = formatMap(params);
+        }
         params.put("sql", sql);
         if (webPageInfo.isEnableCache()) {
-            return MyPageHelper.start(webPageInfo, sql, () -> sqlSessionTemplate.selectList(TABLE_MAPPER_PACKAGE + "useSql", params));
+            Map<String, Object> finalParams = params;
+            return MyPageHelper.start(webPageInfo, sql, () -> sqlSessionTemplate.selectList(TABLE_MAPPER_PACKAGE + "useSql", finalParams));
         }
         MyPageHelper.start(webPageInfo);
         return new PageInfo<>(sqlSessionTemplate.selectList(TABLE_MAPPER_PACKAGE + "useSql", params));
@@ -779,9 +796,9 @@ public class BaseMapperImpl implements BaseMapper {
     }
 
     public Object getSequence(String tableName, String pkName) {
-        String dataType = getDataConfig();
+        String dataTypeConfig = getDataConfig();
         Object id;
-        if (DataUnit.HANGO.equals(dataType)) {
+        if (DataUnit.HANGO.equals(dataTypeConfig)) {
             if (!tableMapper.judgeHighGoSequenceExist(tableName.toLowerCase())) {
                 MyPageHelper.noCount(WebPageInfo.builder().pageNum(1).pageSize(1).order(WebPageInfo.DESC).sortField(pkName).build());
                 DataMap<Object> dataMap = DataMap.builder().tableName(tableName).pkName(pkName).fields(pkName).build();
