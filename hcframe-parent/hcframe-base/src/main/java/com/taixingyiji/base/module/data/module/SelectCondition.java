@@ -113,7 +113,7 @@ public class SelectCondition implements Serializable {
         }
 
         public SelectBuilder tableName(String tableName) {
-            this.tableName = "`"+tableName+"`";
+            this.tableName = tableName;
             return this;
         }
 

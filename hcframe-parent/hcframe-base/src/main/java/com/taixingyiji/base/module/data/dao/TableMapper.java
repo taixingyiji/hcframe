@@ -42,8 +42,11 @@ public interface TableMapper {
     List<Map<String, Object>> getListNoPage(@Param("typeName") String tableName, @Param("info") Map<String, Object> map);
 
     Object getSequence(@Param("tableName") String tableName);
-
+    Object getHighGoSequence(@Param("tableName") String tableName);
+    boolean judgeHighGoSequenceExist(@Param("tableName") String tableName);
+    boolean judgeDamengSequenceExist(@Param("tableName") String tableName);
     int createSequence(@Param("tableName") String tableName, @Param("lastId")Object lastId);
+    int createHighGoSequence(@Param("tableName") String tableName, @Param("lastId")Object lastId);
 
     Long count(@Param("tableName")String tableName,@Param("sql")String sql);
 

@@ -13,7 +13,7 @@ import java.util.Map;
 public interface BaseMapper {
 
     <E> int save(DataMap<E> dataMap);
-
+    String getDataConfig();
     int save(String tableName, String pkName, Map<String, Object> data);
 
     <E> int save(E e);

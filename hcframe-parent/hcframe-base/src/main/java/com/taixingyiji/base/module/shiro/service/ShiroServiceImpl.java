@@ -156,7 +156,7 @@ public class ShiroServiceImpl implements ShiroService {
     public FtToken findByToken(String accessToken) {
         FtToken osToken = new FtToken();
 //        osToken.setToken(accessToken);
-        Condition condition = Condition.creatCriteria().equal("TOKEN", accessToken).build();
+        Condition condition = Condition.creatCriteria().andEqual("TOKEN", accessToken).build();
         Map<String, Object> map = baseMapper.selectOneByCondition("FT_TOKEN", condition);
         osToken.setToken((String) map.get("TOKEN"));
         osToken.setTokenId((String) map.get("TOKEN_ID"));
