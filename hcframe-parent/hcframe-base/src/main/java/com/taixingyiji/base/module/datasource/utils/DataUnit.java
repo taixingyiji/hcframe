@@ -12,6 +12,7 @@ public class DataUnit {
     public static final String MYSQL = "Mysql";
     public static final String ORACLE = "Oracle";
     public static final String DAMENG = "Dameng";
+    public static final String HANGO= "HanGO";
     public static final String MASTERBEAN = "masterDataSource";
     public static final String DYNAMICBEAN = "dynamicDataSource";
     public static final String PASSWORD = "******";

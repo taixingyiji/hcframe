@@ -58,6 +58,9 @@ public class BaseMapperImpl implements BaseMapper {
             if (dataType.contains("sqlite")) {
                 datasourceConfig.setCommonType(DataUnit.SQLITE);
             }
+            if(dataType.contains("highgo")) {
+                datasourceConfig.setCommonType(DataUnit.HANGO);
+            }
         }
         JudgesNull(dataMap.getData(), "data can not be null!");
         JudgesNull(dataMap.getTableName(), "tableName can not be null!");
@@ -65,7 +68,7 @@ public class BaseMapperImpl implements BaseMapper {
             dataMap.setPkName("ID");
         }
         int i;
-        if (DataUnit.ORACLE.equals(datasourceConfig.getCommonType()) || DataUnit.DAMENG.equals(datasourceConfig.getCommonType())) {
+        if (DataUnit.ORACLE.equals(datasourceConfig.getCommonType()) || DataUnit.DAMENG.equals(datasourceConfig.getCommonType()) || DataUnit.HANGO.equals(datasourceConfig.getCommonType())) {
             if (org.springframework.util.StringUtils.isEmpty(dataMap.get(dataMap.getPkName()))) {
                 Object id = getSequence(dataMap.getTableName(), dataMap.getPkName());
                 dataMap.toBuilder().add(dataMap.getPkName(), id);
@@ -82,10 +85,14 @@ public class BaseMapperImpl implements BaseMapper {
         return i;
     }
 
+    private String formatTable(String tableName) {
+        return "`"+tableName+"`";
+    }
     @Override
     public int save(String tableName, String pkName, Map<String, Object> data) {
         JudgesNull(tableName, "data can not be null!");
         JudgesNull(data, "tableName can not be null!");
+        tableName = formatTable(tableName);
         String key;
         DatasourceConfig datasourceConfig = new DatasourceConfig();
         try {
@@ -132,6 +139,7 @@ public class BaseMapperImpl implements BaseMapper {
 
     private int updateByWhere(Condition condition, String tableName, Map<String, Object> data) {
         Map<String, Object> params = condition.getParamMap();
+        tableName = formatTable(tableName);
         params.put("tableName", tableName);
         params.put("info", data);
         params.put("sql", condition.getSql());
@@ -244,6 +252,7 @@ public class BaseMapperImpl implements BaseMapper {
 
     private int deleteByWhere(Condition condition, String tableName) {
         Map<String, Object> params = condition.getParamMap();
+        tableName = formatTable(tableName);
         params.put("tableName", tableName);
         params.put("sql", condition.getSql());
         return sqlSessionTemplate.delete(TABLE_MAPPER_PACKAGE + "deleteByWhere", params);
@@ -330,6 +339,7 @@ public class BaseMapperImpl implements BaseMapper {
     @Override
     public List<Map<String, Object>> selectAll(String tableName) {
         JudgesNull(tableName, "tableName can not be null!");
+        tableName = formatTable(tableName);
         return tableMapper.useSql(SelectCondition.builder().tableName(tableName).build().getSql());
     }
 
@@ -734,7 +744,7 @@ public class BaseMapperImpl implements BaseMapper {
                 String key = entry.getKey();
                 Object value = entry.getValue();
                 if (!key.equals(pkName) && value != null && !(value instanceof String && ((String) value).isEmpty())) {
-                    sql.append(key).append(" = #{item").append(index).append("_").append(key).append("}, ");
+                    sql.append("`").append(key).append("`").append(" = #{item").append(index).append("_").append(key).append("}, ");
                     paramMap.put("item" + index + "_" + key, value);
                     hasSetClause = true;
                 }
@@ -746,7 +756,7 @@ public class BaseMapperImpl implements BaseMapper {
                 // 如果没有要更新的字段，跳过这条记录
                 continue;
             }
-            sql.append(" WHERE ").append(pkName).append(" = #{item").append(index).append("_").append(pkName).append("};");
+            sql.append(" WHERE ").append("`").append(pkName).append("`").append(" = #{item").append(index).append("_").append(pkName).append("};");
             paramMap.put("item" + index + "_" + pkName, item.get(pkName));
             index++;
         }
@@ -769,7 +779,7 @@ public class BaseMapperImpl implements BaseMapper {
         try {
             id = tableMapper.getSequence(tableName);
         } catch (Exception e) {
-            MyPageHelper.start(WebPageInfo.builder().pageNum(1).pageSize(1).order(WebPageInfo.DESC).sortField(pkName).build());
+            MyPageHelper.noCount(WebPageInfo.builder().pageNum(1).pageSize(1).order(WebPageInfo.DESC).sortField(pkName).build());
             DataMap<Object> dataMap = DataMap.builder().tableName(tableName).pkName(pkName).fields(pkName).build();
             Condition condition = Condition.creatCriteria(dataMap).build();
             Map<String, Object> map = selectOneByCondition(condition);

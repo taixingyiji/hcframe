@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>hcframe-base</artifactId>
-    <version>1.2.3-SNAPSHOT</version>
+    <version>1.2.4-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -47,6 +47,13 @@
                     <artifactId>log4j-api</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.highgo/HgdbJdbc -->
+        <!-- https://mvnrepository.com/artifact/com.highgo/HgdbJdbc -->
+        <dependency>
+            <groupId>com.highgo</groupId>
+            <artifactId>HgdbJdbc</artifactId>
+            <version>6.2.3</version>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>

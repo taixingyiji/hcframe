@@ -273,7 +273,7 @@ public class Condition implements Serializable {
                 value = value.toString().replaceAll("\"", "");
             }
             String sqlKey = "item_" + IdUtil.fastUUID();
-            this.conditionSql += " " + key + EQUAL + "#{" + sqlKey + "}";
+            this.conditionSql += " `" + key +"` "+ EQUAL + "#{" + sqlKey + "}";
             this.paramMap.put(sqlKey, value);
             return this;
         }
@@ -290,7 +290,7 @@ public class Condition implements Serializable {
 
         public ConditionBuilder like(String key, Object value) {
             sqlCheckLike(value);
-            this.conditionSql += " " + key + " " + LIKE + " '" + value + "'";
+            this.conditionSql += " `" + key +"` "+ " " + LIKE + " '" + value + "'";
             return this;
         }
 
@@ -318,7 +318,7 @@ public class Condition implements Serializable {
                 i++;
             }
             inStr.append(R_CURVES);
-            this.conditionSql += " " + key + " " + IN + " " + inStr.toString();
+            this.conditionSql += " `" + key +"` "+ " " + IN + " " + inStr.toString();
             return this;
         }
 
@@ -337,7 +337,7 @@ public class Condition implements Serializable {
             String sqlKey2 = "item_" + IdUtil.fastUUID();
             this.paramMap.put(sqlKey, start);
             this.paramMap.put(sqlKey2, end);
-            this.conditionSql += " " + key + " " + BETWEEN + " #{" + sqlKey + "} " + AND + " #{" + sqlKey2 + "} ";
+            this.conditionSql += " `" + key +"` "+ " " + BETWEEN + " #{" + sqlKey + "} " + AND + " #{" + sqlKey2 + "} ";
             return this;
         }
 
@@ -354,7 +354,7 @@ public class Condition implements Serializable {
         public ConditionBuilder lt(String key, Object value) {
             String sqlKey = "item_" + IdUtil.fastUUID();
             this.paramMap.put(sqlKey, value);
-            this.conditionSql += " " + key + " " + LT + " #{" + sqlKey + "} ";
+            this.conditionSql += " `" + key +"` "+ " " + LT + " #{" + sqlKey + "} ";
             return this;
         }
 
@@ -376,7 +376,7 @@ public class Condition implements Serializable {
         public ConditionBuilder notEqual(String key, Object value) {
             String sqlKey = "item_" + IdUtil.fastUUID();
             this.paramMap.put(sqlKey, value);
-            this.conditionSql += " " + key + " " + NOT_EQUAL + " #{" + sqlKey + "} ";
+            this.conditionSql += " `" + key +"` "+ " " + NOT_EQUAL + " #{" + sqlKey + "} ";
             return this;
         }
 
@@ -393,7 +393,7 @@ public class Condition implements Serializable {
         public ConditionBuilder gt(String key, Object value) {
             String sqlKey = "item_" + IdUtil.fastUUID();
             this.paramMap.put(sqlKey, value);
-            this.conditionSql += " " + key + " " + GT + " #{" + sqlKey + "} ";
+            this.conditionSql += " `" + key +"` "+ " " + GT + " #{" + sqlKey + "} ";
             return this;
         }
 
@@ -410,7 +410,7 @@ public class Condition implements Serializable {
         public ConditionBuilder lte(String key, Object value) {
             String sqlKey = "item_" + IdUtil.fastUUID();
             this.paramMap.put(sqlKey, value);
-            this.conditionSql += " " + key + " " + LTE + " #{" + value.toString() + "} ";
+            this.conditionSql += " `" + key +"` "+ " " + LTE + " #{" + value.toString() + "} ";
             return this;
         }
 
@@ -427,7 +427,7 @@ public class Condition implements Serializable {
         public ConditionBuilder gte(String key, Object value) {
             String sqlKey = "item_" + IdUtil.fastUUID();
             this.paramMap.put(sqlKey, value);
-            this.conditionSql += " " + key + " " + GTE + " #{" + value.toString() + "} ";
+            this.conditionSql += " `" + key +"` "+ " " + GTE + " #{" + value.toString() + "} ";
             return this;
         }
 
