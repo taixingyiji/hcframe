@@ -32,7 +32,7 @@ public class UserInfoUtil<T> {
         if (date.getTime() > expireData.getTime()) {
             return null;
         }
-        return (T) shiroService.findByUserId(ftToken.getUserId());
+        return (T) shiroService.findByUserId(String.valueOf(ftToken.getUserId()));
     }
 
     /**

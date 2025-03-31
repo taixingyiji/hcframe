@@ -29,7 +29,7 @@ public class FtToken implements Serializable {
 
     private String token;
 
-    private String userId;
+    private Integer userId;
 
     private Date updateTime;
 

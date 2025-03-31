@@ -80,7 +80,7 @@ public class CustomRealm extends AuthorizingRealm {
         } else {
             //1. 根据accessToken，查询用户信息
             FtToken tokenEntity = shiroService.findByToken(accessToken);
-            userId = tokenEntity.getUserId();
+            userId = String.valueOf(tokenEntity.getUserId());
             //2. token失效
             if (tokenEntity.getExpireTime().getTime() < System.currentTimeMillis()) {
                 throw new IncorrectCredentialsException("token失效，请重新登录");

@@ -160,7 +160,7 @@ public class ShiroServiceImpl implements ShiroService {
         Map<String, Object> map = baseMapper.selectOneByCondition("FT_TOKEN", condition);
         osToken.setToken((String) map.get("TOKEN"));
         osToken.setTokenId((String) map.get("TOKEN_ID"));
-        osToken.setUserId((String) map.get("USER_ID"));
+        osToken.setUserId((Integer) map.get("USER_ID"));
         osToken.setExpireTime((Date) map.get("EXPIRE_TIME"));
         osToken.setUpdateTime((Date) map.get("UPDATE_TIME"));
         return osToken;
