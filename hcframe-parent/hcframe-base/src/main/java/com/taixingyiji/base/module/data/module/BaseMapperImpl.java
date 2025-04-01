@@ -95,20 +95,20 @@ public class BaseMapperImpl implements BaseMapper {
     }
 
     public Map<String, Object> formatMap(Map<String, Object> data) {
-        // 遍历 Map 并转换值
-        for (Map.Entry<String, Object> entry : data.entrySet()) {
-            Object value = entry.getValue();
-            if (value instanceof String) {
-                String strValue = (String) value;
-                if (strValue.matches("-?\\d+")) { // 匹配整数
-                    data.put(entry.getKey(), Long.parseLong(strValue));
-                } else if (strValue.matches("-?\\d*\\.\\d+")) { // 匹配浮点数
-                    data.put(entry.getKey(), (long) Double.parseDouble(strValue));
-                }
-            } else if (value instanceof Number) {
-                data.put(entry.getKey(), ((Number) value).longValue());
-            }
-        }
+//        // 遍历 Map 并转换值
+//        for (Map.Entry<String, Object> entry : data.entrySet()) {
+//            Object value = entry.getValue();
+//            if (value instanceof String) {
+//                String strValue = (String) value;
+//                if (strValue.matches("-?\\d+")) { // 匹配整数
+//                    data.put(entry.getKey(), Long.parseLong(strValue));
+//                } else if (strValue.matches("-?\\d*\\.\\d+")) { // 匹配浮点数
+//                    data.put(entry.getKey(), (long) Double.parseDouble(strValue));
+//                }
+//            } else if (value instanceof Number) {
+//                data.put(entry.getKey(), ((Number) value).longValue());
+//            }
+//        }
         return data;
     }
 

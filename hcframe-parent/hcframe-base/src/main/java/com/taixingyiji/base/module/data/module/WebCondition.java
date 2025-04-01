@@ -1,6 +1,8 @@
 package com.taixingyiji.base.module.data.module;
 
+import cn.hutool.core.date.DateUtil;
 import com.taixingyiji.base.module.data.constants.QueryConstants;
+import com.taixingyiji.base.module.datasource.utils.DataUnit;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -44,30 +46,46 @@ public class WebCondition {
         return valueList;
     }
 
-    public static Condition.ConditionBuilder setSign(WebCondition webCondition,Condition.ConditionBuilder builder) {
+    public static Condition.ConditionBuilder setSign(WebCondition webCondition, Condition.ConditionBuilder builder, String dataType) {
+        if (DataUnit.HANGO.equals(dataType)) {
+            if (webCondition.key.toUpperCase().contains("TIME") && webCondition.value instanceof String) {
+                try {
+                    webCondition.value = DateUtil.parse((String) webCondition.value);
+                } catch (Exception ignored) {
+                }
+            }
+        }
         switch (webCondition.getSign()) {
-            case QueryConstants.LIKE:{
-                return builder.like(webCondition.key, "%"+webCondition.value+"%");
+            case QueryConstants.LIKE: {
+                return builder.like(webCondition.key, "%" + webCondition.value + "%");
             }
-            case QueryConstants.EQUAL:{
-                return builder.equal(webCondition.key,webCondition.value);
+            case QueryConstants.EQUAL: {
+                return builder.equal(webCondition.key, webCondition.value);
             }
-            case QueryConstants.BETWEEN:{
-                return builder.between(webCondition.key, webCondition.value,webCondition.sValue);
+            case QueryConstants.BETWEEN: {
+                if (DataUnit.HANGO.equals(dataType)) {
+                    if (webCondition.key.toUpperCase().contains("TIME") && webCondition.sValue instanceof String) {
+                        try {
+                        webCondition.sValue = DateUtil.parse((String) webCondition.sValue);
+                        } catch (Exception ignored) {
+                        }
+                    }
+                }
+                return builder.between(webCondition.key, webCondition.value, webCondition.sValue);
             }
-            case QueryConstants.GT:{
+            case QueryConstants.GT: {
                 return builder.gt(webCondition.key, webCondition.value);
             }
-            case QueryConstants.GTE:{
+            case QueryConstants.GTE: {
                 return builder.gte(webCondition.key, webCondition.value);
             }
-            case QueryConstants.LT:{
+            case QueryConstants.LT: {
                 return builder.lt(webCondition.key, webCondition.value);
             }
-            case QueryConstants.LTE:{
+            case QueryConstants.LTE: {
                 return builder.lte(webCondition.key, webCondition.value);
             }
-            case QueryConstants.IN:{
+            case QueryConstants.IN: {
                 String[] strings = webCondition.value.toString().split(",");
                 return builder.in(webCondition.key, Arrays.asList(strings));
             }
@@ -76,12 +94,12 @@ public class WebCondition {
         }
     }
 
-    public static Condition.ConditionBuilder setLogic(WebCondition webCondition,Condition.ConditionBuilder builder) {
+    public static Condition.ConditionBuilder setLogic(WebCondition webCondition, Condition.ConditionBuilder builder) {
         switch (webCondition.getLogic()) {
-            case QueryConstants.AND:{
+            case QueryConstants.AND: {
                 return builder.and();
             }
-            case QueryConstants.OR:{
+            case QueryConstants.OR: {
                 return builder.or();
             }
             default:
@@ -89,12 +107,12 @@ public class WebCondition {
         }
     }
 
-    public static Condition.ConditionBuilder setCurves(WebCondition webCondition,Condition.ConditionBuilder builder) {
+    public static Condition.ConditionBuilder setCurves(WebCondition webCondition, Condition.ConditionBuilder builder) {
         switch (webCondition.getCurves()) {
-            case QueryConstants.L_CURVES:{
+            case QueryConstants.L_CURVES: {
                 return builder.leftCurves();
             }
-            case QueryConstants.R_CURVES:{
+            case QueryConstants.R_CURVES: {
                 return builder.rightCurves();
             }
             default:

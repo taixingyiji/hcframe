@@ -233,7 +233,7 @@ public class TableServiceImpl implements TableService {
             if (!StringUtils.isEmpty(webCondition.getCurves())) {
                 builder = WebCondition.setCurves(webCondition, builder);
             }
-            builder = WebCondition.setSign(webCondition, builder);
+            builder = WebCondition.setSign(webCondition, builder,baseMapper.getDataConfig());
         }
         return builder;
     }

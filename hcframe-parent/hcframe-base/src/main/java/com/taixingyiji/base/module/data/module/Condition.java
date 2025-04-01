@@ -241,14 +241,14 @@ public class Condition implements Serializable {
         }
 
         private Object formatValue(Object value) {
-            if(value instanceof String) {
-                String str = (String)value;
-                if (str.matches("-?\\d+")) { // 匹配整数
-                    return Long.parseLong(str);
-                } else if (str.matches("-?\\d*\\.\\d+")) { // 匹配浮点数
-                    return Double.parseDouble(str);
-                }
-            }
+//            if(value instanceof String) {
+//                String str = (String)value;
+//                if (str.matches("-?\\d+")) { // 匹配整数
+//                    return Long.parseLong(str);
+//                } else if (str.matches("-?\\d*\\.\\d+")) { // 匹配浮点数
+//                    return Double.parseDouble(str);
+//                }
+//            }
             return value;
         }
 
