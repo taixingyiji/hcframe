@@ -1,5 +1,6 @@
 package com.taixingyiji.base.module.data.module;
 
+import com.alibaba.druid.pool.DruidDataSource;
 import com.github.pagehelper.PageInfo;
 import com.taixingyiji.base.common.ServiceException;
 import com.taixingyiji.base.common.WebPageInfo;
@@ -17,6 +18,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.sql.Connection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -28,14 +30,17 @@ public class BaseMapperImpl implements BaseMapper {
     public static final String BASE = "base";
     public static final String TABLE_MAPPER_PACKAGE = "com.taixingyiji.base.module.data.dao.TableMapper.";
     final TableMapper tableMapper;
+    final DruidDataSource druidDataSource;
 
     @Value("${spring.datasource.druid.driver-class-name}")
     public String dataType;
     final SqlSessionTemplate sqlSessionTemplate;
 
-    public BaseMapperImpl(TableMapper tableMapper, SqlSessionTemplate sqlSessionTemplate) {
+    public BaseMapperImpl(TableMapper tableMapper, SqlSessionTemplate sqlSessionTemplate,
+                          DruidDataSource druidDataSource) {
         this.tableMapper = tableMapper;
         this.sqlSessionTemplate = sqlSessionTemplate;
+        this.druidDataSource = druidDataSource;
     }
 
     @Override
@@ -43,23 +48,44 @@ public class BaseMapperImpl implements BaseMapper {
         String key;
         DatasourceConfig datasourceConfig = new DatasourceConfig();
         try {
+
             key = DBContextHolder.getDataSource();
             datasourceConfig = DataSourceUtil.get(key);
         } catch (Exception e) {
-            if (dataType.contains("oracle")) {
-                datasourceConfig.setCommonType(DataUnit.ORACLE);
-            }
-            if (dataType.contains("mysql")) {
-                datasourceConfig.setCommonType(DataUnit.MYSQL);
-            }
-            if (dataType.contains("DmDriver")) {
-                datasourceConfig.setCommonType(DataUnit.DAMENG);
-            }
-            if (dataType.contains("sqlite")) {
-                datasourceConfig.setCommonType(DataUnit.SQLITE);
-            }
-            if (dataType.contains("highgo")) {
-                datasourceConfig.setCommonType(DataUnit.HANGO);
+            try {
+                Connection connection = druidDataSource.getConnection();
+                String dbType = connection.getMetaData().getDatabaseProductName();
+                if (dbType.contains("Oracle")) {
+                    datasourceConfig.setCommonType(DataUnit.ORACLE);
+                }
+                if (dbType.contains("MySQL")) {
+                    datasourceConfig.setCommonType(DataUnit.MYSQL);
+                }
+                if (dbType.contains("DM")) {
+                    datasourceConfig.setCommonType(DataUnit.DAMENG);
+                }
+                if (dbType.contains("SQLite")) {
+                    datasourceConfig.setCommonType(DataUnit.SQLITE);
+                }
+                if (dbType.contains("PostgreSQL")) {
+                    datasourceConfig.setCommonType(DataUnit.HANGO);
+                }
+            } catch (Exception e1) {
+                if (dataType.contains("oracle")) {
+                    datasourceConfig.setCommonType(DataUnit.ORACLE);
+                }
+                if (dataType.contains("mysql")) {
+                    datasourceConfig.setCommonType(DataUnit.MYSQL);
+                }
+                if (dataType.contains("DmDriver")) {
+                    datasourceConfig.setCommonType(DataUnit.DAMENG);
+                }
+                if (dataType.contains("sqlite")) {
+                    datasourceConfig.setCommonType(DataUnit.SQLITE);
+                }
+                if (dataType.contains("highgo")) {
+                    datasourceConfig.setCommonType(DataUnit.HANGO);
+                }
             }
         }
         return datasourceConfig.getCommonType();
@@ -800,10 +826,7 @@ public class BaseMapperImpl implements BaseMapper {
         Object id;
         if (DataUnit.HANGO.equals(dataTypeConfig)) {
             if (!tableMapper.judgeHighGoSequenceExist(tableName.toLowerCase())) {
-                MyPageHelper.noCount(WebPageInfo.builder().pageNum(1).pageSize(1).order(WebPageInfo.DESC).sortField(pkName).build());
-                DataMap<Object> dataMap = DataMap.builder().tableName(tableName).pkName(pkName).fields(pkName).build();
-                Condition condition = Condition.creatCriteria(dataMap).build();
-                Map<String, Object> map = selectOneByCondition(condition);
+                Map<String, Object> map = selectRecentData(tableName, pkName);
                 if (map == null) {
                     tableMapper.createHighGoSequence(tableName, 1);
                 } else {
@@ -813,12 +836,15 @@ public class BaseMapperImpl implements BaseMapper {
             id = tableMapper.getHighGoSequence(tableName);
         } else {
             try {
-                id = tableMapper.getSequence(tableName);
+                String url = druidDataSource.getUrl();
+                String schema = getSchemaFromJdbcUrl(url);
+                if(tableMapper.judgeDamengSequenceExist(tableName,schema)>0) {
+                    id = tableMapper.getSequence(tableName);
+                }else {
+                    throw new ServiceException("序列不存在");
+                }
             } catch (Exception e) {
-                MyPageHelper.noCount(WebPageInfo.builder().pageNum(1).pageSize(1).order(WebPageInfo.DESC).sortField(pkName).build());
-                DataMap<Object> dataMap = DataMap.builder().tableName(tableName).pkName(pkName).fields(pkName).build();
-                Condition condition = Condition.creatCriteria(dataMap).build();
-                Map<String, Object> map = selectOneByCondition(condition);
+                Map<String, Object> map = selectRecentData(tableName, pkName);
                 if (map == null) {
                     tableMapper.createSequence(tableName, 1);
                 } else {
@@ -828,5 +854,32 @@ public class BaseMapperImpl implements BaseMapper {
             }
         }
         return Long.parseLong(id.toString()) + 1L;
+    }
+
+    private Map<String, Object> selectRecentData(String tableName, String pkName) {
+        MyPageHelper.noCount(WebPageInfo.builder().pageNum(1).pageSize(1).order(WebPageInfo.DESC).sortField(pkName).build());
+        DataMap<Object> dataMap = DataMap.builder().tableName(tableName).pkName(pkName).fields(pkName).build();
+        Condition condition = Condition.creatCriteria(dataMap).build();
+        return selectOneByCondition(condition);
+    }
+
+    public static String getSchemaFromJdbcUrl(String url) {
+        if (url == null || !url.contains("?")) {
+            return null;
+        }
+
+        String[] parts = url.split("\\?");
+        if (parts.length < 2) {
+            return null;
+        }
+
+        String[] params = parts[1].split("&");
+        for (String param : params) {
+            if (param.toLowerCase().startsWith("schema=")) {
+                return param.substring("schema=".length());
+            }
+        }
+
+        return null;
     }
 }

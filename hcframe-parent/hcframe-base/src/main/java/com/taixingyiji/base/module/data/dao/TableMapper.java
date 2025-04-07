@@ -44,7 +44,7 @@ public interface TableMapper {
     Object getSequence(@Param("tableName") String tableName);
     Object getHighGoSequence(@Param("tableName") String tableName);
     boolean judgeHighGoSequenceExist(@Param("tableName") String tableName);
-    boolean judgeDamengSequenceExist(@Param("tableName") String tableName);
+    int judgeDamengSequenceExist(@Param("tableName") String tableName,@Param("schema")String schema);
     int createSequence(@Param("tableName") String tableName, @Param("lastId")Object lastId);
     int createHighGoSequence(@Param("tableName") String tableName, @Param("lastId")Object lastId);
 
