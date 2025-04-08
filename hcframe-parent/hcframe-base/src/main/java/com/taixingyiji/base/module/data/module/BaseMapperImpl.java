@@ -740,36 +740,21 @@ public class BaseMapperImpl implements BaseMapper {
             throw new ServiceException("list can not empty");
         }
 //        JudgesNull(data, "tableName can not be null!");
-        String key;
-        DatasourceConfig datasourceConfig = new DatasourceConfig();
-        try {
-            key = DBContextHolder.getDataSource();
-            datasourceConfig = DataSourceUtil.get(key);
-        } catch (Exception e) {
-            if (dataType.contains("oracle")) {
-                datasourceConfig.setCommonType(DataUnit.ORACLE);
-            }
-            if (dataType.contains("mysql")) {
-                datasourceConfig.setCommonType(DataUnit.MYSQL);
-            }
-            if (dataType.contains("DmDriver")) {
-                datasourceConfig.setCommonType(DataUnit.DAMENG);
-            }
-            if (dataType.contains("sqlite")) {
-                datasourceConfig.setCommonType(DataUnit.SQLITE);
-            }
-        }
+        String dataTypeConfig = getDataConfig();
         if (StringUtils.isEmpty(pkName)) {
             pkName = "ID";
         }
-
-        if (datasourceConfig.getCommonType().equals(DataUnit.ORACLE) || datasourceConfig.getCommonType().equals(DataUnit.DAMENG)) {
+        int i;
+        if (dataTypeConfig.equals(DataUnit.ORACLE) || dataTypeConfig.equals(DataUnit.DAMENG) || dataTypeConfig.equals(DataUnit.HANGO)) {
+            Object id = getSequence(tableName, pkName);
             for (Map<String, Object> map : list) {
-                Object id = getSequence(tableName, pkName);
-                map.put(pkName, id);
+                map.put(pkName, "nextval('"+tableName.toLowerCase()+"_seq')");
             }
+            i = tableMapper.insertBatchSeq(list,tableName,pkName);
+        }else {
+            i = tableMapper.insertBatch(list, tableName);
+
         }
-        int i = tableMapper.insertBatch(list, tableName);
         SqlException.base(i, "保存失败");
         return i;
     }
@@ -828,12 +813,12 @@ public class BaseMapperImpl implements BaseMapper {
             if (!tableMapper.judgeHighGoSequenceExist(tableName.toLowerCase())) {
                 Map<String, Object> map = selectRecentData(tableName, pkName);
                 if (map == null) {
-                    tableMapper.createHighGoSequence(tableName, 1);
+                    tableMapper.createHighGoSequence(tableName.toLowerCase(), 1);
                 } else {
-                    tableMapper.createHighGoSequence(tableName, map.get(pkName));
+                    tableMapper.createHighGoSequence(tableName.toLowerCase(), map.get(pkName));
                 }
             }
-            id = tableMapper.getHighGoSequence(tableName);
+            id = tableMapper.getHighGoSequence(tableName.toLowerCase());
         } else {
             try {
                 String url = druidDataSource.getUrl();

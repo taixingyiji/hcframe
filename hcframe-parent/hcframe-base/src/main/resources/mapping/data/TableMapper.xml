@@ -158,7 +158,7 @@
         from dual
     </select>
     <select id="getHighGoSequence" resultType="java.lang.Object">
-        select ${tableName}_seq.nextval
+        select nextval('${tableName}_seq')
     </select>
     <insert id="createSequence">
         CREATE
@@ -209,8 +209,31 @@
         VALUES
         <foreach collection="list" item="row" separator=",">
             <trim prefix="(" suffix=")" suffixOverrides=",">
-                <foreach collection="row" item="value">
-                    #{value},
+                <foreach collection="row" item="value" separator=",">
+                    #{value}
+                </foreach>
+            </trim>
+        </foreach>
+    </insert>
+    <insert id="insertBatchSeq" parameterType="map">
+        INSERT INTO ${tableName}
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <foreach collection="list[0].keySet()" item="column" separator=",">
+                ${column}
+            </foreach>
+        </trim>
+        VALUES
+        <foreach collection="list" item="row" separator=",">
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <foreach collection="row" item="value" index="key" separator=",">
+                    <choose>
+                        <when test="key == pkName">
+                            ${value}
+                        </when>
+                        <otherwise>
+                            #{value}
+                        </otherwise>
+                    </choose>
                 </foreach>
             </trim>
         </foreach>

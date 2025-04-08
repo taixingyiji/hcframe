@@ -52,5 +52,7 @@ public interface TableMapper {
 
     Long countBySql(@Param("sql") String sql);
     int insertBatch(@Param("list") List<Map<String, Object>> list, @Param("tableName") String tableName);
+    int insertBatchSeq(@Param("list") List<Map<String, Object>> list, @Param("tableName") String tableName,@Param("pkName")String pkName);
+
     int updateBatchByPk(@Param("sql")String sql);
 }
