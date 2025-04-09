@@ -44,7 +44,7 @@ public class BaseMapperImpl implements BaseMapper {
     }
 
     @Override
-    public String getDataConfig() {
+    public String getDataConfig(){
         String key;
         DatasourceConfig datasourceConfig = new DatasourceConfig();
         try {
@@ -70,6 +70,7 @@ public class BaseMapperImpl implements BaseMapper {
                 if (dbType.contains("PostgreSQL")) {
                     datasourceConfig.setCommonType(DataUnit.HANGO);
                 }
+                connection.close();
             } catch (Exception e1) {
                 if (dataType.contains("oracle")) {
                     datasourceConfig.setCommonType(DataUnit.ORACLE);
@@ -745,8 +746,14 @@ public class BaseMapperImpl implements BaseMapper {
             pkName = "ID";
         }
         int i;
-        if (dataTypeConfig.equals(DataUnit.ORACLE) || dataTypeConfig.equals(DataUnit.DAMENG) || dataTypeConfig.equals(DataUnit.HANGO)) {
-            Object id = getSequence(tableName, pkName);
+        if (dataTypeConfig.equals(DataUnit.ORACLE) || dataTypeConfig.equals(DataUnit.DAMENG)){
+            for (Map<String, Object> map : list) {
+                Object id = getSequence(tableName, pkName);
+                map.put(pkName, id);
+            }
+            i = tableMapper.insertBatch(list,tableName);
+        }else if(dataTypeConfig.equals(DataUnit.HANGO)) {
+            getSequence(tableName, pkName);
             for (Map<String, Object> map : list) {
                 map.put(pkName, "nextval('"+tableName.toLowerCase()+"_seq')");
             }
