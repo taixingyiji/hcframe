@@ -202,7 +202,7 @@ public class TableServiceImpl implements TableService {
                 selectJoinBuilder = selectJoinBuilder.join(joinCondition);
             }
             SelectCondition selectCondition = selectJoinBuilder.build();
-            Condition.ConditionBuilder builder = Condition.creatCriteria(selectCondition);
+            Condition.ConditionBuilder builder = Condition.creatCriteria(selectCondition,selectCondition.getTableName());
             builder = getQueryBuilder(query, builder);
             return baseMapper.selectByCondition(builder.build(), webPageInfo);
         } else {

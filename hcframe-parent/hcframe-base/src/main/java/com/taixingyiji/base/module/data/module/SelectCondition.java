@@ -39,6 +39,9 @@ public class SelectCondition implements Serializable {
         this.sql = sql;
         this.tableName = tableName;
     }
+    public String getTableName(){
+        return this.tableName;
+    }
 
     public String getSql() {
         return sql;

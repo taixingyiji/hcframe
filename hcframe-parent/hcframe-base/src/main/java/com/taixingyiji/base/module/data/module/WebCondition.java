@@ -47,30 +47,14 @@ public class WebCondition {
     }
 
     public static Condition.ConditionBuilder setSign(WebCondition webCondition, Condition.ConditionBuilder builder, String dataType) {
-        if (DataUnit.HANGO.equals(dataType)) {
-            if (webCondition.key.toUpperCase().contains("TIME") && webCondition.value instanceof String) {
-                try {
-                    webCondition.value = DateUtil.parse((String) webCondition.value);
-                } catch (Exception ignored) {
-                }
-            }
-        }
         switch (webCondition.getSign()) {
             case QueryConstants.LIKE: {
-                return builder.like(webCondition.key, "%" + webCondition.value + "%");
+                return builder.like(webCondition.key,  webCondition.value);
             }
             case QueryConstants.EQUAL: {
                 return builder.equal(webCondition.key, webCondition.value);
             }
             case QueryConstants.BETWEEN: {
-                if (DataUnit.HANGO.equals(dataType)) {
-                    if (webCondition.key.toUpperCase().contains("TIME") && webCondition.sValue instanceof String) {
-                        try {
-                        webCondition.sValue = DateUtil.parse((String) webCondition.sValue);
-                        } catch (Exception ignored) {
-                        }
-                    }
-                }
                 return builder.between(webCondition.key, webCondition.value, webCondition.sValue);
             }
             case QueryConstants.GT: {
