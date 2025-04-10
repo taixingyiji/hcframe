@@ -747,12 +747,22 @@ public class BaseMapperImpl implements BaseMapper {
             pkName = "ID";
         }
         int i;
-        if (dataTypeConfig.equals(DataUnit.ORACLE) || dataTypeConfig.equals(DataUnit.DAMENG)) {
+        if (dataTypeConfig.equals(DataUnit.ORACLE)) {
             for (Map<String, Object> map : list) {
                 Object id = getSequence(tableName, pkName);
                 map.put(pkName, id);
             }
             i = tableMapper.insertBatch(list, tableName);
+        }else if(dataTypeConfig.equals(DataUnit.DAMENG)){
+            getSequence(tableName, pkName);
+            List<Map<String,Object>> tempList = new ArrayList<>();
+            for (Map<String, Object> map : list) {
+                map = formatMap(map,tableName);
+                map.put(pkName, tableName + "_SEQ.nextval");
+                tempList.add(map);
+            }
+            list = tempList;
+            i = tableMapper.insertBatchSeq(list, tableName, pkName);
         } else if (dataTypeConfig.equals(DataUnit.HANGO)) {
             getSequence(tableName, pkName);
             List<Map<String,Object>> tempList = new ArrayList<>();

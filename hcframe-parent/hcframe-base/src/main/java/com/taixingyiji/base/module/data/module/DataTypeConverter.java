@@ -2,7 +2,6 @@ package com.taixingyiji.base.module.data.module;
 
 import cn.hutool.core.date.DateUtil;
 
-import java.sql.*;
 import java.util.*;
 
 /**
@@ -32,6 +31,14 @@ public class DataTypeConverter {
                         case "int":
                             convertedData.put(column, Integer.parseInt(value.toString()));
                             break;
+                        case "double":
+                        case "DOUBLE":
+                            convertedData.put(column, Double.parseDouble(value.toString()));
+                            break;
+                        case "float":
+                        case "FLOAT":
+                            convertedData.put(column, Float.parseFloat(value.toString()));
+                            break;
                         case "bigint":
                         case "BIGINT":
                             convertedData.put(column, Long.parseLong(value.toString()));
@@ -45,9 +52,13 @@ public class DataTypeConverter {
                             convertedData.put(column, DateUtil.parse(value.toString()));
                             break;
                         default:
-                            if(columnType.contains("int") || columnType.contains("INT")){
+                            if (columnType.contains("int") || columnType.contains("INT")) {
                                 convertedData.put(column, Integer.parseInt(value.toString()));
-                            }else {
+                            } else if (columnType.contains("double") || columnType.contains("DOUBLE")) {
+                                convertedData.put(column, Double.parseDouble(value.toString()));
+                            } else if (columnType.contains("float") || columnType.contains("FLOAT")) {
+                                convertedData.put(column, Float.parseFloat(value.toString()));
+                            } else {
                                 convertedData.put(column, value);
                             }
                             break;
