@@ -96,7 +96,7 @@ public class BaseMapperImpl implements BaseMapper {
         JudgesNull(dataMap.getData(), "data can not be null!");
         JudgesNull(dataMap.getTableName(), "tableName can not be null!");
         if (DataUnit.HANGO.equals(dataTypeConfig)) {
-            dataMap.setData(formatMap(dataMap.getData(), dataMap.getTableName()));
+            dataMap.getData().putAll(formatMap(dataMap.getData(),dataMap.getTableName()));
         }
         if (StringUtils.isEmpty(dataMap.getPkName())) {
             dataMap.setPkName("ID");
@@ -143,7 +143,7 @@ public class BaseMapperImpl implements BaseMapper {
         JudgesNull(data, "tableName can not be null!");
         String dataTypeConfig = getDataConfig();
         if (DataUnit.HANGO.equals(dataTypeConfig)) {
-            data = formatMap(data, tableName);
+            data.putAll(formatMap(data, tableName));
         }
         if (StringUtils.isEmpty(pkName)) {
             pkName = "ID";
@@ -174,7 +174,8 @@ public class BaseMapperImpl implements BaseMapper {
         Map<String, Object> params = condition.getParamMap();
         params.put("tableName", tableName);
         String dataTypeConfig = getDataConfig();
-        params.put("info", formatMap(data,tableName));
+        data.putAll(formatMap(data,tableName));
+        params.put("info", data);
         params.put("sql", condition.getSql());
         int i = sqlSessionTemplate.update(TABLE_MAPPER_PACKAGE + "updateByWhere", params);
         return i;
