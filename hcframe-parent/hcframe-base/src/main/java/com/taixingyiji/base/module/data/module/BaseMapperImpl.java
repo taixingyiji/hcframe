@@ -798,7 +798,7 @@ public class BaseMapperImpl implements BaseMapper {
                 String key = entry.getKey();
                 Object value = entry.getValue();
                 if (!key.equals(pkName) && value != null && !(value instanceof String && ((String) value).isEmpty())) {
-                    sql.append("`").append(key).append("`").append(" = #{item").append(index).append("_").append(key).append("}, ");
+                    sql.append(key).append(" = #{item").append(index).append("_").append(key).append("}, ");
                     paramMap.put("item" + index + "_" + key, value);
                     hasSetClause = true;
                 }
@@ -810,7 +810,7 @@ public class BaseMapperImpl implements BaseMapper {
                 // 如果没有要更新的字段，跳过这条记录
                 continue;
             }
-            sql.append(" WHERE ").append("`").append(pkName).append("`").append(" = #{item").append(index).append("_").append(pkName).append("};");
+            sql.append(" WHERE ").append(pkName).append(" = #{item").append(index).append("_").append(pkName).append("};");
             paramMap.put("item" + index + "_" + pkName, item.get(pkName));
             index++;
         }
