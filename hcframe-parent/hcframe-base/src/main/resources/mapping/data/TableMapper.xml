@@ -87,7 +87,7 @@
         </foreach>
     </insert>
 
-    <update id="updateInfo" parameterType="map" useGeneratedKeys="true" keyProperty="info.id" keyColumn="id">
+    <update id="updateInfo" parameterType="map">
         update ${tableName}
         <set>
             <foreach collection="info" separator="," item="value" index="key">
@@ -96,7 +96,7 @@
         </set>
         where id = #{info.id}
     </update>
-    <update id="updateInfoWithNull" parameterType="map" useGeneratedKeys="true" keyProperty="info.id" keyColumn="id">
+    <update id="updateInfoWithNull" parameterType="map" >
         update ${tableName}
         <set>
             <foreach collection="info.keys" separator="," item="key" index="index">
@@ -108,7 +108,7 @@
         where id = #{info.id}
     </update>
 
-    <update id="updateByWhere" parameterType="map" useGeneratedKeys="true" keyProperty="info.id">
+    <update id="updateByWhere" parameterType="map" >
         update ${tableName}
         <set>
             <foreach collection="info" separator="," item="value" index="key">
@@ -118,7 +118,7 @@
         ${sql}
     </update>
 
-    <update id="updateByWhereWithNull" parameterType="map" useGeneratedKeys="true" keyProperty="info.id" keyColumn="id">
+    <update id="updateByWhereWithNull" parameterType="map">
         update ${tableName}
         <set>
             <foreach collection="info.keys" separator="," item="key" index="index">
