@@ -315,6 +315,45 @@ public class Condition implements Serializable {
             return this;
         }
 
+        public ConditionBuilder leftLike(String key, Object value) {
+            if (value.toString().contains("\"")) {
+                value = value.toString().replaceAll("\"", "");
+            }
+            String sqlKey = "item_" + IdUtil.fastUUID();
+            this.conditionSql += " " + key + " " + LIKE + " CONCAT('%',#{" + sqlKey + "})";
+            this.paramMap.put(sqlKey, formatValue(key, value));
+            return this;
+        }
+
+        public ConditionBuilder rightLike(String key, Object value) {
+            if (value.toString().contains("\"")) {
+                value = value.toString().replaceAll("\"", "");
+            }
+            String sqlKey = "item_" + IdUtil.fastUUID();
+            this.conditionSql += " " + key + " " + LIKE + " CONCAT(#{" + sqlKey + "},'%')";
+            this.paramMap.put(sqlKey, formatValue(key, value));
+            return this;
+        }
+        public ConditionBuilder andLeftLike(String key, Object value) {
+            this.and().leftLike(key, value);
+            return this;
+        }
+
+        public ConditionBuilder andRightLike(String key, Object value) {
+            this.and().rightLike(key, value);
+            return this;
+        }
+
+        public ConditionBuilder orLeftLike(String key, Object value) {
+            this.or().leftLike(key, value);
+            return this;
+        }
+
+        public ConditionBuilder orRightLike(String key, Object value) {
+            this.or().rightLike(key, value);
+            return this;
+        }
+
         public ConditionBuilder like(String key, Object value) {
             if (value.toString().contains("\"")) {
                 value = value.toString().replaceAll("\"", "");

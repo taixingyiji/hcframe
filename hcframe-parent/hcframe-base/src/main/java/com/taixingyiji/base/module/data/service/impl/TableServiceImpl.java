@@ -214,6 +214,7 @@ public class TableServiceImpl implements TableService {
     public ResultVO<Integer> logicDelete(OsSysTable tableName, String ids) {
         Map<String, Object> map = new HashMap<>(1);
         map.put(FieldConstants.DELETED.toString(), 0);
+        map.put(FieldConstants.UPDATE_TIME.toString(), new Date());
         DataMap dataMap = DataMap.builder().sysOsTable(tableName).ids(ids).data(map).build();
         Condition condition = Condition.creatCriteria().andIn(dataMap.getPkName(), dataMap.getIdList()).build();
         int i = baseMapper.updateByCondition(dataMap, condition);

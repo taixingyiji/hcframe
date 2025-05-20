@@ -240,5 +240,15 @@
             <name>Snapshot</name>
             <url>http://192.168.0.123:8081/repository/maven-snapshots/</url>
         </snapshotRepository>
+<!--        <repository>-->
+<!--            <id>releases-hc</id>-->
+<!--            <name>Releases</name>-->
+<!--            <url>https://qs.taixingyiji.com:8082/repository/maven-releases/</url>-->
+<!--        </repository>-->
+<!--        <snapshotRepository>-->
+<!--            <id>snapshots-hc</id>-->
+<!--            <name>Snapshot</name>-->
+<!--            <url>https://qs.taixingyiji.com:8082/repository/maven-snapshots/</url>-->
+<!--        </snapshotRepository>-->
     </distributionManagement>
 </project>
