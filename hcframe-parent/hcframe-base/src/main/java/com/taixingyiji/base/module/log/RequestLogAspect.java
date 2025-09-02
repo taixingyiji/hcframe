@@ -45,38 +45,42 @@ public class RequestLogAspect {
     public Object doAround(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
 
         long start = System.currentTimeMillis();
-        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        HttpServletRequest request = attributes.getRequest();
         Object result = proceedingJoinPoint.proceed();
-
-        if (frameConfig.getShowControllerLog()) {
-            RequestInfo requestInfo = new RequestInfo();
-            requestInfo.setIp(request.getRemoteAddr());
-            requestInfo.setUrl(request.getRequestURL().toString());
-            requestInfo.setHttpMethod(request.getMethod());
-            requestInfo.setClassMethod(String.format("%s.%s", proceedingJoinPoint.getSignature().getDeclaringTypeName(),
-                    proceedingJoinPoint.getSignature().getName()));
-            requestInfo.setRequestParams(getRequestParamsByProceedingJoinPoint(proceedingJoinPoint));
-            requestInfo.setResult(result);
-            requestInfo.setTimeCost(System.currentTimeMillis() - start);
-            LOGGER.info("Request Info      : {}", JSON.toJSONString(requestInfo));
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (attributes != null) {
+            HttpServletRequest request = attributes.getRequest();
+            if (frameConfig.getShowControllerLog()) {
+                RequestInfo requestInfo = new RequestInfo();
+                requestInfo.setIp(request.getRemoteAddr());
+                requestInfo.setUrl(request.getRequestURL().toString());
+                requestInfo.setHttpMethod(request.getMethod());
+                requestInfo.setClassMethod(String.format("%s.%s", proceedingJoinPoint.getSignature().getDeclaringTypeName(),
+                        proceedingJoinPoint.getSignature().getName()));
+                requestInfo.setRequestParams(getRequestParamsByProceedingJoinPoint(proceedingJoinPoint));
+                requestInfo.setResult(result);
+                requestInfo.setTimeCost(System.currentTimeMillis() - start);
+                LOGGER.info("Request Info      : {}", JSON.toJSONString(requestInfo));
+            }
         }
+
         return result;
     }
 
     @AfterThrowing(pointcut = "requestServer()", throwing = "e")
     public void doAfterThrow(JoinPoint joinPoint, RuntimeException e) {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        HttpServletRequest request = attributes.getRequest();
-        RequestErrorInfo requestErrorInfo = new RequestErrorInfo();
-        requestErrorInfo.setIp(request.getRemoteAddr());
-        requestErrorInfo.setUrl(request.getRequestURL().toString());
-        requestErrorInfo.setHttpMethod(request.getMethod());
-        requestErrorInfo.setClassMethod(String.format("%s.%s", joinPoint.getSignature().getDeclaringTypeName(),
-                joinPoint.getSignature().getName()));
-        requestErrorInfo.setRequestParams(getRequestParamsByJoinPoint(joinPoint));
-        requestErrorInfo.setException(e);
-        LOGGER.error("Error Request Info      : {}", JSON.toJSONString(requestErrorInfo));
+        if (attributes != null) {
+            HttpServletRequest request = attributes.getRequest();
+            RequestErrorInfo requestErrorInfo = new RequestErrorInfo();
+            requestErrorInfo.setIp(request.getRemoteAddr());
+            requestErrorInfo.setUrl(request.getRequestURL().toString());
+            requestErrorInfo.setHttpMethod(request.getMethod());
+            requestErrorInfo.setClassMethod(String.format("%s.%s", joinPoint.getSignature().getDeclaringTypeName(),
+                    joinPoint.getSignature().getName()));
+            requestErrorInfo.setRequestParams(getRequestParamsByJoinPoint(joinPoint));
+            requestErrorInfo.setException(e);
+            LOGGER.error("Error Request Info      : {}", JSON.toJSONString(requestErrorInfo));
+        }
     }
 
     /**
