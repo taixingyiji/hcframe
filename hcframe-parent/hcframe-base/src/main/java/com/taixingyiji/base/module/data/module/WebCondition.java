@@ -73,6 +73,12 @@ public class WebCondition {
                 String[] strings = webCondition.value.toString().split(",");
                 return builder.in(webCondition.key, Arrays.asList(strings));
             }
+            case QueryConstants.RIGHT_LIKE: {
+                return builder.rightLike(webCondition.key,  webCondition.value);
+            }
+            case QueryConstants.LEFT_LIKE: {
+                return builder.leftLike(webCondition.key,  webCondition.value);
+            }
             default:
                 throw new IllegalStateException("Unexpected sign value: " + webCondition.getLogic());
         }

@@ -20,6 +20,8 @@ public class QueryConstants {
     public static final int GT = 6;
     public static final int LTE = 7;
     public static final int GTE = 8;
+    public static final int RIGHT_LIKE = 9;
+    public static final int LEFT_LIKE = 10;
 
     public static final String QUERY = "query";
     public static final String JOIN = "join";
