@@ -4,6 +4,7 @@ import com.alibaba.druid.pool.DruidDataSource;
 import com.github.pagehelper.PageInfo;
 import com.taixingyiji.base.common.ServiceException;
 import com.taixingyiji.base.common.WebPageInfo;
+import com.taixingyiji.base.common.config.FrameConfig;
 import com.taixingyiji.base.common.utils.MyPageHelper;
 import com.taixingyiji.base.common.utils.StringUtils;
 import com.taixingyiji.base.module.data.dao.TableMapper;
@@ -15,6 +16,7 @@ import com.taixingyiji.base.module.datasource.utils.DataSourceUtil;
 import com.taixingyiji.base.module.datasource.utils.DataUnit;
 import com.taixingyiji.base.module.tableconfig.entity.OsSysTable;
 import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -35,9 +37,14 @@ public class BaseMapperImpl implements BaseMapper {
     final SqlSessionTemplate sqlSessionTemplate;
 
     public BaseMapperImpl(TableMapper tableMapper, SqlSessionTemplate sqlSessionTemplate,
-                          DruidDataSource druidDataSource) {
+                          DruidDataSource druidDataSource,FrameConfig frameConfig,
+                          @Qualifier("dynamicSqlSessionTemplate") SqlSessionTemplate sqlSessionTemplate2) {
         this.tableMapper = tableMapper;
-        this.sqlSessionTemplate = sqlSessionTemplate;
+        if(frameConfig.getMultiDataSource()){
+            this.sqlSessionTemplate = sqlSessionTemplate2;
+        }else {
+            this.sqlSessionTemplate = sqlSessionTemplate;
+        }
         this.druidDataSource = druidDataSource;
     }
 

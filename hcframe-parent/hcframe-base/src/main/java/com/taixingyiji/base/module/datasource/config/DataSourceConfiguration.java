@@ -92,7 +92,7 @@ public class DataSourceConfiguration {
     public PlatformTransactionManager transactionManager() {
         return new DataSourceTransactionManager(dynamicDataSource());
     }
-    @Bean
+    @Bean(name = "dynamicSqlSessionTemplate")
     public SqlSessionTemplate sqlSessionTemplate(@Qualifier("sqlSessionFactoryBean222")SqlSessionFactory sqlSessionFactory) {
         return new SqlSessionTemplate(sqlSessionFactory);
     }
