@@ -1,10 +1,10 @@
 package com.taixingyiji.base.module.datasource.dynamic;
 
-import com.alibaba.druid.util.StringUtils;
 import com.taixingyiji.base.module.datasource.utils.DataUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
+import org.springframework.util.StringUtils;
 
 /**
  * @author lhc

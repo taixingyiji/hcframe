@@ -480,7 +480,7 @@ public class Condition implements Serializable {
         public ConditionBuilder lte(String key, Object value) {
             String sqlKey = "item_" + IdUtil.fastUUID();
             this.paramMap.put(sqlKey, formatValue(key, value));
-            this.conditionSql += " " + key + " " + LTE + " #{" + value.toString() + "} ";
+            this.conditionSql += " " + key + " " + LTE + " #{" + sqlKey + "} ";
             return this;
         }
 
@@ -497,7 +497,7 @@ public class Condition implements Serializable {
         public ConditionBuilder gte(String key, Object value) {
             String sqlKey = "item_" + IdUtil.fastUUID();
             this.paramMap.put(sqlKey, formatValue(key, value));
-            this.conditionSql += " " + key + " " + GTE + " #{" + value.toString() + "} ";
+            this.conditionSql += " " + key + " " + GTE + " #{" + sqlKey + "} ";
             return this;
         }
 
