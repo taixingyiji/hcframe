@@ -16,6 +16,7 @@ import com.taixingyiji.base.module.datasource.utils.DataSourceUtil;
 import com.taixingyiji.base.module.datasource.utils.DataUnit;
 import com.taixingyiji.base.module.tableconfig.entity.OsSysTable;
 import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -38,9 +39,9 @@ public class BaseMapperImpl implements BaseMapper {
 
     public BaseMapperImpl(TableMapper tableMapper, SqlSessionTemplate sqlSessionTemplate,
                           DruidDataSource druidDataSource,FrameConfig frameConfig,
-                          @Qualifier("dynamicSqlSessionTemplate") SqlSessionTemplate sqlSessionTemplate2) {
+                          @Autowired(required = false) @Qualifier("dynamicSqlSessionTemplate") SqlSessionTemplate sqlSessionTemplate2) {
         this.tableMapper = tableMapper;
-        if(frameConfig.getMultiDataSource()){
+        if(frameConfig.getMultiDataSource() && sqlSessionTemplate2 != null ){
             this.sqlSessionTemplate = sqlSessionTemplate2;
         }else {
             this.sqlSessionTemplate = sqlSessionTemplate;
