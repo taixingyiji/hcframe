@@ -75,6 +75,7 @@ public class CustomRealm extends AuthorizingRealm {
             long time = Long.parseLong((String) redisUtil.hget("tokenSession:" + accessToken, "expireTime"));
             if (time < System.currentTimeMillis()) {
                 redisUtil.del(accessToken);
+                systemRealm.setTimeoutLogoutLog(userId);
                 throw new IncorrectCredentialsException("token失效，请重新登录");
             }
         } else {
@@ -83,6 +84,7 @@ public class CustomRealm extends AuthorizingRealm {
             userId = String.valueOf(tokenEntity.getUserId());
             //2. token失效
             if (tokenEntity.getExpireTime().getTime() < System.currentTimeMillis()) {
+                systemRealm.setTimeoutLogoutLog(userId);
                 throw new IncorrectCredentialsException("token失效，请重新登录");
             }
         }

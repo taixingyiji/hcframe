@@ -32,4 +32,10 @@ public interface SystemRealm {
      */
     LinkedHashMap<String, String> setShiroUrl();
 
+    /**
+     * 设置登出日志
+     * @param userId
+     */
+    void setTimeoutLogoutLog(String userId);
+
 }
