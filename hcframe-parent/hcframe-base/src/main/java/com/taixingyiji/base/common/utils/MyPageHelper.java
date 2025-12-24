@@ -36,6 +36,41 @@ public class MyPageHelper {
     }
 
     /**
+     * 校验 List<SortItem>，如果发现非法字段或非法排序方向，直接抛异常
+     *
+     * @param sortList 前端传入的排序列表
+     * @param allowedFields 可选业务白名单字段（可为 null）
+     * @throws IllegalArgumentException 不合法字段或方向
+     */
+    public static void validateSortList(List<SortItem> sortList, Set<String> allowedFields) {
+        if (sortList == null || sortList.isEmpty()) return;
+
+        for (SortItem item : sortList) {
+            if (item == null) continue;
+            String field = item.getField();
+            String order = item.getOrder();
+
+            if (StringUtils.isBlank(field)) {
+                throw new IllegalArgumentException("排序字段不能为空");
+            }
+
+            if (allowedFields != null && !allowedFields.contains(field)) {
+                throw new IllegalArgumentException("排序字段不在白名单中: " + field);
+            }
+
+            if (!field.matches("^[a-zA-Z0-9_]+$")) {
+                throw new IllegalArgumentException("排序字段格式非法: " + field);
+            }
+
+            if (StringUtils.isNotBlank(order) &&
+                    !(order.equalsIgnoreCase(ASC) || order.equalsIgnoreCase(DESC))) {
+                throw new IllegalArgumentException(
+                        "排序方向不合法（只能 ASC 或 DESC）: " + field + " -> " + order);
+            }
+        }
+    }
+
+    /**
      * 校验单个字段和排序方向是否合法
      */
     private static boolean isSafeField(String field, String order, Set<String> allowedFields) {
