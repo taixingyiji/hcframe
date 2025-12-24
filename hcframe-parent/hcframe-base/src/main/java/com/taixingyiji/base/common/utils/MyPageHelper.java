@@ -110,45 +110,64 @@ public class MyPageHelper {
     }
 
     public static void start(WebPageInfo webPageInfo) {
-        if (WebPageInfo.hasSortList(webPageInfo)) {
-            List<SortItem> sortList = JSONUtil.toList(JSONUtil.parseArray(webPageInfo.getSortList()), SortItem.class);
-            PageHelper.startPage(webPageInfo.getPageNum(), webPageInfo.getPageSize(), buildOrderBy(sortList, new HashSet<>())).setAsyncCount(true);
-        } else if (WebPageInfo.hasSort(webPageInfo)) {
-            PageHelper.startPage(webPageInfo.getPageNum(), webPageInfo.getPageSize(), webPageInfo.getSortSql()).setAsyncCount(true);
+        if (webPageInfo.isEnableSort()) {
+            if (WebPageInfo.hasSortList(webPageInfo)) {
+                List<SortItem> sortList = JSONUtil.toList(JSONUtil.parseArray(webPageInfo.getSortList()), SortItem.class);
+                PageHelper.startPage(webPageInfo.getPageNum(), webPageInfo.getPageSize(), buildOrderBy(sortList, new HashSet<>())).setAsyncCount(true);
+            } else if (WebPageInfo.hasSort(webPageInfo)) {
+                PageHelper.startPage(webPageInfo.getPageNum(), webPageInfo.getPageSize(), webPageInfo.getSortSql()).setAsyncCount(true);
+            } else {
+                PageHelper.startPage(webPageInfo.getPageNum(), webPageInfo.getPageSize()).setAsyncCount(true);
+            }
         } else {
             PageHelper.startPage(webPageInfo.getPageNum(), webPageInfo.getPageSize()).setAsyncCount(true);
         }
+
     }
 
     public static void noCount(WebPageInfo webPageInfo) {
-        if (WebPageInfo.hasSortList(webPageInfo)) {
-            List<SortItem> sortList = JSONUtil.toList(JSONUtil.parseArray(webPageInfo.getSortList()), SortItem.class);
-            PageHelper.startPage(webPageInfo.getPageNum(), webPageInfo.getPageSize(), false).setOrderBy(buildOrderBy(sortList, new HashSet<>()));
-        } else if (WebPageInfo.hasSort(webPageInfo)) {
-            PageHelper.startPage(webPageInfo.getPageNum(), webPageInfo.getPageSize(), false).setOrderBy(webPageInfo.getSortSql());
+        if (webPageInfo.isEnableSort()) {
+            if (WebPageInfo.hasSortList(webPageInfo)) {
+                List<SortItem> sortList = JSONUtil.toList(JSONUtil.parseArray(webPageInfo.getSortList()), SortItem.class);
+                PageHelper.startPage(webPageInfo.getPageNum(), webPageInfo.getPageSize(), false).setOrderBy(buildOrderBy(sortList, new HashSet<>()));
+            } else if (WebPageInfo.hasSort(webPageInfo)) {
+                PageHelper.startPage(webPageInfo.getPageNum(), webPageInfo.getPageSize(), false).setOrderBy(webPageInfo.getSortSql());
+            } else {
+                PageHelper.startPage(webPageInfo.getPageNum(), webPageInfo.getPageSize(), false);
+            }
         } else {
             PageHelper.startPage(webPageInfo.getPageNum(), webPageInfo.getPageSize(), false);
+
         }
+
     }
 
     public static PageInfo<Map<String, Object>> noCount(WebPageInfo webPageInfo, Supplier<List<Map<String, Object>>> querySupplier) {
-        if (WebPageInfo.hasSortList(webPageInfo)) {
-            List<SortItem> sortList = JSONUtil.toList(JSONUtil.parseArray(webPageInfo.getSortList()), SortItem.class);
-            return PageHelper.startPage(webPageInfo.getPageNum(), webPageInfo.getPageSize(), buildOrderBy(sortList, new HashSet<>())).count(false).doSelectPageInfo(querySupplier::get);
-        } else if (WebPageInfo.hasSort(webPageInfo)) {
-            return PageHelper.startPage(webPageInfo.getPageNum(), webPageInfo.getPageSize(), webPageInfo.getSortSql()).count(false).doSelectPageInfo(querySupplier::get);
-        } else {
+        if (webPageInfo.isEnableSort()) {
+            if (WebPageInfo.hasSortList(webPageInfo)) {
+                List<SortItem> sortList = JSONUtil.toList(JSONUtil.parseArray(webPageInfo.getSortList()), SortItem.class);
+                return PageHelper.startPage(webPageInfo.getPageNum(), webPageInfo.getPageSize(), buildOrderBy(sortList, new HashSet<>())).count(false).doSelectPageInfo(querySupplier::get);
+            } else if (WebPageInfo.hasSort(webPageInfo)) {
+                return PageHelper.startPage(webPageInfo.getPageNum(), webPageInfo.getPageSize(), webPageInfo.getSortSql()).count(false).doSelectPageInfo(querySupplier::get);
+            } else {
+                return PageHelper.startPage(webPageInfo.getPageNum(), webPageInfo.getPageSize()).count(false).doSelectPageInfo(querySupplier::get);
+            }
+        }else {
             return PageHelper.startPage(webPageInfo.getPageNum(), webPageInfo.getPageSize()).count(false).doSelectPageInfo(querySupplier::get);
         }
     }
 
     public static PageInfo<Map<String, Object>> myStart(WebPageInfo webPageInfo, Supplier<List<Map<String, Object>>> querySupplier) {
-        if (WebPageInfo.hasSortList(webPageInfo)) {
-            List<SortItem> sortList = JSONUtil.toList(JSONUtil.parseArray(webPageInfo.getSortList()), SortItem.class);
-            return PageHelper.startPage(webPageInfo.getPageNum(), webPageInfo.getPageSize(), buildOrderBy(sortList, new HashSet<>())).doSelectPageInfo(querySupplier::get);
-        } else if (WebPageInfo.hasSort(webPageInfo)) {
-            return PageHelper.startPage(webPageInfo.getPageNum(), webPageInfo.getPageSize(), webPageInfo.getSortSql()).doSelectPageInfo(querySupplier::get);
-        } else {
+        if (webPageInfo.isEnableSort()) {
+            if (WebPageInfo.hasSortList(webPageInfo)) {
+                List<SortItem> sortList = JSONUtil.toList(JSONUtil.parseArray(webPageInfo.getSortList()), SortItem.class);
+                return PageHelper.startPage(webPageInfo.getPageNum(), webPageInfo.getPageSize(), buildOrderBy(sortList, new HashSet<>())).doSelectPageInfo(querySupplier::get);
+            } else if (WebPageInfo.hasSort(webPageInfo)) {
+                return PageHelper.startPage(webPageInfo.getPageNum(), webPageInfo.getPageSize(), webPageInfo.getSortSql()).doSelectPageInfo(querySupplier::get);
+            } else {
+                return PageHelper.startPage(webPageInfo.getPageNum(), webPageInfo.getPageSize()).doSelectPageInfo(querySupplier::get);
+            }
+        }else {
             return PageHelper.startPage(webPageInfo.getPageNum(), webPageInfo.getPageSize()).doSelectPageInfo(querySupplier::get);
         }
     }

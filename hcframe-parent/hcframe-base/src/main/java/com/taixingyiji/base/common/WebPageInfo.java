@@ -58,9 +58,14 @@ public class WebPageInfo implements Serializable {
     private String sortList;
 
     @ApiModelProperty(
-            value = "开启缓存"
+            value = "开启分页缓存"
     )
     private boolean enableCache = false;
+
+    @ApiModelProperty(
+            value = "开启分页排序"
+    )
+    private boolean enableSort = true;
 
     public static boolean isSafeOrderBy(String orderBy) {
         if (StringUtils.isBlank(orderBy)) {
