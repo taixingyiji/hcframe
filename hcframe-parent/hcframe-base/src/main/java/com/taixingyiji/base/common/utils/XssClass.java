@@ -1,10 +1,14 @@
 package com.taixingyiji.base.common.utils;
 
+
 import static org.thymeleaf.util.StringUtils.split;
 
 public class XssClass {
 
     public static boolean sqlInj(String str){
+        if(StringUtils.isBlank(str)){
+            return false;
+        }
         String injStr = "'| and | exec | insert | select | delete | update |"+
         " count |*|%| chr | mid | master | truncate | char | declare |;| or |+|,|<script>";
         String[] injStra = split(injStr,"|");
@@ -17,6 +21,9 @@ public class XssClass {
     }
 
     public static boolean sqlInjLike(String str){
+        if(StringUtils.isBlank(str)){
+            return false;
+        }
         String injStr = "'| and | exec | insert | select | delete | update |"+
                 " count |*| chr | mid | master | truncate | char | declare |;| or |+|,|<script>";
         String[] injStra = split(injStr,"|");

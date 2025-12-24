@@ -395,6 +395,33 @@ public class BaseMapperImpl implements BaseMapper {
         return tableMapper.useSql(SelectCondition.builder().tableName(tableName).build().getSql());
     }
 
+    private List<Map<String, Object>> selectListAllKey(Condition condition, String tableName) {
+        Map<String, Object> params = condition.getParamMap();
+        params.put("sql", condition.getSql());
+        List<Map<String, Object>> list =
+                sqlSessionTemplate.selectList(TABLE_MAPPER_PACKAGE + "useSql", params);
+
+        if (list == null || list.isEmpty()) {
+            return list;
+        }
+
+        // 收集所有可能出现过的 key
+        Set<String> allKeys = new HashSet<>();
+        for (Map<String, Object> row : list) {
+            allKeys.addAll(row.keySet());
+        }
+
+        // 补全缺失字段
+        for (Map<String, Object> row : list) {
+            for (String key : allKeys) {
+                row.putIfAbsent(key, null);
+            }
+        }
+        return list;
+    }
+
+
+
     private List<Map<String, Object>> selectList(Condition condition, String tableName) {
         Map<String, Object> params = condition.getParamMap();
         String dataTypeConfig = getDataConfig();
@@ -532,6 +559,26 @@ public class BaseMapperImpl implements BaseMapper {
                 .toCreatCriteria(DataMap.builder().tableName(tableName).fields(fieldList).build())
                 .build();
         return selectList(condition,tableName);
+    }
+
+
+    @Override
+    public List<Map<String, Object>> selectByConditionAllKey(String tableName, Condition condition) {
+        JudgesNull(tableName, "tableName can not be null!");
+        condition = condition.toCreatCriteria(DataMap.builder().tableName(tableName).build()).build();
+        return selectListAllKey(condition,tableName);
+    }
+
+    @Override
+    public PageInfo<Map<String, Object>> selectByConditionAllKey(String tableName, Condition condition, WebPageInfo webPageInfo) {
+        JudgesNull(tableName, "tableName can not be null!");
+        condition = condition.toCreatCriteria(DataMap.builder().tableName(tableName).build()).build();
+        if (webPageInfo.isEnableCache()) {
+            Condition finalCondition = condition;
+            return MyPageHelper.start(webPageInfo, condition.getSql(), () -> selectList(finalCondition,tableName));
+        }
+        MyPageHelper.start(webPageInfo);
+        return new PageInfo<>(selectListAllKey(condition,tableName));
     }
 
     @Override

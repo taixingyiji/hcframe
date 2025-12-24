@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * (WebPageInfo)实体类
@@ -51,16 +52,38 @@ public class WebPageInfo implements Serializable {
             example = "asc")
     private String order = ASC;
 
+
+    @ApiModelProperty(
+            value = "符合排序字段",example = "[{\"field\":\"CREATE_TIME\",\"order\":\"ASC\"}]")
+    private String sortList;
+
     @ApiModelProperty(
             value = "开启缓存"
     )
     private boolean enableCache = false;
+
+    public static boolean isSafeOrderBy(String orderBy) {
+        if (StringUtils.isBlank(orderBy)) {
+            return true;
+        }
+        // 忽略大小写
+        return orderBy.matches(
+                "(?i)^([a-zA-Z0-9_]+\\s+(asc|desc))(\\s*,\\s*[a-zA-Z0-9_]+\\s+(asc|desc))*$"
+        );
+    }
+
+    public static boolean hasSortList(WebPageInfo webPageInfo) {
+        return !StringUtils.isBlank(webPageInfo.getSortList());
+    }
 
     public static boolean hasSort(WebPageInfo webPageInfo) {
         return !StringUtils.isBlank(webPageInfo.getSortField());
     }
 
     public String getSortSql() {
+        if(!isSafeOrderBy(this.order)){
+            throw new ServiceException("排序字段不合法");
+        }
         return this.sortField + " " + this.order;
     }
 }

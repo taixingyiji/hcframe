@@ -83,7 +83,8 @@ public interface BaseMapper {
     List<Map<String, Object>> selectByCondition(String tableName, String fieldList, Condition condition);
 
     PageInfo<Map<String, Object>> selectByCondition(Condition condition, WebPageInfo webPageInfo);
-
+    List<Map<String, Object>> selectByConditionAllKey(String tableName, Condition condition);
+    PageInfo<Map<String, Object>> selectByConditionAllKey(String tableName, Condition condition, WebPageInfo webPageInfo);
     <E> PageInfo<Map<String, Object>> selectByCondition(DataMap<E> dataMap, Condition condition, WebPageInfo webPageInfo);
 
     PageInfo<Map<String, Object>> selectByCondition(String tableName, Condition condition, WebPageInfo webPageInfo);
