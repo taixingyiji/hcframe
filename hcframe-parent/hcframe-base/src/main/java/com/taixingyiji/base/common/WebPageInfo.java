@@ -72,9 +72,7 @@ public class WebPageInfo implements Serializable {
             return true;
         }
         // 忽略大小写
-        return orderBy.matches(
-                "(?i)^([a-zA-Z0-9_]+\\s+(asc|desc))(\\s*,\\s*[a-zA-Z0-9_]+\\s+(asc|desc))*$"
-        );
+        return orderBy.matches("(?i)^(asc|desc)$");
     }
 
     public static boolean hasSortList(WebPageInfo webPageInfo) {

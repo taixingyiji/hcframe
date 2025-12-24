@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -38,34 +40,49 @@ public class MyPageHelper {
     /**
      * 校验 List<SortItem>，如果发现非法字段或非法排序方向，直接抛异常
      *
-     * @param sortList 前端传入的排序列表
+     * @param webPageInfo 前端传入的排序列表
      * @param allowedFields 可选业务白名单字段（可为 null）
      * @throws IllegalArgumentException 不合法字段或方向
      */
-    public static void validateSortList(List<SortItem> sortList, Set<String> allowedFields) {
-        if (sortList == null || sortList.isEmpty()) return;
-
-        for (SortItem item : sortList) {
-            if (item == null) continue;
-            String field = item.getField();
-            String order = item.getOrder();
-
-            if (StringUtils.isBlank(field)) {
-                throw new IllegalArgumentException("排序字段不能为空");
+    public static void validateSortList(WebPageInfo webPageInfo, Set<String> allowedFields) {
+        if(WebPageInfo.hasSortList(webPageInfo)){
+            String sortListStr;
+            try {
+                sortListStr = URLDecoder.decode(webPageInfo.getSortList(), "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                throw new ServiceException(e);
             }
+            List<SortItem> sortList = JSONUtil.toList(JSONUtil.parseArray(sortListStr), SortItem.class);
+            if (sortList == null || sortList.isEmpty()) return;
 
-            if (allowedFields != null && !allowedFields.contains(field)) {
-                throw new IllegalArgumentException("排序字段不在白名单中: " + field);
+            for (SortItem item : sortList) {
+                if (item == null) continue;
+                String field = item.getField();
+                String order = item.getOrder();
+
+                if (StringUtils.isBlank(field)) {
+                    throw new IllegalArgumentException("排序字段不能为空");
+                }
+
+                if (allowedFields != null && !allowedFields.isEmpty() && !allowedFields.contains(field)) {
+                    throw new IllegalArgumentException("排序字段不在白名单中: " + field);
+                }
+
+                if (!field.matches("^[a-zA-Z0-9_]+$")) {
+                    throw new IllegalArgumentException("排序字段格式非法: " + field);
+                }
+
+                if (StringUtils.isNotBlank(order) &&
+                        !(order.equalsIgnoreCase(ASC) || order.equalsIgnoreCase(DESC))) {
+                    throw new IllegalArgumentException(
+                            "排序方向不合法（只能 ASC 或 DESC）: " + field + " -> " + order);
+                }
             }
+        }
 
-            if (!field.matches("^[a-zA-Z0-9_]+$")) {
-                throw new IllegalArgumentException("排序字段格式非法: " + field);
-            }
-
-            if (StringUtils.isNotBlank(order) &&
-                    !(order.equalsIgnoreCase(ASC) || order.equalsIgnoreCase(DESC))) {
-                throw new IllegalArgumentException(
-                        "排序方向不合法（只能 ASC 或 DESC）: " + field + " -> " + order);
+        if(!StringUtils.isBlank(webPageInfo.getSortField())) {
+            if (allowedFields != null && !allowedFields.contains(webPageInfo.getSortField())) {
+                throw new IllegalArgumentException("排序字段不在白名单中: " + webPageInfo.getSortField());
             }
         }
     }
@@ -76,7 +93,7 @@ public class MyPageHelper {
     private static boolean isSafeField(String field, String order, Set<String> allowedFields) {
         if (StringUtils.isBlank(field)) return false;
         // 字段白名单校验，如果不传 allowedFields，可传 null，则只做格式校验
-        if (allowedFields != null && !allowedFields.contains(field)) return false;
+        if (allowedFields != null && !allowedFields.isEmpty() && !allowedFields.contains(field)) return false;
         // 字段名格式安全
         if (!field.matches("^[a-zA-Z0-9_]+$")) return false;
         // 排序方向安全
@@ -112,7 +129,13 @@ public class MyPageHelper {
     public static void start(WebPageInfo webPageInfo) {
         if (webPageInfo.isEnableSort()) {
             if (WebPageInfo.hasSortList(webPageInfo)) {
-                List<SortItem> sortList = JSONUtil.toList(JSONUtil.parseArray(webPageInfo.getSortList()), SortItem.class);
+                String sortListStr;
+                try {
+                    sortListStr = URLDecoder.decode(webPageInfo.getSortList(), "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    throw new ServiceException(e);
+                }
+                List<SortItem> sortList = JSONUtil.toList(JSONUtil.parseArray(sortListStr), SortItem.class);
                 PageHelper.startPage(webPageInfo.getPageNum(), webPageInfo.getPageSize(), buildOrderBy(sortList, new HashSet<>())).setAsyncCount(true);
             } else if (WebPageInfo.hasSort(webPageInfo)) {
                 PageHelper.startPage(webPageInfo.getPageNum(), webPageInfo.getPageSize(), webPageInfo.getSortSql()).setAsyncCount(true);
@@ -128,7 +151,13 @@ public class MyPageHelper {
     public static void noCount(WebPageInfo webPageInfo) {
         if (webPageInfo.isEnableSort()) {
             if (WebPageInfo.hasSortList(webPageInfo)) {
-                List<SortItem> sortList = JSONUtil.toList(JSONUtil.parseArray(webPageInfo.getSortList()), SortItem.class);
+                String sortListStr;
+                try {
+                    sortListStr = URLDecoder.decode(webPageInfo.getSortList(), "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    throw new ServiceException(e);
+                }
+                List<SortItem> sortList = JSONUtil.toList(JSONUtil.parseArray(sortListStr), SortItem.class);
                 PageHelper.startPage(webPageInfo.getPageNum(), webPageInfo.getPageSize(), false).setOrderBy(buildOrderBy(sortList, new HashSet<>()));
             } else if (WebPageInfo.hasSort(webPageInfo)) {
                 PageHelper.startPage(webPageInfo.getPageNum(), webPageInfo.getPageSize(), false).setOrderBy(webPageInfo.getSortSql());
@@ -145,7 +174,13 @@ public class MyPageHelper {
     public static PageInfo<Map<String, Object>> noCount(WebPageInfo webPageInfo, Supplier<List<Map<String, Object>>> querySupplier) {
         if (webPageInfo.isEnableSort()) {
             if (WebPageInfo.hasSortList(webPageInfo)) {
-                List<SortItem> sortList = JSONUtil.toList(JSONUtil.parseArray(webPageInfo.getSortList()), SortItem.class);
+                String sortListStr;
+                try {
+                    sortListStr = URLDecoder.decode(webPageInfo.getSortList(), "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    throw new ServiceException(e);
+                }
+                List<SortItem> sortList = JSONUtil.toList(JSONUtil.parseArray(sortListStr), SortItem.class);
                 return PageHelper.startPage(webPageInfo.getPageNum(), webPageInfo.getPageSize(), buildOrderBy(sortList, new HashSet<>())).count(false).doSelectPageInfo(querySupplier::get);
             } else if (WebPageInfo.hasSort(webPageInfo)) {
                 return PageHelper.startPage(webPageInfo.getPageNum(), webPageInfo.getPageSize(), webPageInfo.getSortSql()).count(false).doSelectPageInfo(querySupplier::get);
@@ -160,7 +195,13 @@ public class MyPageHelper {
     public static PageInfo<Map<String, Object>> myStart(WebPageInfo webPageInfo, Supplier<List<Map<String, Object>>> querySupplier) {
         if (webPageInfo.isEnableSort()) {
             if (WebPageInfo.hasSortList(webPageInfo)) {
-                List<SortItem> sortList = JSONUtil.toList(JSONUtil.parseArray(webPageInfo.getSortList()), SortItem.class);
+                String sortListStr;
+                try {
+                    sortListStr = URLDecoder.decode(webPageInfo.getSortList(), "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    throw new ServiceException(e);
+                }
+                List<SortItem> sortList = JSONUtil.toList(JSONUtil.parseArray(sortListStr), SortItem.class);
                 return PageHelper.startPage(webPageInfo.getPageNum(), webPageInfo.getPageSize(), buildOrderBy(sortList, new HashSet<>())).doSelectPageInfo(querySupplier::get);
             } else if (WebPageInfo.hasSort(webPageInfo)) {
                 return PageHelper.startPage(webPageInfo.getPageNum(), webPageInfo.getPageSize(), webPageInfo.getSortSql()).doSelectPageInfo(querySupplier::get);
