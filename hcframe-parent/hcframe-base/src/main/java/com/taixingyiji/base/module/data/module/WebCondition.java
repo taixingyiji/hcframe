@@ -1,6 +1,7 @@
 package com.taixingyiji.base.module.data.module;
 
 import cn.hutool.core.date.DateUtil;
+import com.taixingyiji.base.common.utils.KeyUtils;
 import com.taixingyiji.base.module.data.constants.QueryConstants;
 import com.taixingyiji.base.module.datasource.utils.DataUnit;
 import lombok.AllArgsConstructor;
@@ -47,6 +48,7 @@ public class WebCondition {
     }
 
     public static Condition.ConditionBuilder setSign(WebCondition webCondition, Condition.ConditionBuilder builder, String dataType) {
+        KeyUtils.checkSafeKey(webCondition.getKey());
         switch (webCondition.getSign()) {
             case QueryConstants.LIKE: {
                 return builder.like(webCondition.key,  webCondition.value);

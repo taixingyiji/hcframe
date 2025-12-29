@@ -67,11 +67,7 @@ public class MyPageHelper {
                 if (allowedFields != null && !allowedFields.isEmpty() && !allowedFields.contains(field)) {
                     throw new IllegalArgumentException("排序字段不在白名单中: " + field);
                 }
-
-                if (!field.matches("^[a-zA-Z0-9_]+$")) {
-                    throw new IllegalArgumentException("排序字段格式非法: " + field);
-                }
-
+                KeyUtils.checkSafeKey(field);
                 if (StringUtils.isNotBlank(order) &&
                         !(order.equalsIgnoreCase(ASC) || order.equalsIgnoreCase(DESC))) {
                     throw new IllegalArgumentException(

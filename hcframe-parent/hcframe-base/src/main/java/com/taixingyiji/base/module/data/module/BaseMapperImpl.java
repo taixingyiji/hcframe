@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.taixingyiji.base.common.ServiceException;
 import com.taixingyiji.base.common.WebPageInfo;
 import com.taixingyiji.base.common.config.FrameConfig;
+import com.taixingyiji.base.common.utils.KeyUtils;
 import com.taixingyiji.base.common.utils.MyPageHelper;
 import com.taixingyiji.base.common.utils.StringUtils;
 import com.taixingyiji.base.module.data.dao.TableMapper;
@@ -103,6 +104,7 @@ public class BaseMapperImpl implements BaseMapper {
         String dataTypeConfig = getDataConfig();
         JudgesNull(dataMap.getData(), "data can not be null!");
         JudgesNull(dataMap.getTableName(), "tableName can not be null!");
+        KeyUtils.checkSafeKey(dataMap.getData());
         if (DataUnit.HANGO.equals(dataTypeConfig)) {
             dataMap.getData().putAll(formatMap(dataMap.getData(),dataMap.getTableName()));
         }
@@ -149,6 +151,7 @@ public class BaseMapperImpl implements BaseMapper {
     public int save(String tableName, String pkName, Map<String, Object> data) {
         JudgesNull(tableName, "data can not be null!");
         JudgesNull(data, "tableName can not be null!");
+        KeyUtils.checkSafeKey(data);
         String dataTypeConfig = getDataConfig();
         if (DataUnit.HANGO.equals(dataTypeConfig)) {
             data.putAll(formatMap(data, tableName));
@@ -179,6 +182,7 @@ public class BaseMapperImpl implements BaseMapper {
     }
 
     private int updateByWhere(Condition condition, String tableName, Map<String, Object> data) {
+        KeyUtils.checkSafeKey(data);
         Map<String, Object> params = condition.getParamMap();
         params.put("tableName", tableName);
         String dataTypeConfig = getDataConfig();
