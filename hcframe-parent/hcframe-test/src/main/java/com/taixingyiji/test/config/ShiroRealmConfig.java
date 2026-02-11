@@ -74,4 +74,8 @@ public class ShiroRealmConfig implements SystemRealm {
         return map;
     }
 
+    @Override
+    public void setTimeoutLogoutLog(String userId) {
+        // no-op for tests
+    }
 }
