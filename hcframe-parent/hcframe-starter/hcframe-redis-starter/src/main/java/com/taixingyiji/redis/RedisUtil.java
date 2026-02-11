@@ -84,7 +84,10 @@ public final class RedisUtil {
             if (key.length == 1) {
                 stringRedisTemplate.delete(key[0]);
             } else {
-                stringRedisTemplate.delete(CollectionUtils.arrayToList(key));
+                // CollectionUtils.arrayToList returns a raw List which can cause generic
+                // type mismatch with RedisTemplate.delete(Collection<String>).
+                // Use Arrays.asList to get a typed List<String> from String[].
+                stringRedisTemplate.delete(java.util.Arrays.asList(key));
             }
         }
     }
