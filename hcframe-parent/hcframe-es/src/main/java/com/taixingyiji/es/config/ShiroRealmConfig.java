@@ -74,8 +74,6 @@ public class ShiroRealmConfig implements SystemRealm {
         return map;
     }
 
-}
-
     /**
      * 超时登出时记录（实现接口方法，默认不做处理）
      * @param userId 用户 id
@@ -84,3 +82,5 @@ public class ShiroRealmConfig implements SystemRealm {
     public void setTimeoutLogoutLog(String userId) {
         // no-op: es 模块无需特殊处理；如果需要记录可在此实现
     }
+}
+
