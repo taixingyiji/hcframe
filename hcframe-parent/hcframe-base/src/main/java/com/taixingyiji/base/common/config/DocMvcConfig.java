@@ -44,7 +44,7 @@ public class DocMvcConfig {
                 environment, basePath);
         return new WebMvcEndpointHandlerMapping(endpointMapping, webEndpoints, endpointMediaTypes,
                 corsProperties.toCorsConfiguration(), new EndpointLinksResolver(allEndpoints, basePath),
-                shouldRegisterLinksMapping, null);
+                shouldRegisterLinksMapping);
     }
 
     /**

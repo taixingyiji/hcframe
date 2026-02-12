@@ -28,8 +28,8 @@ public class DruidConfig implements WebMvcConfigurer {
     //配置Druid的监控
     //1、配置一个管理后台的Servlet
     @Bean
-    public ServletRegistrationBean<StatViewServlet> statViewServlet(){
-        ServletRegistrationBean<StatViewServlet> bean = new ServletRegistrationBean<>(new StatViewServlet(), "/druid/*");
+    public ServletRegistrationBean statViewServlet(){
+        ServletRegistrationBean bean = new ServletRegistrationBean(new StatViewServlet(), "/druid/*");
         Map<String,String> initParams = new HashMap<>();
         DruidAuth druidAuth = auth();
 //        initParams.put("loginUsername",druidAuth.getUsername());
@@ -44,8 +44,8 @@ public class DruidConfig implements WebMvcConfigurer {
 
     //2、配置一个web监控的filter
     @Bean
-    public FilterRegistrationBean<WebStatFilter> webStatFilter(){
-        FilterRegistrationBean<WebStatFilter> bean = new FilterRegistrationBean<>();
+    public FilterRegistrationBean webStatFilter(){
+        FilterRegistrationBean bean = new FilterRegistrationBean();
         bean.setFilter(new WebStatFilter());
         Map<String,String> initParams = new HashMap<>(1);
         initParams.put("exclusions","*.js,*.css,/druid/*");
