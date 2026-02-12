@@ -289,6 +289,12 @@
             <version>1.1</version>
             <scope>provided</scope>
         </dependency>
+        <!-- Explicit actuator module to expose servlet-based actuator endpoint types for Spring Boot 4.x -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-actuator</artifactId>
+            <version>4.0.1</version>
+        </dependency>
     </dependencies>
     <build>
         <finalName>hcframe-base</finalName>
