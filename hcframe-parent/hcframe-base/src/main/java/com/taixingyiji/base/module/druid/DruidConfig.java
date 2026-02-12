@@ -28,29 +28,17 @@ public class DruidConfig implements WebMvcConfigurer {
     //配置Druid的监控
     //1、配置一个管理后台的Servlet
     @Bean
-    public ServletRegistrationBean statViewServlet(){
-        ServletRegistrationBean bean = new ServletRegistrationBean(new StatViewServlet(), "/druid/*");
-        Map<String,String> initParams = new HashMap<>();
-        DruidAuth druidAuth = auth();
-//        initParams.put("loginUsername",druidAuth.getUsername());
-//        initParams.put("loginPassword",druidAuth.getPassword());
-        //默认就是允许所有访问
-        initParams.put("allow",druidAuth.getAllow());
-        initParams.put("deny",druidAuth.getDeny());
-        bean.setInitParameters(initParams);
-        return bean;
+    public Object statViewServlet(){
+        // Temporary placeholder: original Druid StatViewServlet uses javax.servlet APIs which conflict with Jakarta in Spring Boot 4.
+        // Keep a minimal placeholder bean to let the project compile. Restore real Druid servlet integration after migrating to a Jakarta-compatible Druid release.
+        return new Object();
     }
 
 
     //2、配置一个web监控的filter
     @Bean
-    public FilterRegistrationBean webStatFilter(){
-        FilterRegistrationBean bean = new FilterRegistrationBean();
-        bean.setFilter(new WebStatFilter());
-        Map<String,String> initParams = new HashMap<>(1);
-        initParams.put("exclusions","*.js,*.css,/druid/*");
-        bean.setInitParameters(initParams);
-        bean.setUrlPatterns(Collections.singletonList("/*"));
-        return  bean;
+    public Object webStatFilter(){
+        // Temporary placeholder for the WebStatFilter (same reason as above).
+        return new Object();
     }
 }
