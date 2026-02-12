@@ -1,6 +1,5 @@
 package com.taixingyiji.base.module.datasource.utils;
 
-import com.alibaba.druid.pool.DruidDataSource;
 import com.taixingyiji.base.common.ServiceException;
 import com.taixingyiji.base.common.utils.SpringContextUtil;
 import com.taixingyiji.base.common.utils.TokenProccessor;
@@ -19,10 +18,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 
 
 /**
@@ -37,7 +38,7 @@ public class DataSourceUtil {
 
     private static DatasourceTypeDao datasourceTypeDao;
 
-    private static DruidDataSource defaultDruid;
+    private static javax.sql.DataSource defaultDataSource;
 
     private static DatasourceTokenDao datasourceTokenDao;
 
@@ -69,8 +70,8 @@ public class DataSourceUtil {
     public static void initDataSource() {
         try {
             //获取masterDataSource
-            DruidDataSource masterDataSource = (DruidDataSource) SpringContextUtil.getBean(DataUnit.MASTERBEAN);
-            DataSourceUtil.defaultDruid = (DruidDataSource) SpringContextUtil.getBean(DataUnit.MASTERBEAN);
+            HikariDataSource masterDataSource = (HikariDataSource) SpringContextUtil.getBean(DataUnit.MASTERBEAN);
+            DataSourceUtil.defaultDataSource = (HikariDataSource) SpringContextUtil.getBean(DataUnit.MASTERBEAN);
             addDataSource(DataUnit.MASTER, masterDataSource);
             addDataSource(DataUnit.SQLITE, masterDataSource);
             flushDataSource();
@@ -104,12 +105,12 @@ public class DataSourceUtil {
         myDynamicDataSource.afterPropertiesSet();
     }
 
-    public static void addDataSource(String key, DruidDataSource masterDataSource) {
+    public static void addDataSource(String key, javax.sql.DataSource masterDataSource) {
         dataSourceMap.put(key, masterDataSource);
     }
 
-    public static void addMapData(String key, DruidDataSource druidDataSource, DatasourceConfig datasourceConfig) {
-        dataSourceMap.put(key, druidDataSource);
+    public static void addMapData(String key, javax.sql.DataSource dataSource, DatasourceConfig datasourceConfig) {
+        dataSourceMap.put(key, dataSource);
         datasourceConfig.setPassword(DataUnit.PASSWORD);
         configSourceMap.put(key, datasourceConfig);
     }
@@ -137,12 +138,12 @@ public class DataSourceUtil {
             // 遍历db列表添加到数据源
             list.forEach(datasourceConfig -> {
                 if (datasourceConfig.getSysEnabled() == DatasourceConfig.ENABLE) {
-                    DruidDataSource druidDataSource = initDruid(datasourceConfig.getCommonType());
-                    BeanUtils.copyProperties(datasourceConfig, druidDataSource);
-                    addMapData(datasourceConfig.getCommonAlias(), druidDataSource, datasourceConfig);
+                    javax.sql.DataSource dataSource = initHikari(datasourceConfig.getCommonType());
+                    BeanUtils.copyProperties(datasourceConfig, dataSource);
+                    addMapData(datasourceConfig.getCommonAlias(), dataSource, datasourceConfig);
                     logger.info("add datasource " + datasourceConfig.getSysDescription());
                     if (datasourceConfig.getIsDefault() == DatasourceConfig.DEFAULT) {
-                        addMapData(DataUnit.MASTER, druidDataSource, datasourceConfig);
+                        addMapData(DataUnit.MASTER, dataSource, datasourceConfig);
                     }
                 }
             });
@@ -151,35 +152,35 @@ public class DataSourceUtil {
     }
 
     /**
-     * 初始化Druid配置
+     * 初始化Hikari配置
      *
      * @param type
      */
-    public static DruidDataSource initDruid(String type) {
-        DruidDataSource druidDataSource = new DruidDataSource();
-        druidDataSource.setInitialSize(defaultDruid.getInitialSize());
-        druidDataSource.setMaxActive(defaultDruid.getMaxActive());
-        druidDataSource.setMaxWait(defaultDruid.getMaxWait());
-        druidDataSource.setTimeBetweenEvictionRunsMillis(defaultDruid.getTimeBetweenEvictionRunsMillis());
-        druidDataSource.setMinEvictableIdleTimeMillis(defaultDruid.getMinEvictableIdleTimeMillis());
+    public static javax.sql.DataSource initHikari(String type) {
+        HikariConfig config = new HikariConfig();
+        // map common pool properties from defaultDataSource if available
+        if (defaultDataSource != null) {
+            // try to copy Hikari-specific properties if the default data source is Hikari
+            if (defaultDataSource instanceof HikariDataSource) {
+                HikariDataSource ds = (HikariDataSource) defaultDataSource;
+                try { config.setMaximumPoolSize(ds.getMaximumPoolSize()); } catch (Exception ignored) {}
+                try { config.setMinimumIdle(ds.getMinimumIdle()); } catch (Exception ignored) {}
+                try { config.setConnectionTimeout(ds.getConnectionTimeout()); } catch (Exception ignored) {}
+                try { config.setIdleTimeout(ds.getIdleTimeout()); } catch (Exception ignored) {}
+                try { config.setMaxLifetime(ds.getMaxLifetime()); } catch (Exception ignored) {}
+            }
+        }
+        // set validation query if available via datasourceType
         DatasourceType datasourceType = datasourceTypeDao.selectOne(DatasourceType.builder().typeKey(type).build());
-        druidDataSource.setValidationQuery(datasourceType.getValidateQuery());
-        druidDataSource.setTestWhileIdle(true);
-        druidDataSource.setTestOnBorrow(false);
-        druidDataSource.setBreakAfterAcquireFailure(true);
-        druidDataSource.setConnectionErrorRetryAttempts(0);
-        druidDataSource.setTestOnReturn(false);
-        try {
-            druidDataSource.setFilters("stat,slf4j");
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        if (datasourceType != null && datasourceType.getValidateQuery() != null) {
+            config.setConnectionTestQuery(datasourceType.getValidateQuery());
         }
-        druidDataSource.setConnectProperties(defaultDruid.getConnectProperties());
-        if (!type.equals(DataUnit.SQLITE)) {
-            druidDataSource.setPoolPreparedStatements(true);
-            druidDataSource.setMaxPoolPreparedStatementPerConnectionSize(20);
-        }
-        return druidDataSource;
+        // other sensible defaults
+        config.setAutoCommit(true);
+        config.setPoolName("hcframe-hikari-");
+
+        HikariDataSource hikariDataSource = new HikariDataSource(config);
+        return hikariDataSource;
     }
 
     /**

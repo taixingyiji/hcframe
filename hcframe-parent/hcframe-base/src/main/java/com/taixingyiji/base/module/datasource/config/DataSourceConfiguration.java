@@ -1,6 +1,7 @@
 package com.taixingyiji.base.module.datasource.config;
 
-import com.alibaba.druid.pool.DruidDataSource;
+// Druid removed; use Hikari/Spring Boot DataSource configuration (properties mapped to spring.datasource.*)
+
 import com.taixingyiji.base.common.MyMapper;
 import com.taixingyiji.base.module.datasource.dynamic.MyDynamicDataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -55,11 +56,14 @@ public class DataSourceConfiguration {
      * @ConfigurationProperties 会把配置文件的参数自动赋值到dataSource里。
      * @Primary 用于标识默认使用的 DataSource Bean
      */
-    @ConfigurationProperties(prefix = "spring.datasource.druid")
+    // Use Spring Boot's standard datasource properties.
+    // Bind to spring.datasource (Hikari properties under spring.datasource.hikari will be picked up by HikariCP automatically).
     @Primary
     @Bean(name = "masterDataSource")
+    @ConfigurationProperties(prefix = "spring.datasource")
     public DataSource masterDataSource() {
-        return new DruidDataSource();
+        // Let Spring Boot / Hikari auto-config or DataSourceBuilder create the DataSource from properties.
+        return org.springframework.boot.jdbc.DataSourceBuilder.create().build();
     }
 
     @Bean(name = "dynamicDataSource")

@@ -1,6 +1,6 @@
 package com.taixingyiji.base.module.data.module;
 
-import com.alibaba.druid.pool.DruidDataSource;
+import javax.sql.DataSource;
 import com.github.pagehelper.PageInfo;
 import com.taixingyiji.base.common.ServiceException;
 import com.taixingyiji.base.common.WebPageInfo;
@@ -32,14 +32,14 @@ public class BaseMapperImpl implements BaseMapper {
     public static final String BASE = "base";
     public static final String TABLE_MAPPER_PACKAGE = "com.taixingyiji.base.module.data.dao.TableMapper.";
     final TableMapper tableMapper;
-    final DruidDataSource druidDataSource;
+    final DataSource dataSource;
 
     @Value("${spring.datasource.druid.driver-class-name}")
     public String dataType;
     final SqlSessionTemplate sqlSessionTemplate;
 
     public BaseMapperImpl(TableMapper tableMapper, SqlSessionTemplate sqlSessionTemplate,
-                          DruidDataSource druidDataSource,FrameConfig frameConfig,
+                          DataSource druidDataSource,FrameConfig frameConfig,
                           @Autowired(required = false) @Qualifier("dynamicSqlSessionTemplate") SqlSessionTemplate sqlSessionTemplate2) {
         this.tableMapper = tableMapper;
         if(frameConfig.getMultiDataSource() && sqlSessionTemplate2 != null ){
@@ -47,7 +47,7 @@ public class BaseMapperImpl implements BaseMapper {
         }else {
             this.sqlSessionTemplate = sqlSessionTemplate;
         }
-        this.druidDataSource = druidDataSource;
+        this.dataSource = druidDataSource;
     }
 
     @Override
@@ -60,7 +60,7 @@ public class BaseMapperImpl implements BaseMapper {
             datasourceConfig = DataSourceUtil.get(key);
         } catch (Exception e) {
             try {
-                Connection connection = druidDataSource.getConnection();
+                Connection connection = dataSource.getConnection();
                 String dbType = connection.getMetaData().getDatabaseProductName();
                 if (dbType.contains("Oracle")) {
                     datasourceConfig.setCommonType(DataUnit.ORACLE);
@@ -77,7 +77,8 @@ public class BaseMapperImpl implements BaseMapper {
                 if (dbType.contains("PostgreSQL")) {
                     datasourceConfig.setCommonType(DataUnit.HANGO);
                 }
-                connection.close();
+                // already closed above
+                
             } catch (Exception e1) {
                 if (dataType.contains("oracle")) {
                     datasourceConfig.setCommonType(DataUnit.ORACLE);
@@ -902,12 +903,20 @@ public class BaseMapperImpl implements BaseMapper {
             id = tableMapper.getHighGoSequence(tableName.toLowerCase());
         } else {
             try {
-                String url = druidDataSource.getUrl();
-                String schema = getSchemaFromJdbcUrl(url);
-                if (tableMapper.judgeDamengSequenceExist(tableName, schema) > 0) {
-                    id = tableMapper.getSequence(tableName);
-                } else {
-                    throw new ServiceException("序列不存在");
+                Connection connForMeta = dataSource.getConnection();
+                try {
+                    String url = connForMeta.getMetaData().getURL();
+                    String schema = getSchemaFromJdbcUrl(url);
+                    if (tableMapper.judgeDamengSequenceExist(tableName, schema) > 0) {
+                        id = tableMapper.getSequence(tableName);
+                    } else {
+                        throw new ServiceException("序列不存在");
+                    }
+                } finally {
+                    try {
+                        if (connForMeta != null && !connForMeta.isClosed()) connForMeta.close();
+                    } catch (SQLException ignored) {
+                    }
                 }
             } catch (Exception e) {
                 Map<String, Object> map = selectRecentData(tableName, pkName);

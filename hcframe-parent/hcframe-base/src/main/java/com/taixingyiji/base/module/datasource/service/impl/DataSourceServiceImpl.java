@@ -1,6 +1,6 @@
 package com.taixingyiji.base.module.datasource.service.impl;
 
-import com.alibaba.druid.pool.DruidDataSource;
+import javax.sql.DataSource; // replaced Druid with generic DataSource
 import com.taixingyiji.base.common.ResultVO;
 import com.taixingyiji.base.common.ServiceException;
 import com.taixingyiji.base.common.WebPageInfo;
@@ -83,7 +83,7 @@ public class DataSourceServiceImpl implements DataSourceService {
             setDefault(datasourceConfig.getDatasourceId());
         }
         if (datasourceConfig.getSysEnabled() == DatasourceConfig.ENABLE) {
-            DruidDataSource druidDataSource = DataSourceUtil.initDruid(datasourceConfig.getCommonType());
+            DataSource druidDataSource = DataSourceUtil.initHikari(datasourceConfig.getCommonType());
             BeanUtils.copyProperties(datasourceConfig, druidDataSource);
             DataSourceUtil.addMapData(datasourceConfig.getCommonAlias(), druidDataSource, datasourceConfig);
             if (datasourceConfig.getIsDefault() == DatasourceConfig.DEFAULT) {
@@ -125,7 +125,7 @@ public class DataSourceServiceImpl implements DataSourceService {
         int i = datasourceConfigDao.updateByPrimaryKeySelective(datasourceConfig);
         if (flag) {
             // 将更新后的数据加入
-            DruidDataSource druidDataSource = DataSourceUtil.initDruid(datasourceConfig.getCommonType());
+            DataSource druidDataSource = DataSourceUtil.initHikari(datasourceConfig.getCommonType());
             BeanUtils.copyProperties(datasourceConfig, druidDataSource);
             DataSourceUtil.addMapData(datasourceConfig.getCommonAlias(), druidDataSource, datasourceConfig);
             if (masterFlag) {
@@ -202,11 +202,8 @@ public class DataSourceServiceImpl implements DataSourceService {
             datasourceConfig = datasourceConfig1;
         }
         DatasourceType datasourceType = datasourceTypeDao.selectOne(DatasourceType.builder().typeKey(datasourceConfig.getCommonType()).build());
-        DruidDataSource druidDataSource = new DruidDataSource();
+        DataSource druidDataSource = DataSourceUtil.initHikari(datasourceConfig.getCommonType());
         BeanUtils.copyProperties(datasourceConfig, druidDataSource);
-        druidDataSource.setBreakAfterAcquireFailure(true);
-        druidDataSource.setConnectionErrorRetryAttempts(0);
-        druidDataSource.setMaxWait(5000);
         long time = System.currentTimeMillis();
         String uuid = UUID.randomUUID().toString();
         String key = uuid + time;
@@ -234,7 +231,7 @@ public class DataSourceServiceImpl implements DataSourceService {
             throw new ServiceException("状态更新失败");
         }
         if (status == DatasourceConfig.ENABLE) {
-            DruidDataSource druidDataSource = DataSourceUtil.initDruid(datasourceConfig.getCommonType());
+            DataSource druidDataSource = DataSourceUtil.initHikari(datasourceConfig.getCommonType());
             DataSourceUtil.addMapData(datasourceConfig.getCommonAlias(), druidDataSource, datasourceConfig);
         } else {
             DataSourceUtil.removeSource(datasourceConfig.getCommonAlias());
@@ -261,7 +258,7 @@ public class DataSourceServiceImpl implements DataSourceService {
             throw new ServiceException("设置失败");
         }
         DatasourceConfig config = datasourceConfigDao.selectOne(DatasourceConfig.builder().datasourceId(id).build());
-        DruidDataSource druidDataSource = DataSourceUtil.initDruid(config.getCommonType());
+        DataSource druidDataSource = DataSourceUtil.initHikari(config.getCommonType());
         BeanUtils.copyProperties(config, druidDataSource);
         DataSourceUtil.addMapData(DataUnit.MASTER, druidDataSource, config);
         DataSourceUtil.addMapData(config.getCommonAlias(),druidDataSource,config);
