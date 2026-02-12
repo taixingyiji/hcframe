@@ -7,6 +7,7 @@ import org.springframework.boot.actuate.endpoint.ExposableEndpoint;
 import org.springframework.boot.actuate.endpoint.web.*;
 import org.springframework.boot.actuate.endpoint.web.annotation.ControllerEndpointsSupplier;
 import org.springframework.boot.actuate.endpoint.web.annotation.ServletEndpointsSupplier;
+import org.springframework.boot.webmvc.actuate.endpoint.web.WebMvcEndpointHandlerMapping;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
@@ -27,7 +28,7 @@ import java.util.List;
 public class DocMvcConfig {
 
     @Bean
-    public org.springframework.boot.actuate.endpoint.web.servlet.WebMvcEndpointHandlerMapping webEndpointServletHandlerMapping(
+    public WebMvcEndpointHandlerMapping webEndpointServletHandlerMapping(
             WebEndpointsSupplier webEndpointsSupplier, ServletEndpointsSupplier servletEndpointsSupplier,
             ControllerEndpointsSupplier controllerEndpointsSupplier, EndpointMediaTypes endpointMediaTypes,
             CorsEndpointProperties corsProperties, WebEndpointProperties webEndpointProperties,
@@ -41,7 +42,7 @@ public class DocMvcConfig {
         EndpointMapping endpointMapping = new EndpointMapping(basePath);
         boolean shouldRegisterLinksMapping = shouldRegisterLinksMapping(webEndpointProperties,
                 environment, basePath);
-        return new org.springframework.boot.actuate.endpoint.web.servlet.WebMvcEndpointHandlerMapping(endpointMapping, webEndpoints, endpointMediaTypes,
+        return new WebMvcEndpointHandlerMapping(endpointMapping, webEndpoints, endpointMediaTypes,
                 corsProperties.toCorsConfiguration(), new EndpointLinksResolver(allEndpoints, basePath),
                 shouldRegisterLinksMapping, null);
     }
