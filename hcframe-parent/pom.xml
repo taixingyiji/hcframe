@@ -32,20 +32,20 @@
         <spring-boot.version>4.0.2</spring-boot.version>
         <java.cas.client.version>3.5.0</java.cas.client.version>
     </properties>
+    <repositories>
+        <repository>
+            <id>spring-releases</id>
+            <name>Spring Releases</name>
+            <url>https://repo.spring.io/release</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
     <dependencyManagement>
-        <repositories>
-            <repository>
-                <id>spring-releases</id>
-                <name>Spring Releases</name>
-                <url>https://repo.spring.io/release</url>
-                <releases>
-                    <enabled>true</enabled>
-                </releases>
-                <snapshots>
-                    <enabled>false</enabled>
-                </snapshots>
-            </repository>
-        </repositories>
         <dependencies>
             <dependency>
                 <groupId>com.alibaba.cloud</groupId>
