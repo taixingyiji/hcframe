@@ -27,7 +27,8 @@
         </dependency>
         <dependency>
             <groupId>com.taixingyiji</groupId>
-            '1.2.5.5-SNAPSHOT'
+            <artifactId>hcframe-base</artifactId>
+            <version>1.2.5.5-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework.boot</groupId>
