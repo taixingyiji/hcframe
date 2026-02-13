@@ -34,6 +34,7 @@ public class WebPageInfo implements Serializable {
             example="10",
             dataType = "Integer"
     )
+    @Builder.Default
     private Integer pageSize = 10;
 
     @ApiModelProperty(
@@ -41,6 +42,7 @@ public class WebPageInfo implements Serializable {
             example="1",
             dataType = "Integer"
     )
+    @Builder.Default
     private Integer pageNum = 1;
 
     @ApiModelProperty(value="排序字段")
@@ -50,6 +52,7 @@ public class WebPageInfo implements Serializable {
             value = "正序倒序",
             allowableValues = "asc,desc",
             example = "asc")
+    @Builder.Default
     private String order = ASC;
 
 
@@ -60,11 +63,13 @@ public class WebPageInfo implements Serializable {
     @ApiModelProperty(
             value = "开启分页缓存"
     )
+    @Builder.Default
     private boolean enableCache = false;
 
     @ApiModelProperty(
             value = "开启分页排序"
     )
+    @Builder.Default
     private boolean enableSort = true;
 
     public static boolean isSafeOrderBy(String orderBy) {
