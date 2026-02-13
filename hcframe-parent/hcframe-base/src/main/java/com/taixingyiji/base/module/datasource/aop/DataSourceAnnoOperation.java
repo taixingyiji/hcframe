@@ -28,16 +28,20 @@ public class DataSourceAnnoOperation {
 
     @Around("@annotation(com.taixingyiji.base.module.datasource.annotation.DatasourceAnno)")
     public Object aroundAdvice(ProceedingJoinPoint pjp) throws Throwable {
-        // 获取方法签名
-        MethodSignature methodSignature = (MethodSignature) pjp.getSignature();
-        // 获取方法
-        Method method = methodSignature.getMethod();
-        // 获取方法上面的注解
-        DatasourceAnno dataSourceAnno = method.getAnnotation(DatasourceAnno.class);
-        String key = dataSourceAnno.value();
-        DBContextHolder.clearDataSource();
-        DBContextHolder.setDataSource(key);
-        return pjp.proceed();
+        try {
+            // 获取方法签名
+            MethodSignature methodSignature = (MethodSignature) pjp.getSignature();
+            // 获取方法
+            Method method = methodSignature.getMethod();
+            // 获取方法上面的注解
+            DatasourceAnno dataSourceAnno = method.getAnnotation(DatasourceAnno.class);
+            String key = dataSourceAnno.value();
+            DBContextHolder.clearDataSource();
+            DBContextHolder.setDataSource(key);
+            return pjp.proceed();
+        } finally {
+            DBContextHolder.clearDataSource();
+        }
     }
 
 }

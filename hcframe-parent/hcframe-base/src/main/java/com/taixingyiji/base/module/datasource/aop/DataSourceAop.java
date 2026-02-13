@@ -51,25 +51,25 @@ public class DataSourceAop {
 
     @Before("log()")
     public void doBefore(JoinPoint joinPoint) {
-        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        if (attributes != null) {
-            HttpServletRequest request = attributes.getRequest();
-            if (isMulti) {
-                String key = request.getParameter("datasourceKey");
-                if (StringUtils.isBlank(key)) {
-                    DBContextHolder.setDataSource(DataUnit.MASTER);
-                } else {
-                    DBContextHolder.setDataSource(key);
-                }
-            }
-        }
+//        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+//        if (attributes != null) {
+//            HttpServletRequest request = attributes.getRequest();
+//            if (isMulti) {
+//                String key = request.getParameter("datasourceKey");
+//                if (StringUtils.isBlank(key)) {
+//                    DBContextHolder.setDataSource(DataUnit.MASTER);
+//                } else {
+//                    DBContextHolder.setDataSource(key);
+//                }
+//            }
+//        }
     }
 
     @After("log()")
     public void doAfter() {
-        if (isMulti) {
-            DBContextHolder.clearDataSource();
-        }
+//        if (isMulti) {
+//            DBContextHolder.clearDataSource();
+//        }
     }
 }
 

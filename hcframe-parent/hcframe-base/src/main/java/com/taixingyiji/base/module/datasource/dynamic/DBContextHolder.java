@@ -1,19 +1,21 @@
 package com.taixingyiji.base.module.datasource.dynamic;
 
+
 import com.taixingyiji.base.module.datasource.utils.DataSourceUtil;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * @description 使用 ConcurrentHashMap 储存当前线程数据源的 key，完全避免 ThreadLocal
+ * @author lhc
+ * @date 2020-09-23
+ * @description 通过ThreadLocal储存当前线程数据源的key
  */
 public class DBContextHolder {
-    private static final ConcurrentHashMap<Long, String> contextHolder = new ConcurrentHashMap<>();
+    // 对当前线程的操作-线程安全的
+    private static final ThreadLocal<String> contextHolder = new ThreadLocal<String>();
 
-    // 切换数据源
+    // 调用此方法，切换数据源
     public static void setDataSource(String dataSource) {
-        Long threadId = Thread.currentThread().getId();
         if (DataSourceUtil.dataSourceMap.containsKey(dataSource)) {
-            contextHolder.put(threadId, dataSource);
+            contextHolder.set(dataSource);
         } else {
             throw new RuntimeException("数据源:" + dataSource + "不存在");
         }
@@ -21,13 +23,12 @@ public class DBContextHolder {
 
     // 获取数据源
     public static String getDataSource() {
-        Long threadId = Thread.currentThread().getId();
-        return contextHolder.get(threadId);
+        return contextHolder.get();
     }
 
-    // 清理线程数据
+    // 删除数据源
     public static void clearDataSource() {
-        Long threadId = Thread.currentThread().getId();
-        contextHolder.remove(threadId);
+        contextHolder.remove();
     }
+
 }
