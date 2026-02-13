@@ -91,4 +91,9 @@ public class ShiroRealmConfig implements SystemRealm {
         return map;
     }
 
+    @Override
+    public void setTimeoutLogoutLog(String userId) {
+        // no-op implementation: set nothing or handle logout log if needed
+    }
+
 }

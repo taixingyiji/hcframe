@@ -25,8 +25,8 @@ import com.taixingyiji.base.module.log.annotation.LogAnno;
 import com.taixingyiji.base.module.tableconfig.entity.OsSysTable;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.lang.reflect.Method;
 import java.util.Date;

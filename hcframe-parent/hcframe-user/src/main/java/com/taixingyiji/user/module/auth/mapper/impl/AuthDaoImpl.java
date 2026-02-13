@@ -82,7 +82,7 @@ public class AuthDaoImpl implements AuthDao {
                 .join("OS_SYS_ROLE")
                 .on("ROLE_ID", "OS_REL_USER_ROLE", "ROLE_ID")
                 .build();
-        Condition condition = Condition.creatCriteria(selectCondition)
+        Condition condition = Condition.creatCriteria(selectCondition, "OS_REL_USER_ROLE")
                 .andEqual("OS_SYS_ROLE.DELETED", 1)
                 .andEqual("OS_SYS_MENU.DELETED", 1)
                 .andEqual("OS_SYS_MENU.MENU_STATUS", 1)
@@ -108,7 +108,7 @@ public class AuthDaoImpl implements AuthDao {
                 .join("OS_SYS_MENU")
                 .on("MENU_ID", "OS_REL_ROLE_MENU", "MENU_ID")
                 .build();
-        Condition condition = Condition.creatCriteria(selectCondition)
+        Condition condition = Condition.creatCriteria(selectCondition, "OS_REL_USER_GROUP")
                 .andEqual("OS_SYS_ROLE.DELETED", 1)
                 .andEqual("OS_SYS_MENU.DELETED", 1)
                 .andEqual("OS_SYS_MENU.OS_ID", OS_ID)
@@ -133,7 +133,7 @@ public class AuthDaoImpl implements AuthDao {
                 .join("OS_SYS_MENU")
                 .on("MENU_ID", "OS_REL_ROLE_MENU", "MENU_ID")
                 .build();
-        Condition condition = Condition.creatCriteria(selectCondition)
+        Condition condition = Condition.creatCriteria(selectCondition, "OS_REL_DEPT_ROLE")
                 .andEqual("OS_SYS_ROLE.DELETED", 1)
                 .andEqual("OS_SYS_MENU.DELETED", 1)
                 .andEqual("OS_SYS_MENU.OS_ID", OS_ID)
@@ -160,7 +160,7 @@ public class AuthDaoImpl implements AuthDao {
                 .join("OS_SYS_MENU")
                 .on("MENU_ID", "OS_REL_ROLE_MENU", "MENU_ID")
                 .build();
-        Condition condition = Condition.creatCriteria(selectCondition)
+        Condition condition = Condition.creatCriteria(selectCondition, "OS_REL_DEPT_GROUP")
                 .andEqual("OS_SYS_ROLE.DELETED", 1)
                 .andEqual("OS_SYS_MENU.DELETED", 1)
                 .andEqual("OS_SYS_ROLE_GROUP.DELETED", 1)
@@ -183,7 +183,7 @@ public class AuthDaoImpl implements AuthDao {
                 .join("OS_SYS_OS")
                 .on("OS_ID", "OS_REL_ROLE_OS", "OS_ID")
                 .build();
-        Condition condition = Condition.creatCriteria(selectCondition)
+        Condition condition = Condition.creatCriteria(selectCondition, "OS_REL_USER_ROLE")
                 .andEqual("OS_SYS_ROLE.DELETED", 1)
                 .andEqual("OS_SYS_OS.DELETED", 1)
                 .andEqual("OS_SYS_OS.ENABLED", 1)
@@ -209,7 +209,7 @@ public class AuthDaoImpl implements AuthDao {
                 .join("OS_SYS_OS")
                 .on("OS_ID", "OS_REL_ROLE_OS", "OS_ID")
                 .build();
-        Condition condition = Condition.creatCriteria(selectCondition)
+        Condition condition = Condition.creatCriteria(selectCondition, "OS_REL_USER_GROUP")
                 .andEqual("OS_SYS_ROLE.DELETED", 1)
                 .andEqual("OS_SYS_OS.DELETED", 1)
                 .andEqual("OS_SYS_OS.OS_ID", OS_ID)
@@ -234,7 +234,7 @@ public class AuthDaoImpl implements AuthDao {
                 .join("OS_SYS_OS")
                 .on("OS_ID", "OS_REL_ROLE_OS", "OS_ID")
                 .build();
-        Condition condition = Condition.creatCriteria(selectCondition)
+        Condition condition = Condition.creatCriteria(selectCondition, "OS_REL_DEPT_ROLE")
                 .andEqual("OS_SYS_ROLE.DELETED", 1)
                 .andEqual("OS_SYS_OS.DELETED", 1)
                 .andEqual("OS_SYS_OS.OS_ID", OS_ID)
@@ -261,7 +261,7 @@ public class AuthDaoImpl implements AuthDao {
                 .join("OS_SYS_OS")
                 .on("OS_ID", "OS_REL_ROLE_OS", "OS_ID")
                 .build();
-        Condition condition = Condition.creatCriteria(selectCondition)
+        Condition condition = Condition.creatCriteria(selectCondition, "OS_REL_DEPT_GROUP")
                 .andEqual("OS_SYS_ROLE.DELETED", 1)
                 .andEqual("OS_SYS_OS.DELETED", 1)
                 .andEqual("OS_SYS_ROLE_GROUP.DELETED", 1)
