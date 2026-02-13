@@ -1,7 +1,7 @@
 package com.taixingyiji.base.common.utils;
 
 
-import org.apache.shiro.codec.Base64;
+import java.util.Base64;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -138,9 +138,28 @@ public class EncryptUtil {
     }
 
     private String base64(byte[] res) {
-        return new String(Base64.encode(res));
+        return Base64.getEncoder().encodeToString(res);
     }
 
+    /**
+     * 使用Base64进行加密
+     *
+     * @param res 密文
+     * @return
+     */
+    public String Base64Encode(String res) {
+        return Base64.getEncoder().encodeToString(res.getBytes());
+    }
+
+    /**
+     * 使用Base64进行解密
+     *
+     * @param res
+     * @return
+     */
+    public String Base64Decode(String res) {
+        return new String(Base64.getDecoder().decode(res));
+    }
     /**
      * 将二进制转换成16进制
      */
