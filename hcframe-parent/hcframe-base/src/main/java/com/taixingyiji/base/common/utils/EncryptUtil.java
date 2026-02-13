@@ -318,23 +318,4 @@ public class EncryptUtil {
         return res ^ key.hashCode();
     }
 
-    /**
-     * 使用Base64进行加密
-     *
-     * @param res 密文
-     * @return
-     */
-    public String Base64Encode(String res) {
-        return String.valueOf(Base64.encode(res.getBytes()));
-    }
-
-    /**
-     * 使用Base64进行解密
-     *
-     * @param res
-     * @return
-     */
-    public String Base64Decode(String res) {
-        return new String(Base64.decode(res));
-    }
 }
