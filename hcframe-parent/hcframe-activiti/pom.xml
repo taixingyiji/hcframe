@@ -31,11 +31,6 @@
             <artifactId>activiti-spring-boot-starter</artifactId>
             <version>7.1.0.M1</version>
         </dependency>
-        <dependency>
-            <groupId>com.taixingyiji</groupId>
-            '1.2.5.5-SNAPSHOT'
-            <scope>compile</scope>
-        </dependency>
     </dependencies>
     <build>
         <plugins>
