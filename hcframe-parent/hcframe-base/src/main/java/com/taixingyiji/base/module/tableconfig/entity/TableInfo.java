@@ -30,6 +30,7 @@ public class TableInfo implements Serializable {
             value = "表描述",
             dataType = "String"
     )
+    @Builder.Default
     private String tableComment = "";
 
 }
