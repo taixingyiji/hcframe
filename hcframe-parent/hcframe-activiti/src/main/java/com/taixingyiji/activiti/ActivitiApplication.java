@@ -11,10 +11,8 @@ import org.springframework.context.annotation.FilterType;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import tk.mybatis.spring.annotation.MapperScan;
 
-@SpringBootApplication(exclude = {
-        org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration.class,
-        org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration.class,
-})
+@SpringBootApplication
+
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 @EnableSwagger2
 @EnableCaching

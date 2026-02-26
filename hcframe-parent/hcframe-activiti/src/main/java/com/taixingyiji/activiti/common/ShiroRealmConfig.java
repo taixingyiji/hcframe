@@ -73,4 +73,9 @@ public class ShiroRealmConfig implements SystemRealm {
         map.put("/**", ShiroType.ANON);
         return map;
     }
+
+    @Override
+    public void setTimeoutLogoutLog(String userId) {
+        // no-op for now
+    }
 }

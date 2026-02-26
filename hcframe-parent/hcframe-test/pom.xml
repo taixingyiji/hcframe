@@ -26,6 +26,15 @@
             <artifactId>hcframe-base</artifactId>
             <version>1.2.5.5-SNAPSHOT</version>
         </dependency>
+        <!-- Ensure Spring Boot web and autoconfigure are available for SB4 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
