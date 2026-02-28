@@ -198,12 +198,6 @@
             <version>1.2.27</version>
             <scope>compile</scope>
         </dependency>
-        <!-- Replace Druid with HikariCP (kept for optional use) -->
-        <dependency>
-            <groupId>com.zaxxer</groupId>
-            <artifactId>HikariCP</artifactId>
-            <version>5.0.1</version>
-        </dependency>
         <!-- Micrometer for metrics (Hikari metrics auto-instrumented by Spring Boot + Micrometer) -->
         <dependency>
             <groupId>io.micrometer</groupId>
