@@ -22,8 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
+import com.alibaba.druid.pool.DruidDataSource;
 
 
 /**
@@ -152,35 +151,34 @@ public class DataSourceUtil {
     }
 
     /**
-     * 初始化Hikari配置
+     * 初始化 Druid 配置（替代原来的 Hikari 实现）
      *
      * @param type
      */
     public static javax.sql.DataSource initHikari(String type) {
-        HikariConfig config = new HikariConfig();
+        // 使用 DruidDataSource 作为实现，以兼容以前代码中对 initHikari 的调用
+        DruidDataSource ds = new DruidDataSource();
         // map common pool properties from defaultDataSource if available
         if (defaultDataSource != null) {
-            // try to copy Hikari-specific properties if the default data source is Hikari
-            if (defaultDataSource instanceof HikariDataSource) {
-                HikariDataSource ds = (HikariDataSource) defaultDataSource;
-                try { config.setMaximumPoolSize(ds.getMaximumPoolSize()); } catch (Exception ignored) {}
-                try { config.setMinimumIdle(ds.getMinimumIdle()); } catch (Exception ignored) {}
-                try { config.setConnectionTimeout(ds.getConnectionTimeout()); } catch (Exception ignored) {}
-                try { config.setIdleTimeout(ds.getIdleTimeout()); } catch (Exception ignored) {}
-                try { config.setMaxLifetime(ds.getMaxLifetime()); } catch (Exception ignored) {}
+            // try to copy some common properties if the default data source is Druid
+            if (defaultDataSource instanceof DruidDataSource) {
+                DruidDataSource defaultDs = (DruidDataSource) defaultDataSource;
+                try { ds.setMaxActive(defaultDs.getMaxActive()); } catch (Exception ignored) {}
+                try { ds.setInitialSize(defaultDs.getInitialSize()); } catch (Exception ignored) {}
+                try { ds.setMaxWait(defaultDs.getMaxWait()); } catch (Exception ignored) {}
+                try { ds.setMinIdle(defaultDs.getMinIdle()); } catch (Exception ignored) {}
             }
         }
         // set validation query if available via datasourceType
         DatasourceType datasourceType = datasourceTypeDao.selectOne(DatasourceType.builder().typeKey(type).build());
         if (datasourceType != null && datasourceType.getValidateQuery() != null) {
-            config.setConnectionTestQuery(datasourceType.getValidateQuery());
+            ds.setValidationQuery(datasourceType.getValidateQuery());
         }
         // other sensible defaults
-        config.setAutoCommit(true);
-        config.setPoolName("hcframe-hikari-");
+        ds.setDefaultAutoCommit(true);
+        ds.setName("hcframe-druid-");
 
-        HikariDataSource hikariDataSource = new HikariDataSource(config);
-        return hikariDataSource;
+        return ds;
     }
 
     /**
