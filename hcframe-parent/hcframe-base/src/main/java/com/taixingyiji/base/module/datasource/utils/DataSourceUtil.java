@@ -68,9 +68,9 @@ public class DataSourceUtil {
      */
     public static void initDataSource() {
         try {
-            //获取masterDataSource
-            HikariDataSource masterDataSource = (HikariDataSource) SpringContextUtil.getBean(DataUnit.MASTERBEAN);
-            DataSourceUtil.defaultDataSource = (HikariDataSource) SpringContextUtil.getBean(DataUnit.MASTERBEAN);
+            //获取masterDataSource（改为使用 DruidDataSource 或通用 DataSource）
+            DruidDataSource masterDataSource = (DruidDataSource) SpringContextUtil.getBean(DataUnit.MASTERBEAN);
+            DataSourceUtil.defaultDataSource = (DruidDataSource) SpringContextUtil.getBean(DataUnit.MASTERBEAN);
             addDataSource(DataUnit.MASTER, masterDataSource);
             addDataSource(DataUnit.SQLITE, masterDataSource);
             flushDataSource();
