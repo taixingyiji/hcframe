@@ -1,6 +1,6 @@
 package com.taixingyiji.base.module.data.module;
 
-import javax.sql.DataSource;
+import com.alibaba.druid.pool.DruidDataSource;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -19,11 +19,11 @@ import java.util.concurrent.ConcurrentHashMap;
 public class TableMetadataCache {
     // 缓存所有表的字段类型信息
     private static final ConcurrentHashMap<String, Map<String, String>> tableColumnTypesCache = new ConcurrentHashMap<>();
-    final DataSource dataSource;
+    final DruidDataSource dataSource;
 
     // 数据库连接池或者数据源
 
-    public TableMetadataCache(DataSource druidDataSource) {
+    public TableMetadataCache(DruidDataSource druidDataSource) {
         this.dataSource = druidDataSource;
     }
 

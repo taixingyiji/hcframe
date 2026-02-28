@@ -1,6 +1,6 @@
 package com.taixingyiji.base.module.data.module;
 
-import javax.sql.DataSource;
+import com.alibaba.druid.pool.DruidDataSource;
 import com.github.pagehelper.PageInfo;
 import com.taixingyiji.base.common.ServiceException;
 import com.taixingyiji.base.common.WebPageInfo;
@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
@@ -32,14 +33,14 @@ public class BaseMapperImpl implements BaseMapper {
     public static final String BASE = "base";
     public static final String TABLE_MAPPER_PACKAGE = "com.taixingyiji.base.module.data.dao.TableMapper.";
     final TableMapper tableMapper;
-    final DataSource dataSource;
+    final DruidDataSource druidDataSource;
 
     @Value("${spring.datasource.druid.driver-class-name}")
     public String dataType;
     final SqlSessionTemplate sqlSessionTemplate;
 
     public BaseMapperImpl(TableMapper tableMapper, SqlSessionTemplate sqlSessionTemplate,
-                          DataSource druidDataSource,FrameConfig frameConfig,
+                          DruidDataSource druidDataSource,FrameConfig frameConfig,
                           @Autowired(required = false) @Qualifier("dynamicSqlSessionTemplate") SqlSessionTemplate sqlSessionTemplate2) {
         this.tableMapper = tableMapper;
         if(frameConfig.getMultiDataSource() && sqlSessionTemplate2 != null ){
@@ -47,7 +48,7 @@ public class BaseMapperImpl implements BaseMapper {
         }else {
             this.sqlSessionTemplate = sqlSessionTemplate;
         }
-        this.dataSource = druidDataSource;
+        this.druidDataSource = druidDataSource;
     }
 
     @Override
@@ -60,7 +61,7 @@ public class BaseMapperImpl implements BaseMapper {
             datasourceConfig = DataSourceUtil.get(key);
         } catch (Exception e) {
             try {
-                Connection connection = dataSource.getConnection();
+                Connection connection = druidDataSource.getConnection();
                 String dbType = connection.getMetaData().getDatabaseProductName();
                 if (dbType.contains("Oracle")) {
                     datasourceConfig.setCommonType(DataUnit.ORACLE);
@@ -77,8 +78,7 @@ public class BaseMapperImpl implements BaseMapper {
                 if (dbType.contains("PostgreSQL")) {
                     datasourceConfig.setCommonType(DataUnit.HANGO);
                 }
-                // already closed above
-                
+                connection.close();
             } catch (Exception e1) {
                 if (dataType.contains("oracle")) {
                     datasourceConfig.setCommonType(DataUnit.ORACLE);
@@ -903,20 +903,12 @@ public class BaseMapperImpl implements BaseMapper {
             id = tableMapper.getHighGoSequence(tableName.toLowerCase());
         } else {
             try {
-                Connection connForMeta = dataSource.getConnection();
-                try {
-                    String url = connForMeta.getMetaData().getURL();
-                    String schema = getSchemaFromJdbcUrl(url);
-                    if (tableMapper.judgeDamengSequenceExist(tableName, schema) > 0) {
-                        id = tableMapper.getSequence(tableName);
-                    } else {
-                        throw new ServiceException("序列不存在");
-                    }
-                } finally {
-                    try {
-                        if (connForMeta != null && !connForMeta.isClosed()) connForMeta.close();
-                    } catch (SQLException ignored) {
-                    }
+                String url = druidDataSource.getUrl();
+                String schema = getSchemaFromJdbcUrl(url);
+                if (tableMapper.judgeDamengSequenceExist(tableName, schema) > 0) {
+                    id = tableMapper.getSequence(tableName);
+                } else {
+                    throw new ServiceException("序列不存在");
                 }
             } catch (Exception e) {
                 Map<String, Object> map = selectRecentData(tableName, pkName);

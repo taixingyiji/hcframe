@@ -1,6 +1,6 @@
 package com.taixingyiji.base.module.datasource.service.impl;
 
-import javax.sql.DataSource; // replaced Druid with generic DataSource
+import com.alibaba.druid.pool.DruidDataSource;
 import com.taixingyiji.base.common.ResultVO;
 import com.taixingyiji.base.common.utils.ObjectUtil;
 import com.taixingyiji.base.module.datasource.dao.DatasourceConfigDao;
@@ -38,10 +38,10 @@ public class DatasourceConfigServiceImpl implements DatasourceConfigService {
     @Override
     public ResultVO add(Integer id) {
         DatasourceConfig datasourceConfig = datasourceConfigDao.selectByPrimaryKey(id);
-        javax.sql.DataSource ds = DataSourceUtil.initHikari(datasourceConfig.getCommonType());
-        BeanUtils.copyProperties(datasourceConfig, ds);
+        DruidDataSource druidDataSource = DataSourceUtil.initDruid(datasourceConfig.getCommonType());
+        BeanUtils.copyProperties(datasourceConfig,druidDataSource);
         //添加数据源到map
-        DataSourceUtil.addMapData(datasourceConfig.getCommonAlias(), ds, datasourceConfig);
+        DataSourceUtil.addMapData(datasourceConfig.getCommonAlias(), druidDataSource,datasourceConfig);
         //刷新
         DataSourceUtil.flushDataSource();
         return ResultVO.getSuccess();
