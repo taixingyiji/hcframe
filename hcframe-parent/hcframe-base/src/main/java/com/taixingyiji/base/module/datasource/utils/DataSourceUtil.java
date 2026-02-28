@@ -22,7 +22,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.alibaba.druid.pool.DruidDataSource;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 
 
 /**
@@ -68,9 +69,9 @@ public class DataSourceUtil {
      */
     public static void initDataSource() {
         try {
-            //获取masterDataSource（改为使用 DruidDataSource 或通用 DataSource）
-            DruidDataSource masterDataSource = (DruidDataSource) SpringContextUtil.getBean(DataUnit.MASTERBEAN);
-            DataSourceUtil.defaultDataSource = (DruidDataSource) SpringContextUtil.getBean(DataUnit.MASTERBEAN);
+            //获取masterDataSource
+            HikariDataSource masterDataSource = (HikariDataSource) SpringContextUtil.getBean(DataUnit.MASTERBEAN);
+            DataSourceUtil.defaultDataSource = (HikariDataSource) SpringContextUtil.getBean(DataUnit.MASTERBEAN);
             addDataSource(DataUnit.MASTER, masterDataSource);
             addDataSource(DataUnit.SQLITE, masterDataSource);
             flushDataSource();
@@ -151,34 +152,35 @@ public class DataSourceUtil {
     }
 
     /**
-     * 初始化 Druid 配置（替代原来的 Hikari 实现）
+     * 初始化Hikari配置
      *
      * @param type
      */
     public static javax.sql.DataSource initHikari(String type) {
-        // 使用 DruidDataSource 作为实现，以兼容以前代码中对 initHikari 的调用
-        DruidDataSource ds = new DruidDataSource();
+        HikariConfig config = new HikariConfig();
         // map common pool properties from defaultDataSource if available
         if (defaultDataSource != null) {
-            // try to copy some common properties if the default data source is Druid
-            if (defaultDataSource instanceof DruidDataSource) {
-                DruidDataSource defaultDs = (DruidDataSource) defaultDataSource;
-                try { ds.setMaxActive(defaultDs.getMaxActive()); } catch (Exception ignored) {}
-                try { ds.setInitialSize(defaultDs.getInitialSize()); } catch (Exception ignored) {}
-                try { ds.setMaxWait(defaultDs.getMaxWait()); } catch (Exception ignored) {}
-                try { ds.setMinIdle(defaultDs.getMinIdle()); } catch (Exception ignored) {}
+            // try to copy Hikari-specific properties if the default data source is Hikari
+            if (defaultDataSource instanceof HikariDataSource) {
+                HikariDataSource ds = (HikariDataSource) defaultDataSource;
+                try { config.setMaximumPoolSize(ds.getMaximumPoolSize()); } catch (Exception ignored) {}
+                try { config.setMinimumIdle(ds.getMinimumIdle()); } catch (Exception ignored) {}
+                try { config.setConnectionTimeout(ds.getConnectionTimeout()); } catch (Exception ignored) {}
+                try { config.setIdleTimeout(ds.getIdleTimeout()); } catch (Exception ignored) {}
+                try { config.setMaxLifetime(ds.getMaxLifetime()); } catch (Exception ignored) {}
             }
         }
         // set validation query if available via datasourceType
         DatasourceType datasourceType = datasourceTypeDao.selectOne(DatasourceType.builder().typeKey(type).build());
         if (datasourceType != null && datasourceType.getValidateQuery() != null) {
-            ds.setValidationQuery(datasourceType.getValidateQuery());
+            config.setConnectionTestQuery(datasourceType.getValidateQuery());
         }
         // other sensible defaults
-        ds.setDefaultAutoCommit(true);
-        ds.setName("hcframe-druid-");
+        config.setAutoCommit(true);
+        config.setPoolName("hcframe-hikari-");
 
-        return ds;
+        HikariDataSource hikariDataSource = new HikariDataSource(config);
+        return hikariDataSource;
     }
 
     /**
