@@ -3,7 +3,7 @@ package com.taixingyiji.base.module.auth.service;
 
 import com.taixingyiji.base.common.ResultVO;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * (FtUser)表服务接口
