@@ -1,6 +1,6 @@
 package com.taixingyiji.base.module.tableconfig.entity;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,16 +20,10 @@ import java.io.Serializable;
 public class TableInfo implements Serializable {
     private static final long serialVersionUID = -277016779002661446L;
 
-    @ApiModelProperty(
-            value = "表名",
-            dataType = "String"
-    )
+    @Schema(description = "表名")
     private String tableName;
 
-    @ApiModelProperty(
-            value = "表描述",
-            dataType = "String"
-    )
+    @Schema(description = "表描述")
     @Builder.Default
     private String tableComment = "";
 

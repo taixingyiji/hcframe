@@ -1,7 +1,7 @@
 package com.taixingyiji.base.common;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * @author lhc
@@ -19,7 +19,7 @@ public class ResultVO<T> {
     private Integer code=SUCCESS;
 
     //("返回信息")
-    @ApiModelProperty(example="ActionOK")
+    @Schema(example="ActionOK")
     private String msg;
 
     //("返回数据")

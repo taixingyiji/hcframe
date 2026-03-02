@@ -1,7 +1,6 @@
 package com.taixingyiji.base.module.datasource.entity;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,7 +20,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @Data
-@ApiModel
+@Schema
 public class DatasourceType implements Serializable {
     private static final long serialVersionUID = 331087641518717829L;
 
@@ -29,28 +28,16 @@ public class DatasourceType implements Serializable {
     @GeneratedValue(generator="JDBC")
     private Integer typeId;
 
-    @ApiModelProperty(
-            value = "Key",
-            dataType = "String"
-    )
+    @Schema(description = "Key")
     private String typeKey;
 
-    @ApiModelProperty(
-            value = "名称",
-            dataType = "String"
-    )
+    @Schema(description = "名称")
     private String typeValue;
 
-    @ApiModelProperty(
-            value = "驱动类地址",
-            dataType = "String"
-    )
+    @Schema(description = "驱动类地址")
     private String driver;
 
-    @ApiModelProperty(
-            value = "数据库校验语句",
-            dataType = "String"
-    )
+    @Schema(description = "数据库校验语句")
     private String validateQuery;
 
 

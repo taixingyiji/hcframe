@@ -1,6 +1,6 @@
 package com.taixingyiji.base.common;
 
-import io.swagger.annotations.ApiModel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,7 +19,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @Data
-@ApiModel
+@Schema
 public class SortItem implements Serializable {
     private static final long serialVersionUID = 5462627800342658554L;
     private String field;

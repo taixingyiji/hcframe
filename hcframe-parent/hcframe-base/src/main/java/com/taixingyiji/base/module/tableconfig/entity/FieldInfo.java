@@ -1,6 +1,6 @@
 package com.taixingyiji.base.module.tableconfig.entity;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,28 +15,15 @@ import java.io.Serializable;
 public class FieldInfo implements Serializable {
     private static final long serialVersionUID = 3537487795273818036L;
 
-    @ApiModelProperty(
-            value = "字段名",
-            dataType = "String"
-    )
+    @Schema(description = "字段名")
     private String columnName;
 
-    @ApiModelProperty(
-            value = "数据类型",
-            dataType = "String"
-    )
+    @Schema(description = "数据类型")
     private String dataType;
 
-    @ApiModelProperty(
-            value = "键类型,1为主键，0为非主键",
-            dataType = "Integer",
-            allowableValues = "1"
-    )
+    @Schema(description = "键类型,1为主键，0为非主键", allowableValues = {"1"})
     private Integer columnKey;
 
-    @ApiModelProperty(
-            value = "注释",
-            dataType = "String"
-    )
+    @Schema(description = "注释")
     private String columnComment;
 }

@@ -1,8 +1,7 @@
 package com.taixingyiji.base.module.datasource.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,7 +23,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @Data
-@ApiModel
+@Schema
 public class DatasourceConfig implements Serializable {
     private static final long serialVersionUID = 188640098731075764L;
 
@@ -37,69 +36,34 @@ public class DatasourceConfig implements Serializable {
     @GeneratedValue(generator="JDBC")
     private Integer datasourceId;
 
-    @ApiModelProperty(
-            value = "驱动包地址",
-            dataType = "String"
-    )
+    @Schema(description = "驱动包地址")
     private String driverClassName;
 
-    @ApiModelProperty(
-            value = "数据库连接url",
-            example = "",
-            dataType = "String"
-    )
+    @Schema(description = "数据库连接url", example = "")
     private String url;
 
-    @ApiModelProperty(
-            value = "数据库用户名",
-            dataType = "String"
-    )
+    @Schema(description = "数据库用户名")
     private String username;
 
-    @ApiModelProperty(
-            value = "数据库密码",
-            dataType = "String"
-    )
+    @Schema(description = "数据库密码")
     private String password;
 
-    @ApiModelProperty(
-            value = "数据库key(数据库别名)",
-            example = "",
-            dataType = "String"
-    )
+    @Schema(description = "数据库key(数据库别名)", example = "")
     private String commonAlias;
 
-    @ApiModelProperty(
-            value = "数据库类型",
-            example = "mysql",
-            dataType = "String"
-    )
+    @Schema(description = "数据库类型", example = "mysql")
     private String commonType;
 
-    @ApiModelProperty(
-            value = "是否启用数据库",
-            example = "1",
-            dataType = "Integer"
-    )
+    @Schema(description = "是否启用数据库", example = "1")
     private Integer sysEnabled;
 
-    @ApiModelProperty(
-            value = "是否是默认数据库",
-            example = "1",
-            dataType = "Integer"
-    )
+    @Schema(description = "是否是默认数据库", example = "1")
     private Integer isDefault;
 
-    @ApiModelProperty(
-            value = "数据库库名",
-            dataType = "String"
-    )
+    @Schema(description = "数据库库名")
     private String schemaName;
 
-    @ApiModelProperty(
-            value = "数据库中文描述",
-            dataType = "String"
-    )
+    @Schema(description = "数据库中文描述")
     private String sysDescription;
 
     @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd HH:mm:ss")

@@ -1,7 +1,6 @@
 package com.taixingyiji.base.common;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,7 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @Data
-@ApiModel
+@Schema
 public class WebPageInfo implements Serializable {
 
     private static final long serialVersionUID = 1156251348750279606L;
@@ -29,45 +28,43 @@ public class WebPageInfo implements Serializable {
     public static final String DESC = "desc";
     public static final String ASC = "asc";
 
-    @ApiModelProperty(
-            value="每页显示条数" ,
-            example="10",
-            dataType = "Integer"
+    @Schema(
+            description="每页显示条数" ,
+            example="10"
     )
     @Builder.Default
     private Integer pageSize = 10;
 
-    @ApiModelProperty(
-            value="页码" ,
-            example="1",
-            dataType = "Integer"
+    @Schema(
+            description="页码" ,
+            example="1"
     )
     @Builder.Default
     private Integer pageNum = 1;
 
-    @ApiModelProperty(value="排序字段")
+    @Schema(description="排序字段")
     private String sortField;
 
-    @ApiModelProperty(
-            value = "正序倒序",
-            allowableValues = "asc,desc",
+    @Schema(
+            description = "正序倒序",
+            allowableValues = {"asc","desc"},
             example = "asc")
     @Builder.Default
     private String order = ASC;
 
 
-    @ApiModelProperty(
-            value = "符合排序字段",example = "[{\"field\":\"CREATE_TIME\",\"order\":\"ASC\"}]")
+    @Schema(
+            description = "符合排序字段",example = "[{\"field\":\"CREATE_TIME\",\"order\":\"ASC\"}]")
     private String sortList;
 
-    @ApiModelProperty(
-            value = "开启分页缓存"
+    @Schema(
+            description = "开启分页缓存"
     )
     @Builder.Default
     private boolean enableCache = false;
 
-    @ApiModelProperty(
-            value = "开启分页排序"
+    @Schema(
+            description = "开启分页排序"
     )
     @Builder.Default
     private boolean enableSort = true;
