@@ -4,7 +4,7 @@ import com.taixingyiji.base.common.ResultVO;
 import com.taixingyiji.base.module.datasource.annotation.DatasourceAnno;
 import com.taixingyiji.base.module.datasource.service.DatasourceTypeService;
 import com.taixingyiji.base.module.datasource.utils.DataUnit;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +23,7 @@ public class DatasourceTypeController {
     DatasourceTypeService datasourceTypeService;
 
     @GetMapping("all")
-    @ApiOperation(value = "获取全部数据库类型信息")
+    @Operation(summary = "获取全部数据库类型信息")
     @DatasourceAnno(DataUnit.SQLITE)
     public ResultVO getAllInfo() {
         return ResultVO.getSuccess(datasourceTypeService.getAllInfo());

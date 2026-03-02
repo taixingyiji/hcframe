@@ -4,7 +4,7 @@ import com.taixingyiji.base.common.ResultVO;
 import com.taixingyiji.base.module.auth.entity.OsSysMenu;
 import com.taixingyiji.base.module.auth.service.AuthFunctionService;
 import com.taixingyiji.base.module.auth.service.MenuService;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +19,7 @@ import java.util.List;
  * @decription 权限接口
  */
 @RestController
-@Api(tags = "权限管理")
+@Tag(name = "权限管理")
 @RequestMapping("auth/function")
 public class AuthFunctionController {
 
