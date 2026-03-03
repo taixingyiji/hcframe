@@ -10,14 +10,12 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import tk.mybatis.spring.annotation.MapperScan;
 
 
 
 @SpringBootApplication()
 @EnableAspectJAutoProxy(proxyTargetClass = true)
-@EnableSwagger2
 @EnableCaching
 @MapperScan(basePackages = "com.taixingyiji.**.dao")
 @ComponentScan(basePackages = {"com.taixingyiji.**"}, excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {DataSourceConfiguration.class}))
