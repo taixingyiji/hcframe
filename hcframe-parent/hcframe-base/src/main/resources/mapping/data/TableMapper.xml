@@ -196,7 +196,7 @@
         BEGIN
         result := sp_getapplock('${tableName}_seq', 'Exclusive', 'Session', 10);
 
-        IF result < 0 THEN
+        IF result &lt; 0 THEN
         RAISE_APPLICATION_ERROR(-20001, '获取锁失败');
         END IF;
         END;
