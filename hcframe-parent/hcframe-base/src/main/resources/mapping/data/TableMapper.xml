@@ -182,26 +182,29 @@
         SELECT setval( '${tableName}_seq', (SELECT COALESCE(MAX(${pkName}),0) + 1 FROM ${tableName}), false);
     </select>
     <!-- 获取锁 -->
-    <select id="lockSequence" resultType="void">
-        SELECT pg_advisory_lock(hashtext(${tableName}_seq));
+    <select id="lockSequence">
+        SELECT pg_advisory_lock(hashtext('${tableName}_seq'));
     </select>
 
     <!-- 释放锁 -->
-    <select id="unlockSequence" resultType="void">
-        SELECT pg_advisory_unlock(hashtext(${tableName}_seq));
+    <select id="unlockSequence" >
+        SELECT pg_advisory_unlock(hashtext('${tableName}_seq'));
     </select>
     <update id="lockSequenceDm">
         DECLARE
-        l_lockhandle VARCHAR2(128);
+        result INT;
         BEGIN
-  DBMS_LOCK.ALLOCATE_UNIQUE(${tableName}_seq, l_lockhandle);
-        DBMS_LOCK.REQUEST(l_lockhandle, DBMS_LOCK.X_MODE, 10, TRUE);
+        result := sp_getapplock('${tableName}_seq', 'Exclusive', 'Session', 10);
+
+        IF result < 0 THEN
+        RAISE_APPLICATION_ERROR(-20001, '获取锁失败');
+        END IF;
         END;
     </update>
 
     <update id="unlockSequenceDm">
         BEGIN
-  DBMS_LOCK.RELEASE(${tableName}_seq);
+    sp_releaseapplock('${tableName}_seq', 'Session');
         END;
     </update>
     <update id="createSequenceSafeDm">
@@ -234,7 +237,7 @@
         SELECT COUNT(*)
         FROM all_sequences
         WHERE sequence_owner = '${schema}'
-          AND sequence_name = '${tableName}_SEQ'
+          AND sequence_name = '${tableName}_seq'
     </select>
     <select id="count" resultType="java.lang.Long">
         SELECT count(0) FROM ${tableName} ${sql}
