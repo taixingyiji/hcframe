@@ -171,7 +171,7 @@
         NOCACHE
     </insert>
     <insert id="createHighGoSequence">
-        CREATE SEQUENCE ${tableName}_seq
+        CREATE SEQUENCE IF NOT EXISTS  ${tableName}_seq
         MINVALUE 1
         NO MAXVALUE
         START WITH ${lastId}

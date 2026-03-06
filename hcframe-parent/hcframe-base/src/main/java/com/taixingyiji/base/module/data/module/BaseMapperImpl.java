@@ -896,7 +896,7 @@ public class BaseMapperImpl implements BaseMapper {
                 if (map == null) {
                     tableMapper.createHighGoSequence(tableName.toLowerCase(), 1);
                 } else {
-                    tableMapper.createHighGoSequence(tableName.toLowerCase(), map.get(pkName));
+                    tableMapper.createHighGoSequence(tableName.toLowerCase(), Long.parseLong(String.valueOf(map.get(pkName)))+ 1);
                 }
             }
             id = tableMapper.getHighGoSequence(tableName.toLowerCase());
@@ -914,12 +914,12 @@ public class BaseMapperImpl implements BaseMapper {
                 if (map == null) {
                     tableMapper.createSequence(tableName, 1);
                 } else {
-                    tableMapper.createSequence(tableName, map.get(pkName));
+                    tableMapper.createSequence(tableName, Long.parseLong(String.valueOf(map.get(pkName)))+ 1);
                 }
                 id = tableMapper.getSequence(tableName);
             }
         }
-        return Long.parseLong(id.toString()) + 1L;
+        return Long.parseLong(id.toString());
     }
 
     private Map<String, Object> selectRecentData(String tableName, String pkName) {
