@@ -178,18 +178,18 @@
         INCREMENT BY 1
         CACHE 1;
     </insert>
-    <select id="setValForHighGoSequence">
+    <update id="setValForHighGoSequence">
         SELECT setval( '${tableName}_seq', (SELECT COALESCE(MAX(${pkName}),0) + 1 FROM ${tableName}), false);
-    </select>
+    </update>
     <!-- 获取锁 -->
-    <select id="lockSequence">
+    <update id="lockSequence">
         SELECT pg_advisory_lock(hashtext('${tableName}_seq'));
-    </select>
+    </update>
 
     <!-- 释放锁 -->
-    <select id="unlockSequence" >
+    <update id="unlockSequence" >
         SELECT pg_advisory_unlock(hashtext('${tableName}_seq'));
-    </select>
+    </update>
     <update id="lockSequenceDm">
         DECLARE
         result INT;

@@ -56,13 +56,13 @@ public interface TableMapper {
 
     int updateBatchByPk(@Param("sql")String sql);
 
-    void lockSequence(@Param("tableName")String tableName);
+    int lockSequence(@Param("tableName")String tableName);
 
-    void unlockSequence(@Param("tableName") String tableName);
+    int unlockSequence(@Param("tableName") String tableName);
 
-    void lockSequenceDm(@Param("tableName") String tableName);
+    int lockSequenceDm(@Param("tableName") String tableName);
 
-    void unlockSequenceDm(@Param("tableName") String tableName);
+    int unlockSequenceDm(@Param("tableName") String tableName);
 
-    void createSequenceSafeDm(@Param("tableName") String tableName, @Param("pkName") String pkName);
+    int createSequenceSafeDm(@Param("tableName") String tableName, @Param("pkName") String pkName);
 }
