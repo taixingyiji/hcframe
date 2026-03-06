@@ -178,6 +178,49 @@
         INCREMENT BY 1
         CACHE 1;
     </insert>
+    <select id="setValForHighGoSequence">
+        SELECT setval( '${tableName}_seq', (SELECT COALESCE(MAX(${pkName}),0) + 1 FROM ${tableName}), false);
+    </select>
+    <!-- 获取锁 -->
+    <select id="lockSequence" resultType="void">
+        SELECT pg_advisory_lock(hashtext(${tableName}_seq));
+    </select>
+
+    <!-- 释放锁 -->
+    <select id="unlockSequence" resultType="void">
+        SELECT pg_advisory_unlock(hashtext(${tableName}_seq));
+    </select>
+    <update id="lockSequenceDm">
+        DECLARE
+        l_lockhandle VARCHAR2(128);
+        BEGIN
+  DBMS_LOCK.ALLOCATE_UNIQUE(${tableName}_seq, l_lockhandle);
+        DBMS_LOCK.REQUEST(l_lockhandle, DBMS_LOCK.X_MODE, 10, TRUE);
+        END;
+    </update>
+
+    <update id="unlockSequenceDm">
+        BEGIN
+  DBMS_LOCK.RELEASE(${tableName}_seq);
+        END;
+    </update>
+    <update id="createSequenceSafeDm">
+        DECLARE
+        v_start NUMBER;
+        BEGIN
+  -- 计算 max(pk)+1
+        SELECT NVL(MAX(${pkName}),0)+1 INTO v_start FROM ${tableName} FOR UPDATE;
+
+        -- 创建序列，如果已存在则忽略
+        BEGIN
+        EXECUTE IMMEDIATE 'CREATE SEQUENCE ' || ${tableName}_seq ||
+                          ' START WITH ' || v_start || ' INCREMENT BY 1 NOCACHE';
+        EXCEPTION
+    WHEN OTHERS THEN
+      NULL; -- 已存在忽略
+        END;
+        END;
+    </update>
     <select id="judgeHighGoSequenceExist" resultType="boolean">
         SELECT EXISTS (
             SELECT 1
