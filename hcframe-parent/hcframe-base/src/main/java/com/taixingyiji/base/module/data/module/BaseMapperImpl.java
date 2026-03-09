@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -40,12 +41,12 @@ public class BaseMapperImpl implements BaseMapper {
     final SqlSessionTemplate sqlSessionTemplate;
 
     public BaseMapperImpl(TableMapper tableMapper, SqlSessionTemplate sqlSessionTemplate,
-                          DruidDataSource druidDataSource,FrameConfig frameConfig,
+                          DruidDataSource druidDataSource, FrameConfig frameConfig,
                           @Autowired(required = false) @Qualifier("dynamicSqlSessionTemplate") SqlSessionTemplate sqlSessionTemplate2) {
         this.tableMapper = tableMapper;
-        if(frameConfig.getMultiDataSource() && sqlSessionTemplate2 != null ){
+        if (frameConfig.getMultiDataSource() && sqlSessionTemplate2 != null) {
             this.sqlSessionTemplate = sqlSessionTemplate2;
-        }else {
+        } else {
             this.sqlSessionTemplate = sqlSessionTemplate;
         }
         this.druidDataSource = druidDataSource;
@@ -107,7 +108,7 @@ public class BaseMapperImpl implements BaseMapper {
         JudgesNull(dataMap.getTableName(), "tableName can not be null!");
         KeyUtils.checkSafeKey(dataMap.getData());
         if (DataUnit.HANGO.equals(dataTypeConfig)) {
-            dataMap.getData().putAll(formatMap(dataMap.getData(),dataMap.getTableName()));
+            dataMap.getData().putAll(formatMap(dataMap.getData(), dataMap.getTableName()));
         }
         if (StringUtils.isEmpty(dataMap.getPkName())) {
             dataMap.setPkName("ID");
@@ -187,7 +188,7 @@ public class BaseMapperImpl implements BaseMapper {
         Map<String, Object> params = condition.getParamMap();
         params.put("tableName", tableName);
         String dataTypeConfig = getDataConfig();
-        data.putAll(formatMap(data,tableName));
+        data.putAll(formatMap(data, tableName));
         params.put("info", data);
         params.put("sql", condition.getSql());
         int i = sqlSessionTemplate.update(TABLE_MAPPER_PACKAGE + "updateByWhere", params);
@@ -198,7 +199,7 @@ public class BaseMapperImpl implements BaseMapper {
         if (DataUnit.HANGO.equals(dataTypeConfig)) {
             // 获取数据库字段类型
             Map<String, String> columnTypes = TableMetadataCache.getColumnTypesFromCache(tableName.toLowerCase());
-            if(columnTypes!=null){
+            if (columnTypes != null) {
                 // 自动转换数据类型
                 data = DataTypeConverter.convertDataTypes(data, columnTypes);
             }
@@ -426,7 +427,6 @@ public class BaseMapperImpl implements BaseMapper {
     }
 
 
-
     private List<Map<String, Object>> selectList(Condition condition, String tableName) {
         Map<String, Object> params = condition.getParamMap();
         String dataTypeConfig = getDataConfig();
@@ -525,27 +525,27 @@ public class BaseMapperImpl implements BaseMapper {
         JudgesNull(pkValue, "pkValue can not be null!");
         Condition condition = Condition.creatCriteria(DataMap.builder().tableName(tableName).pkName(pkName).pkValue(pkValue).build()).build();
         condition = condition.toCreatCriteria().andEqual(pkName, pkValue).build();
-        return selectOne(condition,tableName);
+        return selectOne(condition, tableName);
     }
 
     @Override
     public List<Map<String, Object>> selectByCondition(Condition condition) {
         JudgesNull(condition.getSelectCondition(), "tableName can not be null!");
-        return selectList(condition,condition.getSelectCondition().getTableName());
+        return selectList(condition, condition.getSelectCondition().getTableName());
     }
 
     @Override
     public <E> List<Map<String, Object>> selectByCondition(DataMap<E> dataMap, Condition condition) {
         JudgesNull(dataMap.getTableName(), "tableName can not be null!");
         condition = condition.toCreatCriteria(dataMap).build();
-        return selectList(condition,dataMap.getTableName());
+        return selectList(condition, dataMap.getTableName());
     }
 
     @Override
     public List<Map<String, Object>> selectByCondition(String tableName, Condition condition) {
         JudgesNull(tableName, "tableName can not be null!");
         condition = condition.toCreatCriteria(DataMap.builder().tableName(tableName).build()).build();
-        return selectList(condition,tableName);
+        return selectList(condition, tableName);
     }
 
     @Override
@@ -554,7 +554,7 @@ public class BaseMapperImpl implements BaseMapper {
         condition = condition
                 .toCreatCriteria(DataMap.builder().tableName(tableName).fieldList(fieldList).build())
                 .build();
-        return selectList(condition,tableName);
+        return selectList(condition, tableName);
     }
 
     @Override
@@ -563,7 +563,7 @@ public class BaseMapperImpl implements BaseMapper {
         condition = condition
                 .toCreatCriteria(DataMap.builder().tableName(tableName).fields(fieldList).build())
                 .build();
-        return selectList(condition,tableName);
+        return selectList(condition, tableName);
     }
 
 
@@ -571,7 +571,7 @@ public class BaseMapperImpl implements BaseMapper {
     public List<Map<String, Object>> selectByConditionAllKey(String tableName, Condition condition) {
         JudgesNull(tableName, "tableName can not be null!");
         condition = condition.toCreatCriteria(DataMap.builder().tableName(tableName).build()).build();
-        return selectListAllKey(condition,tableName);
+        return selectListAllKey(condition, tableName);
     }
 
     @Override
@@ -580,19 +580,19 @@ public class BaseMapperImpl implements BaseMapper {
         condition = condition.toCreatCriteria(DataMap.builder().tableName(tableName).build()).build();
         if (webPageInfo.isEnableCache()) {
             Condition finalCondition = condition;
-            return MyPageHelper.start(webPageInfo, condition.getSql(), () -> selectList(finalCondition,tableName));
+            return MyPageHelper.start(webPageInfo, condition.getSql(), () -> selectList(finalCondition, tableName));
         }
         MyPageHelper.start(webPageInfo);
-        return new PageInfo<>(selectListAllKey(condition,tableName));
+        return new PageInfo<>(selectListAllKey(condition, tableName));
     }
 
     @Override
     public PageInfo<Map<String, Object>> selectByCondition(Condition condition, WebPageInfo webPageInfo) {
         MyPageHelper.start(webPageInfo);
         if (webPageInfo.isEnableCache()) {
-            return MyPageHelper.start(webPageInfo, condition.getSql(), () -> selectList(condition,condition.getSelectCondition().getTableName()));
+            return MyPageHelper.start(webPageInfo, condition.getSql(), () -> selectList(condition, condition.getSelectCondition().getTableName()));
         }
-        return new PageInfo<>(selectList(condition,condition.getSelectCondition().getTableName()));
+        return new PageInfo<>(selectList(condition, condition.getSelectCondition().getTableName()));
     }
 
     @Override
@@ -601,10 +601,10 @@ public class BaseMapperImpl implements BaseMapper {
         condition = condition.toCreatCriteria(dataMap).build();
         if (webPageInfo.isEnableCache()) {
             Condition finalCondition = condition;
-            return MyPageHelper.start(webPageInfo, condition.getSql(), () -> selectList(finalCondition,dataMap.getTableName()));
+            return MyPageHelper.start(webPageInfo, condition.getSql(), () -> selectList(finalCondition, dataMap.getTableName()));
         }
         MyPageHelper.start(webPageInfo);
-        return new PageInfo<>(selectList(condition,dataMap.getTableName()));
+        return new PageInfo<>(selectList(condition, dataMap.getTableName()));
     }
 
     @Override
@@ -613,10 +613,10 @@ public class BaseMapperImpl implements BaseMapper {
         condition = condition.toCreatCriteria(DataMap.builder().tableName(tableName).build()).build();
         if (webPageInfo.isEnableCache()) {
             Condition finalCondition = condition;
-            return MyPageHelper.start(webPageInfo, condition.getSql(), () -> selectList(finalCondition,tableName));
+            return MyPageHelper.start(webPageInfo, condition.getSql(), () -> selectList(finalCondition, tableName));
         }
         MyPageHelper.start(webPageInfo);
-        return new PageInfo<>(selectList(condition,tableName));
+        return new PageInfo<>(selectList(condition, tableName));
     }
 
     @Override
@@ -625,10 +625,10 @@ public class BaseMapperImpl implements BaseMapper {
         condition = condition.toCreatCriteria(DataMap.builder().tableName(tableName).fieldList(fieldList).build()).build();
         if (webPageInfo.isEnableCache()) {
             Condition finalCondition = condition;
-            return MyPageHelper.start(webPageInfo, condition.getSql(), () -> selectList(finalCondition,tableName));
+            return MyPageHelper.start(webPageInfo, condition.getSql(), () -> selectList(finalCondition, tableName));
         }
         MyPageHelper.start(webPageInfo);
-        return new PageInfo<>(selectList(condition,tableName));
+        return new PageInfo<>(selectList(condition, tableName));
     }
 
     @Override
@@ -637,43 +637,43 @@ public class BaseMapperImpl implements BaseMapper {
         condition = condition.toCreatCriteria(DataMap.builder().tableName(tableName).fields(fieldList).build()).build();
         if (webPageInfo.isEnableCache()) {
             Condition finalCondition = condition;
-            return MyPageHelper.start(webPageInfo, condition.getSql(), () -> selectList(finalCondition,tableName));
+            return MyPageHelper.start(webPageInfo, condition.getSql(), () -> selectList(finalCondition, tableName));
         }
         MyPageHelper.start(webPageInfo);
-        return new PageInfo<>(selectList(condition,tableName));
+        return new PageInfo<>(selectList(condition, tableName));
     }
 
     @Override
     public <E> Map<String, Object> selectOneByCondition(DataMap<E> dataMap, Condition condition) {
         JudgesNull(dataMap.getTableName(), "tableName can not be null!");
         condition = condition.toCreatCriteria(dataMap).build();
-        return selectOne(condition,dataMap.getTableName());
+        return selectOne(condition, dataMap.getTableName());
     }
 
     @Override
     public Map<String, Object> selectOneByCondition(String tableName, Condition condition) {
         JudgesNull(tableName, "tableName can not be null!");
         condition = condition.toCreatCriteria(DataMap.builder().tableName(tableName).build()).build();
-        return selectOne(condition,tableName);
+        return selectOne(condition, tableName);
     }
 
     @Override
     public Map<String, Object> selectOneByCondition(String tableName, List<String> fieldList, Condition condition) {
         JudgesNull(tableName, "tableName can not be null!");
         condition = condition.toCreatCriteria(DataMap.builder().tableName(tableName).fieldList(fieldList).build()).build();
-        return selectOne(condition,tableName);
+        return selectOne(condition, tableName);
     }
 
     @Override
     public Map<String, Object> selectOneByCondition(String tableName, String fieldList, Condition condition) {
         JudgesNull(tableName, "tableName can not be null!");
         condition = condition.toCreatCriteria(DataMap.builder().tableName(tableName).fields(fieldList).build()).build();
-        return selectOne(condition,tableName);
+        return selectOne(condition, tableName);
     }
 
     @Override
     public Map<String, Object> selectOneByCondition(Condition condition) {
-        return selectOne(condition,condition.getSelectCondition().getTableName());
+        return selectOne(condition, condition.getSelectCondition().getTableName());
     }
 
     @Override
@@ -682,7 +682,7 @@ public class BaseMapperImpl implements BaseMapper {
         SelectCondition selectJoinBuilder = SelectCondition
                 .joinBuilder(tableName)
                 .join(joinCondition).build();
-        return tableMapper.useSql(condition.toCreatCriteria(selectJoinBuilder,tableName).build().getSql());
+        return tableMapper.useSql(condition.toCreatCriteria(selectJoinBuilder, tableName).build().getSql());
     }
 
 
@@ -692,7 +692,7 @@ public class BaseMapperImpl implements BaseMapper {
         SelectCondition selectJoinBuilder = SelectCondition
                 .joinBuilder(tableName)
                 .join(joinCondition).build();
-        return tableMapper.useSql(condition.toCreatCriteria(selectJoinBuilder,tableName).build().getSql());
+        return tableMapper.useSql(condition.toCreatCriteria(selectJoinBuilder, tableName).build().getSql());
     }
 
     @Override
@@ -701,7 +701,7 @@ public class BaseMapperImpl implements BaseMapper {
         SelectCondition selectJoinBuilder = SelectCondition
                 .joinBuilder(tableName)
                 .leftJoin(joinCondition).build();
-        return tableMapper.useSql(condition.toCreatCriteria(selectJoinBuilder,tableName).build().getSql());
+        return tableMapper.useSql(condition.toCreatCriteria(selectJoinBuilder, tableName).build().getSql());
     }
 
     @Override
@@ -710,7 +710,7 @@ public class BaseMapperImpl implements BaseMapper {
         SelectCondition selectJoinBuilder = SelectCondition
                 .joinBuilder(tableName)
                 .leftJoin(joinCondition).build();
-        return tableMapper.useSql(condition.toCreatCriteria(selectJoinBuilder,tableName).build().getSql());
+        return tableMapper.useSql(condition.toCreatCriteria(selectJoinBuilder, tableName).build().getSql());
     }
 
     @Override
@@ -719,7 +719,7 @@ public class BaseMapperImpl implements BaseMapper {
         SelectCondition selectJoinBuilder = SelectCondition
                 .joinBuilder(tableName)
                 .rightJoin(joinCondition).build();
-        return tableMapper.useSql(condition.toCreatCriteria(selectJoinBuilder,tableName).build().getSql());
+        return tableMapper.useSql(condition.toCreatCriteria(selectJoinBuilder, tableName).build().getSql());
     }
 
     @Override
@@ -728,12 +728,12 @@ public class BaseMapperImpl implements BaseMapper {
         SelectCondition selectJoinBuilder = SelectCondition
                 .joinBuilder(tableName)
                 .rightJoin(joinCondition).build();
-        return tableMapper.useSql(condition.toCreatCriteria(selectJoinBuilder,tableName).build().getSql());
+        return tableMapper.useSql(condition.toCreatCriteria(selectJoinBuilder, tableName).build().getSql());
     }
 
     @Override
     public List<Map<String, Object>> selectionByCondition(SelectCondition selectCondition, Condition condition) {
-        return tableMapper.useSql(condition.toCreatCriteria(selectCondition,selectCondition.getTableName()).build().getSql());
+        return tableMapper.useSql(condition.toCreatCriteria(selectCondition, selectCondition.getTableName()).build().getSql());
     }
 
     @Override
@@ -813,11 +813,11 @@ public class BaseMapperImpl implements BaseMapper {
                 map.put(pkName, id);
             }
             i = tableMapper.insertBatch(list, tableName);
-        }else if(dataTypeConfig.equals(DataUnit.DAMENG)){
+        } else if (dataTypeConfig.equals(DataUnit.DAMENG)) {
             getSequence(tableName, pkName);
-            List<Map<String,Object>> tempList = new ArrayList<>();
+            List<Map<String, Object>> tempList = new ArrayList<>();
             for (Map<String, Object> map : list) {
-                map = formatMap(map,tableName);
+                map = formatMap(map, tableName);
                 map.put(pkName, tableName + "_SEQ.nextval");
                 tempList.add(map);
             }
@@ -825,9 +825,9 @@ public class BaseMapperImpl implements BaseMapper {
             i = tableMapper.insertBatchSeq(list, tableName, pkName);
         } else if (dataTypeConfig.equals(DataUnit.HANGO)) {
             getSequence(tableName, pkName);
-            List<Map<String,Object>> tempList = new ArrayList<>();
+            List<Map<String, Object>> tempList = new ArrayList<>();
             for (Map<String, Object> map : list) {
-                map = formatMap(map,tableName);
+                map = formatMap(map, tableName);
                 map.put(pkName, "nextval('" + tableName.toLowerCase() + "_seq')");
                 tempList.add(map);
             }
@@ -893,34 +893,37 @@ public class BaseMapperImpl implements BaseMapper {
         Object id;
         if (DataUnit.HANGO.equals(dataTypeConfig)) {
             if (!tableMapper.judgeHighGoSequenceExist(tableName.toLowerCase())) {
-                Map<String, Object> map = selectRecentData(tableName, pkName);
-                if (map == null) {
-                    tableMapper.createHighGoSequence(tableName.toLowerCase(), 1);
-                } else {
-                    tableMapper.createHighGoSequence(tableName.toLowerCase(), map.get(pkName));
+                try {
+                    tableMapper.lockSequence(tableName.toLowerCase());
+                    // 再判断一次，避免多个线程同时创建
+                    if (!tableMapper.judgeHighGoSequenceExist(tableName.toLowerCase())) {
+                        tableMapper.createHighGoSequence(tableName.toLowerCase(), 1);
+                        tableMapper.setValForHighGoSequence(tableName.toLowerCase(), pkName.toLowerCase());
+                    }
+                } finally {
+                    tableMapper.unlockSequence(tableName.toLowerCase());
                 }
             }
             id = tableMapper.getHighGoSequence(tableName.toLowerCase());
         } else {
-            try {
-                String url = druidDataSource.getUrl();
-                String schema = getSchemaFromJdbcUrl(url);
-                if (tableMapper.judgeDamengSequenceExist(tableName, schema) > 0) {
-                    id = tableMapper.getSequence(tableName);
-                } else {
-                    throw new ServiceException("序列不存在");
-                }
-            } catch (Exception e) {
-                Map<String, Object> map = selectRecentData(tableName, pkName);
-                if (map == null) {
-                    tableMapper.createSequence(tableName, 1);
-                } else {
-                    tableMapper.createSequence(tableName, map.get(pkName));
+            String url = druidDataSource.getUrl();
+            String schema = getSchemaFromJdbcUrl(url);
+            if (tableMapper.judgeDamengSequenceExist(tableName, schema) > 0) {
+                id = tableMapper.getSequence(tableName);
+            } else {
+                try {
+                    tableMapper.lockSequenceDm(tableName);
+                    // 初始化序列
+                    if (tableMapper.judgeDamengSequenceExist(tableName, schema) == 0) {
+                        tableMapper.createSequenceSafeDm(tableName, pkName); // 数据库内部计算 max(pk)+1
+                    }
+                } finally {
+                    tableMapper.unlockSequenceDm(tableName);
                 }
                 id = tableMapper.getSequence(tableName);
             }
         }
-        return Long.parseLong(id.toString()) + 1L;
+        return Long.parseLong(id.toString());
     }
 
     private Map<String, Object> selectRecentData(String tableName, String pkName) {

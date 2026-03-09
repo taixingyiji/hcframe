@@ -47,7 +47,7 @@ public interface TableMapper {
     int judgeDamengSequenceExist(@Param("tableName") String tableName,@Param("schema")String schema);
     int createSequence(@Param("tableName") String tableName, @Param("lastId")Object lastId);
     int createHighGoSequence(@Param("tableName") String tableName, @Param("lastId")Object lastId);
-
+    int setValForHighGoSequence(@Param("tableName") String tableName,@Param("pkName")String pkName);
     Long count(@Param("tableName")String tableName,@Param("sql")String sql);
 
     Long countBySql(@Param("sql") String sql);
@@ -55,4 +55,14 @@ public interface TableMapper {
     int insertBatchSeq(@Param("list") List<Map<String, Object>> list, @Param("tableName") String tableName,@Param("pkName")String pkName);
 
     int updateBatchByPk(@Param("sql")String sql);
+
+    int lockSequence(@Param("tableName")String tableName);
+
+    int unlockSequence(@Param("tableName") String tableName);
+
+    int lockSequenceDm(@Param("tableName") String tableName);
+
+    int unlockSequenceDm(@Param("tableName") String tableName);
+
+    int createSequenceSafeDm(@Param("tableName") String tableName, @Param("pkName") String pkName);
 }

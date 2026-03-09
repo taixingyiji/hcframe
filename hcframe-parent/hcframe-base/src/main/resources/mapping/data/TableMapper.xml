@@ -171,13 +171,59 @@
         NOCACHE
     </insert>
     <insert id="createHighGoSequence">
-        CREATE SEQUENCE ${tableName}_seq
+        CREATE SEQUENCE IF NOT EXISTS  ${tableName}_seq
         MINVALUE 1
         NO MAXVALUE
         START WITH ${lastId}
         INCREMENT BY 1
         CACHE 1;
     </insert>
+    <update id="setValForHighGoSequence">
+        SELECT setval( '${tableName}_seq', (SELECT COALESCE(MAX(${pkName}),0) + 1 FROM ${tableName}), false);
+    </update>
+    <!-- 获取锁 -->
+    <update id="lockSequence">
+        SELECT pg_advisory_lock(hashtext('${tableName}_seq'));
+    </update>
+
+    <!-- 释放锁 -->
+    <update id="unlockSequence" >
+        SELECT pg_advisory_unlock(hashtext('${tableName}_seq'));
+    </update>
+    <update id="lockSequenceDm">
+        DECLARE
+        result INT;
+        BEGIN
+        result := sp_getapplock('${tableName}_seq', 'Exclusive', 'Session', 10);
+
+        IF result &lt; 0 THEN
+        RAISE_APPLICATION_ERROR(-20001, '获取锁失败');
+        END IF;
+        END;
+    </update>
+
+    <update id="unlockSequenceDm">
+        BEGIN
+    sp_releaseapplock('${tableName}_seq', 'Session');
+        END;
+    </update>
+    <update id="createSequenceSafeDm">
+        DECLARE
+        v_start NUMBER;
+        BEGIN
+  -- 计算 max(pk)+1
+        SELECT NVL(MAX(${pkName}),0)+1 INTO v_start FROM ${tableName} FOR UPDATE;
+
+        -- 创建序列，如果已存在则忽略
+        BEGIN
+        EXECUTE IMMEDIATE 'CREATE SEQUENCE ' || ${tableName}_seq ||
+                          ' START WITH ' || v_start || ' INCREMENT BY 1 NOCACHE';
+        EXCEPTION
+    WHEN OTHERS THEN
+      NULL; -- 已存在忽略
+        END;
+        END;
+    </update>
     <select id="judgeHighGoSequenceExist" resultType="boolean">
         SELECT EXISTS (
             SELECT 1
@@ -191,7 +237,7 @@
         SELECT COUNT(*)
         FROM all_sequences
         WHERE sequence_owner = '${schema}'
-          AND sequence_name = '${tableName}_SEQ'
+          AND sequence_name = '${tableName}_seq'
     </select>
     <select id="count" resultType="java.lang.Long">
         SELECT count(0) FROM ${tableName} ${sql}
