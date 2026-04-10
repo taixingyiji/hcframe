@@ -1,7 +1,6 @@
 package com.taixingyiji.activiti.activiti;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,9 +21,6 @@ public class CommonTask {
 
     private String id;
 
-    @ApiModelProperty(
-            value="流程名称"
-    )
     private String name;
 
     private String description;
@@ -33,9 +29,6 @@ public class CommonTask {
 
     private String owner;
 
-    @ApiModelProperty(
-            value="流程人"
-    )
     private String assignee;
 
     private String processInstanceId;
@@ -68,10 +61,7 @@ public class CommonTask {
 
     private Date claimTime;
 
-    @ApiModelProperty(
-            value="是否只显示未锁定条目",
-            allowableValues="true,false"
-    )
+    @Builder.Default
     private Boolean isUnAssignee = false;
 
     private String tableName;

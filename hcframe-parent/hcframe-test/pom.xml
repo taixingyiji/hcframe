@@ -24,7 +24,7 @@
         <dependency>
             <groupId>com.taixingyiji</groupId>
             <artifactId>hcframe-base</artifactId>
-            <version>1.2.5.5-SNAPSHOT</version>
+            <version>1.2.5.5.2-SNAPSHOT</version>
         </dependency>
         <!-- Ensure Spring Boot web and autoconfigure are available for SB4 -->
         <dependency>
