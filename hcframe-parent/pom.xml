@@ -279,12 +279,12 @@
         <repository>
             <id>releases</id>
             <name>Releases</name>
-            <url>http://192.168.0.123:8081/repository/maven-releases/</url>
+            <url>http://192.168.50.6:8081/repository/maven-releases/</url>
         </repository>
         <snapshotRepository>
             <id>snapshots</id>
             <name>Snapshot</name>
-            <url>http://192.168.0.123:8081/repository/maven-snapshots/</url>
+            <url>http://192.168.50.6:8081/repository/maven-snapshots/</url>
         </snapshotRepository>
 <!--        <repository>-->
 <!--            <id>releases-hc</id>-->
