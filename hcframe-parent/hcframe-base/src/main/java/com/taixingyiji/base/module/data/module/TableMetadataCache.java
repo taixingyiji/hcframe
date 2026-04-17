@@ -3,7 +3,7 @@ package com.taixingyiji.base.module.data.module;
 import com.alibaba.druid.pool.DruidDataSource;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import java.sql.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;

@@ -1,10 +1,10 @@
 package com.taixingyiji.base.common.utils;
 
 
-import javax.activation.DataHandler;
-import javax.activation.FileDataSource;
-import javax.mail.*;
-import javax.mail.internet.*;
+import jakarta.activation.DataHandler;
+import jakarta.activation.FileDataSource;
+import jakarta.mail.*;
+import jakarta.mail.internet.*;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.List;

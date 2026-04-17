@@ -1,7 +1,7 @@
 package com.taixingyiji.base.common.utils;
 
-import javax.mail.Authenticator;
-import javax.mail.PasswordAuthentication;
+import jakarta.mail.Authenticator;
+import jakarta.mail.PasswordAuthentication;
 
 public class MailAuthenticator extends Authenticator{
     String userName=null;

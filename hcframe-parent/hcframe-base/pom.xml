@@ -124,12 +124,6 @@
 <!--            <artifactId>mybatis-plus-boot-starter</artifactId>-->
 <!--            <version>3.4.3.4</version>-->
 <!--        </dependency>-->
-        <!-- https://mvnrepository.com/artifact/javax.validation/validation-api -->
-        <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-            <version>2.0.1.Final</version>
-        </dependency>
 <!--        <dependency>-->
 <!--            <groupId>org.apache.shiro</groupId>-->
 <!--            <artifactId>shiro-spring</artifactId>-->
@@ -182,9 +176,12 @@
             <version>2.21.0</version>
         </dependency>
         <dependency>
-            <groupId>javax.mail</groupId>
-            <artifactId>mail</artifactId>
-            <version>1.4.7</version>
+            <groupId>org.eclipse.angus</groupId>
+            <artifactId>jakarta.mail</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.activation</groupId>
+            <artifactId>jakarta.activation-api</artifactId>
         </dependency>
         <dependency>
             <groupId>tk.mybatis</groupId>
@@ -296,9 +293,8 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>javax.websocket</groupId>
-            <artifactId>javax.websocket-api</artifactId>
-            <version>1.1</version>
+            <groupId>jakarta.websocket</groupId>
+            <artifactId>jakarta.websocket-api</artifactId>
             <scope>provided</scope>
         </dependency>
         <!-- Explicit actuator module to expose servlet-based actuator endpoint types for Spring Boot 4.x -->
