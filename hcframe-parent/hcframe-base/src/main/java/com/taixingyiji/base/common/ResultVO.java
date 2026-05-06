@@ -2,7 +2,7 @@ package com.taixingyiji.base.common;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
-
+import java.util.*;
 /**
  * @author lhc
  * @description 返回结果VO对象
@@ -22,6 +22,7 @@ public class ResultVO<T> {
     @Schema(example="ActionOK")
     private String msg;
 
+    private Integer  camelStatus = 0;
     //("返回数据")
     private T data;
 
@@ -114,6 +115,114 @@ public class ResultVO<T> {
         return new ResultVO<T>(UNLOG, "用户未登录，请重新登录");
     }
 
+    /**
+     * 返回成功，并自动将Map中的下划线字段转为驼峰
+     *
+     * 支持：
+     * Map
+     * List<Map>
+     * 嵌套Map/List
+     */
+    public static <T> ResultVO<T> getCamelSuccess(T data) {
+        Object camelData = convertCamelObject(data);
+        ResultVO<T> resultVO = new ResultVO<>((T) camelData);
+        resultVO.setCamelStatus(1);
+        return resultVO;
+    }
+
+    /**
+     * 递归转换对象
+     */
+    private static Object convertCamelObject(Object obj) {
+
+        switch (obj) {
+            case null -> {
+                return null;
+            }
+
+
+            // Map处理
+            case Map<?, ?> map -> {
+
+                Map<String, Object> result = new LinkedHashMap<>();
+
+                for (Map.Entry<?, ?> entry : map.entrySet()) {
+
+                    String key = String.valueOf(entry.getKey());
+
+                    result.put(
+                            underlineToCamel(key),
+                            convertCamelObject(entry.getValue())
+                    );
+                }
+
+                return result;
+            }
+
+
+            // List处理
+            case List<?> list -> {
+
+                List<Object> result = new ArrayList<>();
+
+                for (Object item : list) {
+                    result.add(convertCamelObject(item));
+                }
+
+                return result;
+            }
+
+
+            // Set处理（可选）
+            case Set<?> set -> {
+
+                Set<Object> result = new LinkedHashSet<>();
+
+                for (Object item : set) {
+                    result.add(convertCamelObject(item));
+                }
+
+                return result;
+            }
+            default -> {
+            }
+        }
+
+        // 其它类型直接返回
+        return obj;
+    }
+
+    /**
+     * 下划线转驼峰
+     * user_name -> userName
+     */
+    private static String underlineToCamel(String str) {
+
+        if (str == null || str.isEmpty()) {
+            return str;
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        boolean upperCase = false;
+
+        for (char c : str.toCharArray()) {
+
+            if (c == '_') {
+                upperCase = true;
+            } else {
+
+                if (upperCase) {
+                    sb.append(Character.toUpperCase(c));
+                    upperCase = false;
+                } else {
+                    sb.append(Character.toLowerCase(c));
+                }
+            }
+        }
+
+        return sb.toString();
+    }
 
     /**
      * 用户没有操作权限
@@ -151,5 +260,14 @@ public class ResultVO<T> {
 
     public void setData(T data) {
         this.data = data;
+    }
+
+
+    public Integer getCamelStatus() {
+        return camelStatus;
+    }
+
+    public void setCamelStatus(Integer camelStatus) {
+        this.camelStatus = camelStatus;
     }
 }
