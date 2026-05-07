@@ -1,6 +1,7 @@
 package com.taixingyiji.base.common;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.github.pagehelper.PageInfo;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.*;
 /**
@@ -49,8 +50,12 @@ public class ResultVO<T> {
 
     private ResultVO(Throwable exp){
         this.code=ERROR;
-        this.msg=exp.getMessage();
+        this.msg="服务端异常，请稍后再试";
+        if(exp instanceof ServiceException) {
+            this.msg=exp.getMessage();
+        }
     }
+
     /**
      * 请求成功  状态码 1
      *
@@ -139,7 +144,10 @@ public class ResultVO<T> {
             case null -> {
                 return null;
             }
-
+            // PageInfo<Map<String, Object>> 处理
+            case PageInfo<?> pageInfo -> {
+                return pageInfo.convert(ResultVO::convertCamelObject);
+            }
 
             // Map处理
             case Map<?, ?> map -> {
