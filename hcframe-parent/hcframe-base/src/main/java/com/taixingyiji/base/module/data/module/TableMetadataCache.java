@@ -38,6 +38,8 @@ public class TableMetadataCache {
                 String tableName = tables.getString("TABLE_NAME");
                 Map<String, String> columnTypes = getColumnTypes(connection, tableName);
                 tableColumnTypesCache.put(tableName, columnTypes);
+                tableColumnTypesCache.put(tableName.toLowerCase(), columnTypes);
+                tableColumnTypesCache.put(tableName.toUpperCase(), columnTypes);
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -61,6 +63,13 @@ public class TableMetadataCache {
 
     // 获取缓存中的字段类型
     public static Map<String, String> getColumnTypesFromCache(String tableName) {
-        return tableColumnTypesCache.get(tableName);
+        Map<String, String> columnTypes = tableColumnTypesCache.get(tableName);
+        if (columnTypes == null) {
+            columnTypes = tableColumnTypesCache.get(tableName.toLowerCase());
+        }
+        if (columnTypes == null) {
+            columnTypes = tableColumnTypesCache.get(tableName.toUpperCase());
+        }
+        return columnTypes;
     }
 }

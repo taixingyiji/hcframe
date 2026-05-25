@@ -9,7 +9,7 @@
     </parent>
     <artifactId>hcframe-base</artifactId>
     <modelVersion>4.0.0</modelVersion>
-    <version>1.2.5.5.2-SNAPSHOT</version>
+    <version>1.2.5.5.3-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
@@ -54,6 +54,11 @@
             <groupId>com.highgo</groupId>
             <artifactId>HgdbJdbc</artifactId>
             <version>6.2.3</version>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.7.7</version>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
@@ -114,9 +119,9 @@
             <version>1.2.83</version>
         </dependency>
         <dependency>
-            <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-            <version>3.0.1</version>
+            <groupId>com.baizhukui</groupId>
+            <artifactId>knife4j-openapi3-boot4-spring-boot-starter</artifactId>
+            <version>5.0.6</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/com.baomidou/mybatis-plus-boot-starter -->
 <!--        <dependency>-->

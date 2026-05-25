@@ -23,9 +23,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.sql.DataSource;
 import java.sql.Connection;
-import java.sql.SQLException;
+import java.sql.DatabaseMetaData;
 import java.util.*;
 
 @Service("base")
@@ -54,51 +53,76 @@ public class BaseMapperImpl implements BaseMapper {
 
     @Override
     public String getDataConfig() {
-        String key;
-        DatasourceConfig datasourceConfig = new DatasourceConfig();
         try {
-
-            key = DBContextHolder.getDataSource();
-            datasourceConfig = DataSourceUtil.get(key);
+            DatasourceConfig datasourceConfig = DataSourceUtil.get(DBContextHolder.getDataSource());
+            String dataConfig = getDataConfig(datasourceConfig);
+            if (StringUtils.isNotEmpty(dataConfig)) {
+                return dataConfig;
+            }
         } catch (Exception e) {
-            try {
-                Connection connection = druidDataSource.getConnection();
-                String dbType = connection.getMetaData().getDatabaseProductName();
-                if (dbType.contains("Oracle")) {
-                    datasourceConfig.setCommonType(DataUnit.ORACLE);
-                }
-                if (dbType.contains("MySQL")) {
-                    datasourceConfig.setCommonType(DataUnit.MYSQL);
-                }
-                if (dbType.contains("DM")) {
-                    datasourceConfig.setCommonType(DataUnit.DAMENG);
-                }
-                if (dbType.contains("SQLite")) {
-                    datasourceConfig.setCommonType(DataUnit.SQLITE);
-                }
-                if (dbType.contains("PostgreSQL")) {
-                    datasourceConfig.setCommonType(DataUnit.HANGO);
-                }
-                connection.close();
-            } catch (Exception e1) {
-                if (dataType.contains("oracle")) {
-                    datasourceConfig.setCommonType(DataUnit.ORACLE);
-                }
-                if (dataType.contains("mysql")) {
-                    datasourceConfig.setCommonType(DataUnit.MYSQL);
-                }
-                if (dataType.contains("DmDriver")) {
-                    datasourceConfig.setCommonType(DataUnit.DAMENG);
-                }
-                if (dataType.contains("sqlite")) {
-                    datasourceConfig.setCommonType(DataUnit.SQLITE);
-                }
-                if (dataType.contains("highgo")) {
-                    datasourceConfig.setCommonType(DataUnit.HANGO);
-                }
+            // fall back to JDBC metadata below
+        }
+
+        try (Connection connection = druidDataSource.getConnection()) {
+            DatabaseMetaData metaData = connection.getMetaData();
+            String dataConfig = detectDataConfig(
+                    metaData.getDatabaseProductName(),
+                    metaData.getDriverName(),
+                    druidDataSource.getDriverClassName(),
+                    druidDataSource.getUrl()
+            );
+            if (StringUtils.isNotEmpty(dataConfig)) {
+                return dataConfig;
+            }
+        } catch (Exception e) {
+            // fall back to configured driver class below
+        }
+
+        return detectDataConfig(dataType, null, null, null);
+    }
+
+    private String getDataConfig(DatasourceConfig datasourceConfig) {
+        if (datasourceConfig == null) {
+            return null;
+        }
+        if (StringUtils.isNotEmpty(datasourceConfig.getCommonType())) {
+            String dataConfig = detectDataConfig(datasourceConfig.getCommonType());
+            return StringUtils.isNotEmpty(dataConfig) ? dataConfig : datasourceConfig.getCommonType();
+        }
+        return detectDataConfig(datasourceConfig.getDriverClassName(), datasourceConfig.getUrl(), null, null);
+    }
+
+    private String detectDataConfig(String... values) {
+        String text = joinConfigText(values);
+        if (text.contains("highgo") || text.contains("hgdb")) {
+            return DataUnit.HANGO;
+        }
+        if (text.contains("postgresql") || text.contains("postgres") || text.contains("postgre")) {
+            return DataUnit.POSTGRE;
+        }
+        if (text.contains("oracle")) {
+            return DataUnit.ORACLE;
+        }
+        if (text.contains("mysql")) {
+            return DataUnit.MYSQL;
+        }
+        if (text.contains("dmdriver") || text.contains("dameng") || text.contains("dm jdbc")) {
+            return DataUnit.DAMENG;
+        }
+        if (text.contains("sqlite")) {
+            return DataUnit.SQLITE;
+        }
+        return null;
+    }
+
+    private String joinConfigText(String... values) {
+        StringBuilder builder = new StringBuilder();
+        for (String value : values) {
+            if (value != null) {
+                builder.append(value).append(' ');
             }
         }
-        return datasourceConfig.getCommonType();
+        return builder.toString().toLowerCase(Locale.ROOT);
     }
 
     @Override
@@ -107,14 +131,14 @@ public class BaseMapperImpl implements BaseMapper {
         JudgesNull(dataMap.getData(), "data can not be null!");
         JudgesNull(dataMap.getTableName(), "tableName can not be null!");
         KeyUtils.checkSafeKey(dataMap.getData());
-        if (DataUnit.HANGO.equals(dataTypeConfig)) {
-            dataMap.getData().putAll(formatMap(dataMap.getData(), dataMap.getTableName()));
+        if (isTypeConversionEnabled(dataTypeConfig)) {
+            dataMap.getData().putAll(formatMap(dataMap.getData(), dataMap.getTableName(), dataTypeConfig));
         }
         if (StringUtils.isEmpty(dataMap.getPkName())) {
             dataMap.setPkName("ID");
         }
         int i;
-        if (DataUnit.ORACLE.equals(dataTypeConfig) || DataUnit.DAMENG.equals(dataTypeConfig) || DataUnit.HANGO.equals(dataTypeConfig)) {
+        if (DataUnit.ORACLE.equals(dataTypeConfig) || DataUnit.DAMENG.equals(dataTypeConfig) || isPostgreSql(dataTypeConfig)) {
             if (org.springframework.util.StringUtils.isEmpty(dataMap.get(dataMap.getPkName()))) {
                 Object id = getSequence(dataMap.getTableName(), dataMap.getPkName());
                 dataMap.toBuilder().add(dataMap.getPkName(), id);
@@ -132,7 +156,7 @@ public class BaseMapperImpl implements BaseMapper {
     }
 
     public Map<String, Object> formatMap(Map<String, Object> data, String tableName) {
-        return getStringObjectMapForHighGo(tableName, data, getDataConfig());
+        return formatMap(data, tableName, getDataConfig());
 //        // 遍历 Map 并转换值
 //        for (Map.Entry<String, Object> entry : data.entrySet()) {
 //            Object value = entry.getValue();
@@ -149,20 +173,56 @@ public class BaseMapperImpl implements BaseMapper {
 //        }
     }
 
+    private Map<String, Object> formatMap(Map<String, Object> data, String tableName, String dataTypeConfig) {
+        if (isTypeConversionEnabled(dataTypeConfig)) {
+            Map<String, String> columnTypes = TableMetadataCache.getColumnTypesFromCache(tableName.toLowerCase());
+            if (columnTypes != null) {
+                return DataTypeConverter.convertDataTypes(data, columnTypes);
+            }
+        }
+        return data;
+    }
+
+    private boolean isTypeConversionEnabled(String dataTypeConfig) {
+        return isPostgreSql(dataTypeConfig);
+    }
+
+    private boolean isPostgreSql(String dataTypeConfig) {
+        return DataUnit.HANGO.equals(dataTypeConfig) || DataUnit.POSTGRE.equals(dataTypeConfig);
+    }
+
+    private Map<String, Object> prepareConditionParams(Condition condition, String tableName, String dataTypeConfig) {
+        Map<String, Object> params = new LinkedHashMap<>(condition.getParamMap());
+        if (!isTypeConversionEnabled(dataTypeConfig) || StringUtils.isEmpty(tableName)) {
+            return params;
+        }
+        Map<String, String> columnTypes = TableMetadataCache.getColumnTypesFromCache(tableName.toLowerCase());
+        if (columnTypes == null) {
+            return params;
+        }
+        for (Map.Entry<String, String> entry : condition.getParamColumnMap().entrySet()) {
+            String sqlKey = entry.getKey();
+            if (params.containsKey(sqlKey)) {
+                params.put(sqlKey, DataTypeConverter.convertDataTypes(entry.getValue(), params.get(sqlKey), columnTypes));
+            }
+        }
+        return params;
+    }
+
     @Override
     public int save(String tableName, String pkName, Map<String, Object> data) {
         JudgesNull(tableName, "data can not be null!");
         JudgesNull(data, "tableName can not be null!");
         KeyUtils.checkSafeKey(data);
         String dataTypeConfig = getDataConfig();
-        if (DataUnit.HANGO.equals(dataTypeConfig)) {
-            data.putAll(formatMap(data, tableName));
+        if (isTypeConversionEnabled(dataTypeConfig)) {
+            data.putAll(formatMap(data, tableName, dataTypeConfig));
         }
         if (StringUtils.isEmpty(pkName)) {
             pkName = "ID";
         }
         int i;
-        if (DataUnit.ORACLE.equals(dataTypeConfig) || DataUnit.DAMENG.equals(dataTypeConfig) || DataUnit.HANGO.equals(dataTypeConfig)) {
+        if (DataUnit.ORACLE.equals(dataTypeConfig) || DataUnit.DAMENG.equals(dataTypeConfig) || isPostgreSql(dataTypeConfig)) {
             if (org.springframework.util.StringUtils.isEmpty(data.get(pkName))) {
                 data.put(pkName, getSequence(tableName, pkName));
             }
@@ -185,10 +245,10 @@ public class BaseMapperImpl implements BaseMapper {
 
     private int updateByWhere(Condition condition, String tableName, Map<String, Object> data) {
         KeyUtils.checkSafeKey(data);
-        Map<String, Object> params = condition.getParamMap();
-        params.put("tableName", tableName);
         String dataTypeConfig = getDataConfig();
-        data.putAll(formatMap(data, tableName));
+        Map<String, Object> params = prepareConditionParams(condition, tableName, dataTypeConfig);
+        params.put("tableName", tableName);
+        data.putAll(formatMap(data, tableName, dataTypeConfig));
         params.put("info", data);
         params.put("sql", condition.getSql());
         int i = sqlSessionTemplate.update(TABLE_MAPPER_PACKAGE + "updateByWhere", params);
@@ -196,7 +256,7 @@ public class BaseMapperImpl implements BaseMapper {
     }
 
     private Map<String, Object> getStringObjectMapForHighGo(String tableName, Map<String, Object> data, String dataTypeConfig) {
-        if (DataUnit.HANGO.equals(dataTypeConfig)) {
+        if (isTypeConversionEnabled(dataTypeConfig)) {
             // 获取数据库字段类型
             Map<String, String> columnTypes = TableMetadataCache.getColumnTypesFromCache(tableName.toLowerCase());
             if (columnTypes != null) {
@@ -311,7 +371,7 @@ public class BaseMapperImpl implements BaseMapper {
     }
 
     private int deleteByWhere(Condition condition, String tableName) {
-        Map<String, Object> params = condition.getParamMap();
+        Map<String, Object> params = prepareConditionParams(condition, tableName, getDataConfig());
         params.put("tableName", tableName);
         params.put("sql", condition.getSql());
         return sqlSessionTemplate.delete(TABLE_MAPPER_PACKAGE + "deleteByWhere", params);
@@ -402,7 +462,7 @@ public class BaseMapperImpl implements BaseMapper {
     }
 
     private List<Map<String, Object>> selectListAllKey(Condition condition, String tableName) {
-        Map<String, Object> params = condition.getParamMap();
+        Map<String, Object> params = prepareConditionParams(condition, tableName, getDataConfig());
         params.put("sql", condition.getSql());
         List<Map<String, Object>> list =
                 sqlSessionTemplate.selectList(TABLE_MAPPER_PACKAGE + "useSql", params);
@@ -428,15 +488,15 @@ public class BaseMapperImpl implements BaseMapper {
 
 
     private List<Map<String, Object>> selectList(Condition condition, String tableName) {
-        Map<String, Object> params = condition.getParamMap();
         String dataTypeConfig = getDataConfig();
+        Map<String, Object> params = prepareConditionParams(condition, tableName, dataTypeConfig);
         params.put("sql", condition.getSql());
         return sqlSessionTemplate.selectList(TABLE_MAPPER_PACKAGE + "useSql", params);
     }
 
     private Map<String, Object> selectOne(Condition condition, String tableName) {
-        Map<String, Object> params = condition.getParamMap();
         String dataTypeConfig = getDataConfig();
+        Map<String, Object> params = prepareConditionParams(condition, tableName, dataTypeConfig);
         params.put("sql", condition.getSql());
         return sqlSessionTemplate.selectOne(TABLE_MAPPER_PACKAGE + "userSqlByOne", params);
     }
@@ -682,7 +742,7 @@ public class BaseMapperImpl implements BaseMapper {
         SelectCondition selectJoinBuilder = SelectCondition
                 .joinBuilder(tableName)
                 .join(joinCondition).build();
-        return tableMapper.useSql(condition.toCreatCriteria(selectJoinBuilder, tableName).build().getSql());
+        return selectList(condition.toCreatCriteria(selectJoinBuilder, tableName).build(), tableName);
     }
 
 
@@ -692,7 +752,7 @@ public class BaseMapperImpl implements BaseMapper {
         SelectCondition selectJoinBuilder = SelectCondition
                 .joinBuilder(tableName)
                 .join(joinCondition).build();
-        return tableMapper.useSql(condition.toCreatCriteria(selectJoinBuilder, tableName).build().getSql());
+        return selectList(condition.toCreatCriteria(selectJoinBuilder, tableName).build(), tableName);
     }
 
     @Override
@@ -701,7 +761,7 @@ public class BaseMapperImpl implements BaseMapper {
         SelectCondition selectJoinBuilder = SelectCondition
                 .joinBuilder(tableName)
                 .leftJoin(joinCondition).build();
-        return tableMapper.useSql(condition.toCreatCriteria(selectJoinBuilder, tableName).build().getSql());
+        return selectList(condition.toCreatCriteria(selectJoinBuilder, tableName).build(), tableName);
     }
 
     @Override
@@ -710,7 +770,7 @@ public class BaseMapperImpl implements BaseMapper {
         SelectCondition selectJoinBuilder = SelectCondition
                 .joinBuilder(tableName)
                 .leftJoin(joinCondition).build();
-        return tableMapper.useSql(condition.toCreatCriteria(selectJoinBuilder, tableName).build().getSql());
+        return selectList(condition.toCreatCriteria(selectJoinBuilder, tableName).build(), tableName);
     }
 
     @Override
@@ -719,7 +779,7 @@ public class BaseMapperImpl implements BaseMapper {
         SelectCondition selectJoinBuilder = SelectCondition
                 .joinBuilder(tableName)
                 .rightJoin(joinCondition).build();
-        return tableMapper.useSql(condition.toCreatCriteria(selectJoinBuilder, tableName).build().getSql());
+        return selectList(condition.toCreatCriteria(selectJoinBuilder, tableName).build(), tableName);
     }
 
     @Override
@@ -728,12 +788,12 @@ public class BaseMapperImpl implements BaseMapper {
         SelectCondition selectJoinBuilder = SelectCondition
                 .joinBuilder(tableName)
                 .rightJoin(joinCondition).build();
-        return tableMapper.useSql(condition.toCreatCriteria(selectJoinBuilder, tableName).build().getSql());
+        return selectList(condition.toCreatCriteria(selectJoinBuilder, tableName).build(), tableName);
     }
 
     @Override
     public List<Map<String, Object>> selectionByCondition(SelectCondition selectCondition, Condition condition) {
-        return tableMapper.useSql(condition.toCreatCriteria(selectCondition, selectCondition.getTableName()).build().getSql());
+        return selectList(condition.toCreatCriteria(selectCondition, selectCondition.getTableName()).build(), selectCondition.getTableName());
     }
 
     @Override
@@ -807,33 +867,40 @@ public class BaseMapperImpl implements BaseMapper {
             pkName = "ID";
         }
         int i;
-        if (dataTypeConfig.equals(DataUnit.ORACLE)) {
+        if (DataUnit.ORACLE.equals(dataTypeConfig)) {
             for (Map<String, Object> map : list) {
                 Object id = getSequence(tableName, pkName);
                 map.put(pkName, id);
             }
             i = tableMapper.insertBatch(list, tableName);
-        } else if (dataTypeConfig.equals(DataUnit.DAMENG)) {
+        } else if (DataUnit.DAMENG.equals(dataTypeConfig)) {
             getSequence(tableName, pkName);
             List<Map<String, Object>> tempList = new ArrayList<>();
             for (Map<String, Object> map : list) {
-                map = formatMap(map, tableName);
+                map = formatMap(map, tableName, dataTypeConfig);
                 map.put(pkName, tableName + "_SEQ.nextval");
                 tempList.add(map);
             }
             list = tempList;
             i = tableMapper.insertBatchSeq(list, tableName, pkName);
-        } else if (dataTypeConfig.equals(DataUnit.HANGO)) {
+        } else if (isPostgreSql(dataTypeConfig)) {
             getSequence(tableName, pkName);
             List<Map<String, Object>> tempList = new ArrayList<>();
             for (Map<String, Object> map : list) {
-                map = formatMap(map, tableName);
+                map = formatMap(map, tableName, dataTypeConfig);
                 map.put(pkName, "nextval('" + tableName.toLowerCase() + "_seq')");
                 tempList.add(map);
             }
             list = tempList;
             i = tableMapper.insertBatchSeq(list, tableName, pkName);
         } else {
+            if (isTypeConversionEnabled(dataTypeConfig)) {
+                List<Map<String, Object>> tempList = new ArrayList<>();
+                for (Map<String, Object> map : list) {
+                    tempList.add(formatMap(map, tableName, dataTypeConfig));
+                }
+                list = tempList;
+            }
             i = tableMapper.insertBatch(list, tableName);
 
         }
@@ -850,8 +917,12 @@ public class BaseMapperImpl implements BaseMapper {
         }
         StringBuilder sql = new StringBuilder();
         Map<String, Object> paramMap = new HashMap<>();
+        String dataTypeConfig = getDataConfig();
         int index = 0;
         for (Map<String, Object> item : list) {
+            if (isTypeConversionEnabled(dataTypeConfig)) {
+                item = formatMap(item, tableName, dataTypeConfig);
+            }
             sql.append("UPDATE ").append(tableName).append(" SET ");
             boolean hasSetClause = false;
             for (Map.Entry<String, Object> entry : item.entrySet()) {
@@ -891,7 +962,7 @@ public class BaseMapperImpl implements BaseMapper {
     public Object getSequence(String tableName, String pkName) {
         String dataTypeConfig = getDataConfig();
         Object id;
-        if (DataUnit.HANGO.equals(dataTypeConfig)) {
+        if (isPostgreSql(dataTypeConfig)) {
             if (!tableMapper.judgeHighGoSequenceExist(tableName.toLowerCase())) {
                 try {
                     tableMapper.lockSequence(tableName.toLowerCase());

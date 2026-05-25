@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * @author lhc
@@ -46,21 +47,10 @@ public class RequestLogAspect {
 
         long start = System.currentTimeMillis();
         Object result = proceedingJoinPoint.proceed();
+        long timeCost = System.currentTimeMillis() - start;
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        if (attributes != null) {
-            HttpServletRequest request = attributes.getRequest();
-            if (frameConfig.getShowControllerLog()) {
-                RequestInfo requestInfo = new RequestInfo();
-                requestInfo.setIp(request.getRemoteAddr());
-                requestInfo.setUrl(request.getRequestURL().toString());
-                requestInfo.setHttpMethod(request.getMethod());
-                requestInfo.setClassMethod(String.format("%s.%s", proceedingJoinPoint.getSignature().getDeclaringTypeName(),
-                        proceedingJoinPoint.getSignature().getName()));
-                requestInfo.setRequestParams(getRequestParamsByProceedingJoinPoint(proceedingJoinPoint));
-                requestInfo.setResult(result);
-                requestInfo.setTimeCost(System.currentTimeMillis() - start);
-                LOGGER.info("Request Info      : {}", JSON.toJSONString(requestInfo));
-            }
+        if (attributes != null && Boolean.TRUE.equals(frameConfig.getShowControllerLog())) {
+            logRequest(proceedingJoinPoint, attributes.getRequest(), result, timeCost);
         }
 
         return result;
@@ -77,10 +67,47 @@ public class RequestLogAspect {
             requestErrorInfo.setHttpMethod(request.getMethod());
             requestErrorInfo.setClassMethod(String.format("%s.%s", joinPoint.getSignature().getDeclaringTypeName(),
                     joinPoint.getSignature().getName()));
-            requestErrorInfo.setRequestParams(getRequestParamsByJoinPoint(joinPoint));
+            if (Boolean.TRUE.equals(frameConfig.getControllerLogParams())) {
+                requestErrorInfo.setRequestParams(getRequestParamsByJoinPoint(joinPoint));
+            }
             requestErrorInfo.setException(e);
             LOGGER.error("Error Request Info      : {}", JSON.toJSONString(requestErrorInfo));
         }
+    }
+
+    private void logRequest(ProceedingJoinPoint proceedingJoinPoint, HttpServletRequest request, Object result, long timeCost) {
+        String classMethod = String.format("%s.%s", proceedingJoinPoint.getSignature().getDeclaringTypeName(),
+                proceedingJoinPoint.getSignature().getName());
+        if (Boolean.TRUE.equals(frameConfig.getControllerLogDetail()) || shouldWriteDetailLog(timeCost)) {
+            RequestInfo requestInfo = new RequestInfo();
+            requestInfo.setIp(request.getRemoteAddr());
+            requestInfo.setUrl(request.getRequestURL().toString());
+            requestInfo.setHttpMethod(request.getMethod());
+            requestInfo.setClassMethod(classMethod);
+            if (Boolean.TRUE.equals(frameConfig.getControllerLogParams())) {
+                requestInfo.setRequestParams(getRequestParamsByProceedingJoinPoint(proceedingJoinPoint));
+            }
+            if (Boolean.TRUE.equals(frameConfig.getControllerLogResult())) {
+                requestInfo.setResult(result);
+            } else if (result != null) {
+                requestInfo.setResult(result.getClass().getName());
+            }
+            requestInfo.setTimeCost(timeCost);
+            LOGGER.info("Request Info      : {}", trimValue(JSON.toJSONString(requestInfo)));
+            return;
+        }
+        LOGGER.info("Request Summary   : ip={}, method={}, url={}, classMethod={}, timeCost={}ms, resultType={}",
+                request.getRemoteAddr(), request.getMethod(), request.getRequestURI(), classMethod, timeCost,
+                result == null ? null : result.getClass().getName());
+    }
+
+    private boolean shouldWriteDetailLog(long timeCost) {
+        Long slowMillis = frameConfig.getControllerLogSlowMillis();
+        if (slowMillis != null && slowMillis >= 0 && timeCost >= slowMillis) {
+            return true;
+        }
+        Double sampleRate = frameConfig.getControllerLogSampleRate();
+        return sampleRate != null && sampleRate > 0D && ThreadLocalRandom.current().nextDouble() < sampleRate;
     }
 
     /**
@@ -118,9 +145,21 @@ public class RequestLogAspect {
                 // 获取文件名
                 value = file.getOriginalFilename();
             }
-            requestParams.put(paramNames[i], value);
+            requestParams.put(paramNames[i], trimValue(value));
         }
         return requestParams;
+    }
+
+    private Object trimValue(Object value) {
+        Integer maxLength = frameConfig.getControllerLogMaxValueLength();
+        if (value == null || maxLength == null || maxLength < 0) {
+            return value;
+        }
+        String text = String.valueOf(value);
+        if (text.length() <= maxLength) {
+            return value;
+        }
+        return text.substring(0, maxLength) + "...[truncated]";
     }
 
 }
