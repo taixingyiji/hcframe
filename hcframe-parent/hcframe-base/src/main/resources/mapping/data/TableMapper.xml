@@ -192,36 +192,44 @@
     </update>
     <update id="lockSequenceDm">
         DECLARE
-        result INT;
+            lock_handle VARCHAR2(128);
+            result INT;
         BEGIN
-        result := sp_getapplock('${tableName}_seq', 'Exclusive', 'Session', 10);
-
-        IF result &lt; 0 THEN
-        RAISE_APPLICATION_ERROR(-20001, '获取锁失败');
-        END IF;
+            DBMS_LOCK.ALLOCATE_UNIQUE('${tableName}_seq',lock_handle);
+            result:=DBMS_LOCK.REQUEST(lock_handle,DBMS_LOCK.X_MODE,10);
+            IF result &lt; 0 THEN
+                RAISE_APPLICATION_ERROR(-20001,'获取锁失败');
+            END IF;
         END;
     </update>
 
     <update id="unlockSequenceDm">
+        DECLARE
+            lock_handle VARCHAR2(128);
         BEGIN
-    sp_releaseapplock('${tableName}_seq', 'Session');
+            DBMS_LOCK.ALLOCATE_UNIQUE('${tableName}_seq',lock_handle);
+            DBMS_LOCK.RELEASE(lock_handle);
         END;
     </update>
     <update id="createSequenceSafeDm">
         DECLARE
-        v_start NUMBER;
+            v_start NUMBER;
+            lock_handle VARCHAR2(128);
+            lock_name VARCHAR2(128);
         BEGIN
-  -- 计算 max(pk)+1
-        SELECT NVL(MAX(${pkName}),0)+1 INTO v_start FROM ${tableName} FOR UPDATE;
+            lock_name := 'SEQ_LOCK_' || '${tableName}';
+            DBMS_LOCK.ALLOCATE_UNIQUE(lock_name, lock_handle);
 
-        -- 创建序列，如果已存在则忽略
-        BEGIN
-        EXECUTE IMMEDIATE 'CREATE SEQUENCE ' || ${tableName}_seq ||
-                          ' START WITH ' || v_start || ' INCREMENT BY 1 NOCACHE';
-        EXCEPTION
-    WHEN OTHERS THEN
-      NULL; -- 已存在忽略
-        END;
+            SELECT NVL(MAX(${pkName}),0)+1 INTO v_start FROM ${tableName};
+            DBMS_LOCK.ALLOCATE_UNIQUE('CAPTCHA_CODE_seq',lock_handle);
+            BEGIN
+                EXECUTE IMMEDIATE 'CREATE SEQUENCE "'||'${tableName}_seq'||'" START WITH '||v_start||' INCREMENT BY 1 NOCACHE';
+            EXCEPTION
+                WHEN OTHERS THEN
+                    NULL;--序列已存在静默忽略
+            END;
+            -- 后续创建序列业务逻辑
+            DBMS_LOCK.RELEASE(lock_handle);
         END;
     </update>
     <select id="judgeHighGoSequenceExist" resultType="boolean">
