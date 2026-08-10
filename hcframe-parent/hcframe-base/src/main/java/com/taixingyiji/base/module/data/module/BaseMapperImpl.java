@@ -697,6 +697,7 @@ public class BaseMapperImpl implements BaseMapper {
                 return maps;
             });
         }
+        MyPageHelper.start(webPageInfo);
         List<Map<String,Object>> pageData = selectList(condition, tableName);
         removePageHelperRowId(pageData);
         return new PageInfo<>(pageData);
@@ -887,7 +888,9 @@ public class BaseMapperImpl implements BaseMapper {
     @Override
     public Long count(String tableName, Condition condition) {
         String sql = condition.getSql();
-        sql = "SELECT count(0) as COUNT FROM " + tableName + " " + sql;
+        String countAlias = SqlIdentifierQuoter.quote("\"COUNT\"");
+        sql = "SELECT count(0) as " + countAlias + " FROM "
+                + SqlIdentifierQuoter.quote(tableName) + " " + sql;
         condition.setSql(sql);
         Map<String, Object> map = selectOne(condition, tableName);
         return Long.parseLong(String.valueOf(map.get("COUNT")));
@@ -922,7 +925,7 @@ public class BaseMapperImpl implements BaseMapper {
             List<Map<String, Object>> tempList = new ArrayList<>();
             for (Map<String, Object> map : list) {
                 map = formatMap(map, tableName, dataTypeConfig);
-                map.put(pkName, tableName + "_SEQ.nextval");
+                map.put(pkName, SqlIdentifierQuoter.quoteWithSuffix(tableName, "_seq") + ".nextval");
                 tempList.add(map);
             }
             list = tempList;
@@ -932,7 +935,7 @@ public class BaseMapperImpl implements BaseMapper {
             List<Map<String, Object>> tempList = new ArrayList<>();
             for (Map<String, Object> map : list) {
                 map = formatMap(map, tableName, dataTypeConfig);
-                map.put(pkName, "nextval('" + tableName.toLowerCase() + "_seq')");
+                map.put(pkName, "nextval('" + SqlIdentifierQuoter.quoteWithSuffix(tableName, "_seq") + "')");
                 tempList.add(map);
             }
             list = tempList;
@@ -962,19 +965,25 @@ public class BaseMapperImpl implements BaseMapper {
         StringBuilder sql = new StringBuilder();
         Map<String, Object> paramMap = new HashMap<>();
         String dataTypeConfig = getDataConfig();
+        String quotedTableName = SqlIdentifierQuoter.quote(tableName);
+        String quotedPkName = SqlIdentifierQuoter.quote(pkName);
         int index = 0;
         for (Map<String, Object> item : list) {
+            KeyUtils.checkSafeKey(item);
             if (isTypeConversionEnabled(dataTypeConfig)) {
                 item = formatMap(item, tableName, dataTypeConfig);
             }
-            sql.append("UPDATE ").append(tableName).append(" SET ");
+            sql.append("UPDATE ").append(quotedTableName).append(" SET ");
             boolean hasSetClause = false;
+            int fieldIndex = 0;
             for (Map.Entry<String, Object> entry : item.entrySet()) {
                 String key = entry.getKey();
                 Object value = entry.getValue();
                 if (!key.equals(pkName) && value != null && !(value instanceof String && ((String) value).isEmpty())) {
-                    sql.append(key).append(" = #{item").append(index).append("_").append(key).append("}, ");
-                    paramMap.put("item" + index + "_" + key, value);
+                    String parameterName = "item" + index + "_field" + fieldIndex++;
+                    sql.append(SqlIdentifierQuoter.quote(key))
+                            .append(" = #{").append(parameterName).append("}, ");
+                    paramMap.put(parameterName, value);
                     hasSetClause = true;
                 }
             }
@@ -985,8 +994,10 @@ public class BaseMapperImpl implements BaseMapper {
                 // 如果没有要更新的字段，跳过这条记录
                 continue;
             }
-            sql.append(" WHERE ").append(pkName).append(" = #{item").append(index).append("_").append(pkName).append("};");
-            paramMap.put("item" + index + "_" + pkName, item.get(pkName));
+            String pkParameterName = "item" + index + "_pk";
+            sql.append(" WHERE ").append(quotedPkName).append(" = #{")
+                    .append(pkParameterName).append("};");
+            paramMap.put(pkParameterName, item.get(pkName));
             index++;
         }
         if (index == 0) {

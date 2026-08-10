@@ -3,22 +3,22 @@
 <mapper namespace="com.taixingyiji.base.module.data.dao.TableMapper">
     <select id="findAllTables" resultType="map">
         select *
-        FROM ${tableName}
+        FROM ${@com.taixingyiji.base.module.data.module.SqlIdentifierQuoter@quote(tableName)}
     </select>
     <select id="findAllTablesWithField" resultType="java.util.Map">
-        select ${fields}
-        FROM ${tableName}
+        select ${@com.taixingyiji.base.module.data.module.SqlIdentifierQuoter@quoteFieldList(fields)}
+        FROM ${@com.taixingyiji.base.module.data.module.SqlIdentifierQuoter@quote(tableName)}
     </select>
     <select id="findByEqual" resultType="map" parameterType="map">
         select *
-        FROM ${tableName}
+        FROM ${@com.taixingyiji.base.module.data.module.SqlIdentifierQuoter@quote(tableName)}
         <where>
             <foreach collection="info.keys"
                      separator=" and "
                      item="key">
                 <if test="info[key]!=null and info[key]!=''">
                     <bind name="value" value="info[key]"/>
-                    ${key}=#{value}
+                    ${@com.taixingyiji.base.module.data.module.SqlIdentifierQuoter@quote(key)}=#{value}
                 </if>
             </foreach>
         </where>
@@ -26,50 +26,51 @@
 
     <select id="findByLike" resultType="map" parameterType="map">
         select *
-        FROM ${tableName}
+        FROM ${@com.taixingyiji.base.module.data.module.SqlIdentifierQuoter@quote(tableName)}
         <where>
             <foreach collection="info.keys"
                      separator=" and "
                      item="key">
                 <if test="info[key]!=null and info[key]!=''">
                     <bind name="value" value="'%' + info[key] + '%'"/>
-                    #{key} like #{value}
+                    ${@com.taixingyiji.base.module.data.module.SqlIdentifierQuoter@quote(key)} like #{value}
                 </if>
             </foreach>
         </where>
     </select>
 
     <delete id="deleteByPrimary">
-        DELETE FROM ${tableName} WHERE ${pkName} in
+        DELETE FROM ${@com.taixingyiji.base.module.data.module.SqlIdentifierQuoter@quote(tableName)}
+        WHERE ${@com.taixingyiji.base.module.data.module.SqlIdentifierQuoter@quote(pkName)} in
         <foreach collection="ids"
                  open="("
                  close=")"
                  separator=","
                  item="item">
-            ${item}
+            #{item}
         </foreach>
     </delete>
 
 
     <insert id="saveInfo" parameterType="map" useGeneratedKeys="true" keyProperty="info.id" keyColumn="id">
-        INSERT INTO ${tableName}
+        INSERT INTO ${@com.taixingyiji.base.module.data.module.SqlIdentifierQuoter@quote(tableName)}
         <foreach collection="info" open="(" close=")" separator="," item="value" index="key">
             <if test="info[key]!=null and info[key]!=''">
-                ${key}
+                ${@com.taixingyiji.base.module.data.module.SqlIdentifierQuoter@quote(key)}
             </if>
         </foreach>
         VALUES
         <foreach collection="info" open="(" close=")" separator="," item="value" index="key">
             <if test="info[key]!=null and info[key]!=''">
-                ${value}
+                #{value}
             </if>
         </foreach>
     </insert>
 
     <insert id="saveInfoWithNull" parameterType="map" useGeneratedKeys="true" keyProperty="info.id" keyColumn="id">
-        INSERT INTO ${tableName}
+        INSERT INTO ${@com.taixingyiji.base.module.data.module.SqlIdentifierQuoter@quote(tableName)}
         <foreach collection="info.keys" open="(" close=")" separator="," item="key" index="index">
-            ${key}
+            ${@com.taixingyiji.base.module.data.module.SqlIdentifierQuoter@quote(key)}
         </foreach>
         VALUES
         <foreach collection="info.entrySet()" open="(" close=")" separator="," index="key" item="value">
@@ -77,9 +78,9 @@
         </foreach>
     </insert>
     <insert id="saveInfoWithOracle" parameterType="map" >
-        INSERT INTO ${tableName}
+        INSERT INTO ${@com.taixingyiji.base.module.data.module.SqlIdentifierQuoter@quote(tableName)}
         <foreach collection="info.keys" open="(" close=")" separator="," item="key" index="index">
-            ${key}
+            ${@com.taixingyiji.base.module.data.module.SqlIdentifierQuoter@quote(key)}
         </foreach>
         VALUES
         <foreach collection="info.entrySet()" open="(" close=")" separator="," index="key" item="value">
@@ -88,42 +89,42 @@
     </insert>
 
     <update id="updateInfo" parameterType="map">
-        update ${tableName}
+        update ${@com.taixingyiji.base.module.data.module.SqlIdentifierQuoter@quote(tableName)}
         <set>
             <foreach collection="info" separator="," item="value" index="key">
-                #{key} = #{value}
+                ${@com.taixingyiji.base.module.data.module.SqlIdentifierQuoter@quote(key)} = #{value}
             </foreach>
         </set>
-        where id = #{info.id}
+        where ${@com.taixingyiji.base.module.data.module.SqlIdentifierQuoter@quote('id')} = #{info.id}
     </update>
     <update id="updateInfoWithNull" parameterType="map" >
-        update ${tableName}
+        update ${@com.taixingyiji.base.module.data.module.SqlIdentifierQuoter@quote(tableName)}
         <set>
-            <foreach collection="info.keys" separator="," item="key" index="index">
+            <foreach collection="info" separator="," item="value" index="key">
                 <if test="key!='id'">
-                    #{key} = #{info[key]}
+                    ${@com.taixingyiji.base.module.data.module.SqlIdentifierQuoter@quote(key)} = #{value}
                 </if>
             </foreach>
         </set>
-        where id = #{info.id}
+        where ${@com.taixingyiji.base.module.data.module.SqlIdentifierQuoter@quote('id')} = #{info.id}
     </update>
 
     <update id="updateByWhere" parameterType="map" >
-        update ${tableName}
+        update ${@com.taixingyiji.base.module.data.module.SqlIdentifierQuoter@quote(tableName)}
         <set>
             <foreach collection="info" separator="," item="value" index="key">
-                ${key} = #{value}
+                ${@com.taixingyiji.base.module.data.module.SqlIdentifierQuoter@quote(key)} = #{value}
             </foreach>
         </set>
         ${sql}
     </update>
 
     <update id="updateByWhereWithNull" parameterType="map">
-        update ${tableName}
+        update ${@com.taixingyiji.base.module.data.module.SqlIdentifierQuoter@quote(tableName)}
         <set>
-            <foreach collection="info.keys" separator="," item="key" index="index">
+            <foreach collection="info" separator="," item="value" index="key">
                 <if test="key!='id'">
-                    #{key} = #{info[key]}
+                    ${@com.taixingyiji.base.module.data.module.SqlIdentifierQuoter@quote(key)} = #{value}
                 </if>
             </foreach>
         </set>
@@ -131,7 +132,7 @@
     </update>
     <delete id="deleteByWhere">
         DELETE
-        FROM ${tableName} ${sql}
+        FROM ${@com.taixingyiji.base.module.data.module.SqlIdentifierQuoter@quote(tableName)} ${sql}
     </delete>
     <select id="useSql" resultType="java.util.Map">
         ${sql}
@@ -143,10 +144,10 @@
         ${sql}
     </select>
     <select id="getListNoPage" resultType="java.util.Map">
-        select * from ${typeName}
+        select * from ${@com.taixingyiji.base.module.data.module.SqlIdentifierQuoter@quote(typeName)}
         where 1=1
         <foreach collection="info" separator="," item="value" index="key">
-            and ${key} = #{value}
+            and ${@com.taixingyiji.base.module.data.module.SqlIdentifierQuoter@quote(key)} = #{value}
         </foreach>
     </select>
 
@@ -154,15 +155,17 @@
 
 
     <select id="getSequence" resultType="java.lang.Object">
-        select ${tableName}_seq.nextval
+        select ${@com.taixingyiji.base.module.data.module.SqlIdentifierQuoter@quoteWithSuffix(tableName, '_seq')}.nextval
         from dual
     </select>
     <select id="getHighGoSequence" resultType="java.lang.Object">
-        select nextval('${tableName}_seq')
+        <bind name="sequenceName"
+              value="@com.taixingyiji.base.module.data.module.SqlIdentifierQuoter@normalizeWithSuffix(tableName, '_seq')"/>
+        select nextval(#{sequenceName})
     </select>
     <insert id="createSequence">
         CREATE
-        SEQUENCE ${tableName}_seq
+        SEQUENCE ${@com.taixingyiji.base.module.data.module.SqlIdentifierQuoter@quoteWithSuffix(tableName, '_seq')}
         MINVALUE 1
         NOMAXVALUE
         START
@@ -171,7 +174,7 @@
         NOCACHE
     </insert>
     <insert id="createHighGoSequence">
-        CREATE SEQUENCE ${tableName}_seq
+        CREATE SEQUENCE ${@com.taixingyiji.base.module.data.module.SqlIdentifierQuoter@quoteWithSuffix(tableName, '_seq')}
         MINVALUE 1
         NO MAXVALUE
         START WITH ${lastId}
@@ -179,23 +182,33 @@
         CACHE 1;
     </insert>
     <update id="setValForHighGoSequence">
-        SELECT setval( '${tableName}_seq', (SELECT COALESCE(MAX(${pkName}),0) + 1 FROM ${tableName}), false);
+        <bind name="sequenceName"
+              value="@com.taixingyiji.base.module.data.module.SqlIdentifierQuoter@normalizeWithSuffix(tableName, '_seq')"/>
+        SELECT setval(#{sequenceName},
+            (SELECT COALESCE(MAX(${@com.taixingyiji.base.module.data.module.SqlIdentifierQuoter@quote(pkName)}),0) + 1
+             FROM ${@com.taixingyiji.base.module.data.module.SqlIdentifierQuoter@quote(tableName)}), false);
     </update>
     <!-- 获取锁 -->
     <update id="lockSequence">
-        SELECT pg_advisory_lock(hashtext('${tableName}_seq'));
+        <bind name="sequenceName"
+              value="@com.taixingyiji.base.module.data.module.SqlIdentifierQuoter@normalizeWithSuffix(tableName, '_seq')"/>
+        SELECT pg_advisory_lock(hashtext(#{sequenceName}));
     </update>
 
     <!-- 释放锁 -->
     <update id="unlockSequence" >
-        SELECT pg_advisory_unlock(hashtext('${tableName}_seq'));
+        <bind name="sequenceName"
+              value="@com.taixingyiji.base.module.data.module.SqlIdentifierQuoter@normalizeWithSuffix(tableName, '_seq')"/>
+        SELECT pg_advisory_unlock(hashtext(#{sequenceName}));
     </update>
     <update id="lockSequenceDm">
         DECLARE
             lock_handle VARCHAR2(128);
             result INT;
         BEGIN
-            DBMS_LOCK.ALLOCATE_UNIQUE('${tableName}_seq',lock_handle);
+            <bind name="sequenceName"
+                  value="@com.taixingyiji.base.module.data.module.SqlIdentifierQuoter@normalizeWithSuffix(tableName, '_seq')"/>
+            DBMS_LOCK.ALLOCATE_UNIQUE(#{sequenceName},lock_handle);
             result:=DBMS_LOCK.REQUEST(lock_handle,DBMS_LOCK.X_MODE,10);
             IF result &lt; 0 THEN
                 RAISE_APPLICATION_ERROR(-20001,'获取锁失败');
@@ -207,23 +220,30 @@
         DECLARE
             lock_handle VARCHAR2(128);
         BEGIN
-            DBMS_LOCK.ALLOCATE_UNIQUE('${tableName}_seq',lock_handle);
+            <bind name="sequenceName"
+                  value="@com.taixingyiji.base.module.data.module.SqlIdentifierQuoter@normalizeWithSuffix(tableName, '_seq')"/>
+            DBMS_LOCK.ALLOCATE_UNIQUE(#{sequenceName},lock_handle);
             DBMS_LOCK.RELEASE(lock_handle);
         END;
     </update>
     <update id="createSequenceSafeDm">
+        <bind name="quotedSequenceName"
+              value="@com.taixingyiji.base.module.data.module.SqlIdentifierQuoter@quoteWithSuffix(tableName, '_seq')"/>
         DECLARE
             v_start NUMBER;
             lock_handle VARCHAR2(128);
             lock_name VARCHAR2(128);
         BEGIN
-            lock_name := 'SEQ_LOCK_' || '${tableName}';
+            lock_name := 'SEQ_LOCK_' || #{tableName};
             DBMS_LOCK.ALLOCATE_UNIQUE(lock_name, lock_handle);
 
-            SELECT NVL(MAX(${pkName}),0)+1 INTO v_start FROM ${tableName};
+            SELECT NVL(MAX(${@com.taixingyiji.base.module.data.module.SqlIdentifierQuoter@quote(pkName)}),0)+1
+            INTO v_start FROM ${@com.taixingyiji.base.module.data.module.SqlIdentifierQuoter@quote(tableName)};
             DBMS_LOCK.ALLOCATE_UNIQUE('CAPTCHA_CODE_seq',lock_handle);
             BEGIN
-                EXECUTE IMMEDIATE 'CREATE SEQUENCE "'||'${tableName}_seq'||'" START WITH '||v_start||' INCREMENT BY 1 NOCACHE';
+                EXECUTE IMMEDIATE 'CREATE SEQUENCE '
+                    || #{quotedSequenceName}
+                    || ' START WITH ' || v_start || ' INCREMENT BY 1 NOCACHE';
             EXCEPTION
                 WHEN OTHERS THEN
                     NULL;--序列已存在静默忽略
@@ -233,31 +253,35 @@
         END;
     </update>
     <select id="judgeHighGoSequenceExist" resultType="boolean">
+        <bind name="sequenceName"
+              value="@com.taixingyiji.base.module.data.module.SqlIdentifierQuoter@normalizeWithSuffix(tableName, '_seq')"/>
         SELECT EXISTS (
             SELECT 1
             FROM pg_class
             WHERE relkind = 'S'
-              AND relname = '${tableName}_seq'
+              AND relname = #{sequenceName}
               AND pg_table_is_visible(oid)
         );
     </select>
     <select id="judgeDamengSequenceExist" resultType="int">
+        <bind name="sequenceName"
+              value="@com.taixingyiji.base.module.data.module.SqlIdentifierQuoter@normalizeWithSuffix(tableName, '_seq')"/>
         SELECT COUNT(*)
         FROM all_sequences
-        WHERE sequence_owner = '${schema}'
-          AND sequence_name = '${tableName}_seq'
+        WHERE sequence_owner = #{schema}
+          AND sequence_name = #{sequenceName}
     </select>
     <select id="count" resultType="java.lang.Long">
-        SELECT count(0) FROM ${tableName} ${sql}
+        SELECT count(0) FROM ${@com.taixingyiji.base.module.data.module.SqlIdentifierQuoter@quote(tableName)} ${sql}
     </select>
     <select id="countBySql" resultType="java.lang.Long">
         ${sql}
     </select>
     <insert id="insertBatch" parameterType="map">
-        INSERT INTO ${tableName}
+        INSERT INTO ${@com.taixingyiji.base.module.data.module.SqlIdentifierQuoter@quote(tableName)}
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <foreach collection="list[0].keySet()" item="column" separator=",">
-                ${column}
+                ${@com.taixingyiji.base.module.data.module.SqlIdentifierQuoter@quote(column)}
             </foreach>
         </trim>
         VALUES
@@ -270,10 +294,10 @@
         </foreach>
     </insert>
     <insert id="insertBatchSeq" parameterType="map">
-        INSERT INTO ${tableName}
+        INSERT INTO ${@com.taixingyiji.base.module.data.module.SqlIdentifierQuoter@quote(tableName)}
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <foreach collection="list[0].keySet()" item="column" separator=",">
-                ${column}
+                ${@com.taixingyiji.base.module.data.module.SqlIdentifierQuoter@quote(column)}
             </foreach>
         </trim>
         VALUES

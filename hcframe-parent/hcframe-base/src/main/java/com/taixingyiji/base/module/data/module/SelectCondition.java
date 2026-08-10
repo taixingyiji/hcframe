@@ -81,7 +81,7 @@ public class SelectCondition implements Serializable {
         if (fieldList != null && fieldList.size() > 0) {
             int i = 1;
             for (String field : fieldList) {
-                stringBuilder.append(field);
+                stringBuilder.append(SqlIdentifierQuoter.quoteField(field));
                 if (i != fieldList.size()) {
                     stringBuilder.append(",");
                 }
@@ -136,8 +136,8 @@ public class SelectCondition implements Serializable {
             }
             this.sql = SELECT + " ";
             this.sql += getFieldStr(this.fieldList);
-            this.sql += " " + FROM + " " + this.tableName;
-            return new SelectCondition(this.sql);
+            this.sql += " " + FROM + " " + SqlIdentifierQuoter.quote(this.tableName);
+            return new SelectCondition(this.sql, this.tableName);
         }
     }
 
@@ -216,54 +216,32 @@ public class SelectCondition implements Serializable {
                 this.sql = SELECT + " ";
                 this.sql += getFieldStr(this.fieldList);
                 stringBuilder.append(" FROM ");
-                stringBuilder.append(this.tableName).append(" ");
+                stringBuilder.append(SqlIdentifierQuoter.quote(this.tableName)).append(" ");
             }
             for (JoinCondition condition : this.joinConditions) {
-                stringBuilder
-                        .append(" JOIN ")
-                        .append(condition.getName())
-                        .append(" ON ")
-                        .append(condition.getName())
-                        .append(".")
-                        .append(condition.getField())
-                        .append(" = ")
-                        .append(condition.getFkTable())
-                        .append(".")
-                        .append(condition.getJoinField())
-                        .append(" ");
+                appendJoin(stringBuilder, " JOIN ", condition);
             }
 
             for (JoinCondition condition : this.leftConditions) {
-                stringBuilder
-                        .append(" LEFT JOIN ")
-                        .append(condition.getName())
-                        .append(" ON ")
-                        .append(condition.getName())
-                        .append(".")
-                        .append(condition.getField())
-                        .append(" = ")
-                        .append(condition.getFkTable())
-                        .append(".")
-                        .append(condition.getJoinField())
-                        .append(" ");
+                appendJoin(stringBuilder, " LEFT JOIN ", condition);
             }
 
             for (JoinCondition condition : this.rightConditions) {
-                stringBuilder
-                        .append(" RIGHT JOIN ")
-                        .append(condition.getName())
-                        .append(" ON ")
-                        .append(condition.getName())
-                        .append(".")
-                        .append(condition.getField())
-                        .append(" = ")
-                        .append(condition.getFkTable())
-                        .append(".")
-                        .append(condition.getJoinField())
-                        .append(" ");
+                appendJoin(stringBuilder, " RIGHT JOIN ", condition);
             }
             this.sql += stringBuilder.toString();
-            return new SelectCondition(this.sql);
+            return new SelectCondition(this.sql, this.tableName);
+        }
+
+        private void appendJoin(StringBuilder sqlBuilder, String joinType, JoinCondition condition) {
+            sqlBuilder
+                    .append(joinType)
+                    .append(SqlIdentifierQuoter.quote(condition.getName()))
+                    .append(" ON ")
+                    .append(SqlIdentifierQuoter.quote(condition.getName() + "." + condition.getField()))
+                    .append(" = ")
+                    .append(SqlIdentifierQuoter.quote(condition.getFkTable() + "." + condition.getJoinField()))
+                    .append(" ");
         }
     }
 
@@ -307,24 +285,25 @@ public class SelectCondition implements Serializable {
 
         public SelectSqlJoinBuilder join(String tableName) {
             this.tempTable = tableName;
-            this.joinSql += " JOIN " + tableName + " ";
+            this.joinSql += " JOIN " + SqlIdentifierQuoter.quote(tableName) + " ";
             return this;
         }
 
         public SelectSqlJoinBuilder leftJoin(String tableName) {
             this.tempTable = tableName;
-            this.joinSql += " LEFT JOIN " + tableName + " ";
+            this.joinSql += " LEFT JOIN " + SqlIdentifierQuoter.quote(tableName) + " ";
             return this;
         }
 
         public SelectSqlJoinBuilder rightJoin(String tableName) {
             this.tempTable = tableName;
-            this.joinSql += " RIGHT JOIN " + tableName + " ";
+            this.joinSql += " RIGHT JOIN " + SqlIdentifierQuoter.quote(tableName) + " ";
             return this;
         }
 
         public SelectSqlJoinBuilder on(String field, String joinTable, String joinField) {
-            this.joinSql += " ON " + this.tempTable + "." + field + "=" + joinTable + "." + joinField + " ";
+            this.joinSql += " ON " + SqlIdentifierQuoter.quote(this.tempTable + "." + field)
+                    + "=" + SqlIdentifierQuoter.quote(joinTable + "." + joinField) + " ";
             return this;
         }
 
@@ -333,7 +312,7 @@ public class SelectCondition implements Serializable {
                 this.sql = SELECT + " ";
                 this.sql += getFieldStr(this.fieldList);
                 StringBuilder stringBuilder = new StringBuilder(" FROM ");
-                stringBuilder.append(this.tableName).append(" ");
+                stringBuilder.append(SqlIdentifierQuoter.quote(this.tableName)).append(" ");
                 this.sql += stringBuilder.toString();
             }
             this.sql += this.joinSql;

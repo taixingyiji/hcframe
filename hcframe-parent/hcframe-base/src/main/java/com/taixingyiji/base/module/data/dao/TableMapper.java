@@ -15,7 +15,7 @@ public interface TableMapper {
 
     List<Map<String ,Object>> findByLike(@Param("tableName") String tableName, @Param("info") Map<String, Object> map);
 
-    int deleteByPrimary(@Param("ids") String[] id, @Param("tableName") String tableName, @Param("pkName") String pkName);
+    int deleteByPrimary(@Param("ids") Object[] ids, @Param("tableName") String tableName, @Param("pkName") String pkName);
 
     int saveInfo(@Param("info") Map<String, Object> map, @Param("tableName") String tableName);
 

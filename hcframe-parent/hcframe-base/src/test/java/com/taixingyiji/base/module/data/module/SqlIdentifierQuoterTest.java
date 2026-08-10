@@ -31,6 +31,31 @@ class SqlIdentifierQuoterTest {
     }
 
     @Test
+    void quotesSelectFieldsAndPreservesExplicitExpressions() {
+        assertEquals("\"T\".\"ORDER\"", SqlIdentifierQuoter.quoteField("T.ORDER", "\""));
+        assertEquals("count(\"T\".\"ORDER\")", SqlIdentifierQuoter.quoteField("count(T.ORDER)", "\""));
+        assertEquals("CASE WHEN T.VALUE > 0 THEN 1 END",
+                SqlIdentifierQuoter.quoteField("CASE WHEN T.VALUE > 0 THEN 1 END", "\""));
+    }
+
+    @Test
+    void selectBuilderQuotesTablesFieldsAndJoinColumns() {
+        SelectCondition select = SelectCondition.sqlJoinBuilder("GROUP")
+                .field(List.of("GROUP.ORDER", "count(GROUP.VALUE)"))
+                .join("USER")
+                .on("KEY", "GROUP", "KEY")
+                .build();
+
+        String sql = select.getSql();
+        String quote = sql.contains("`GROUP`") ? "`" : "\"";
+        assertTrue(sql.contains(quote + "GROUP" + quote + "." + quote + "ORDER" + quote));
+        assertTrue(sql.contains("count(" + quote + "GROUP" + quote + "." + quote + "VALUE" + quote + ")"));
+        assertTrue(sql.contains("JOIN " + quote + "USER" + quote));
+        assertTrue(sql.contains(quote + "USER" + quote + "." + quote + "KEY" + quote
+                + "=" + quote + "GROUP" + quote + "." + quote + "KEY" + quote));
+    }
+
+    @Test
     void usesIdentifierRulesFromCurrentDynamicDataSource() throws Exception {
         assertQuoteFromMetadata("postgres-test", "\"", true, false,
                 "\"create_time\"", "\"CREATE_TIME\"");
@@ -82,6 +107,10 @@ class SqlIdentifierQuoterTest {
             DBContextHolder.setDataSource(dataSourceKey);
             assertEquals(expectedUnquoted, SqlIdentifierQuoter.quote("CREATE_TIME"));
             assertEquals(expectedExplicitlyQuoted, SqlIdentifierQuoter.quote("\"CREATE_TIME\""));
+            String expectedSequenceName = storesLowerCaseIdentifiers ? "create_time_seq"
+                    : storesUpperCaseIdentifiers ? "CREATE_TIME_SEQ" : "CREATE_TIME_seq";
+            assertEquals(expectedSequenceName,
+                    SqlIdentifierQuoter.normalizeWithSuffix("CREATE_TIME", "_seq"));
         } finally {
             DBContextHolder.clearDataSource();
             DataSourceUtil.dataSourceMap.remove(dataSourceKey);

@@ -10,6 +10,7 @@ import com.github.pagehelper.PageHelper;
 import com.taixingyiji.base.common.config.FrameConfig;
 import com.taixingyiji.base.module.cache.base.BaseCache;
 import com.taixingyiji.base.module.cache.emum.CacheType;
+import com.taixingyiji.base.module.data.module.SqlIdentifierQuoter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -116,7 +117,7 @@ public class MyPageHelper {
             if (!isSafeField(field, order, allowedFields)) continue;
 
             String dir = DESC.equalsIgnoreCase(order) ? DESC : ASC;
-            orderParts.add(field + " " + dir);
+            orderParts.add(SqlIdentifierQuoter.quote(field) + " " + dir);
         }
 
         return orderParts.isEmpty() ? null : String.join(", ", orderParts);
@@ -134,7 +135,7 @@ public class MyPageHelper {
                 List<SortItem> sortList = JSONUtil.toList(JSONUtil.parseArray(sortListStr), SortItem.class);
                 PageHelper.startPage(webPageInfo.getPageNum(), webPageInfo.getPageSize(), buildOrderBy(sortList, new HashSet<>())).setAsyncCount(true);
             } else if (WebPageInfo.hasSort(webPageInfo)) {
-                PageHelper.startPage(webPageInfo.getPageNum(), webPageInfo.getPageSize(), webPageInfo.getSortSql()).setAsyncCount(true);
+                PageHelper.startPage(webPageInfo.getPageNum(), webPageInfo.getPageSize(), buildOrderBy(webPageInfo)).setAsyncCount(true);
             } else {
                 PageHelper.startPage(webPageInfo.getPageNum(), webPageInfo.getPageSize()).setAsyncCount(true);
             }
@@ -156,7 +157,7 @@ public class MyPageHelper {
                 List<SortItem> sortList = JSONUtil.toList(JSONUtil.parseArray(sortListStr), SortItem.class);
                 PageHelper.startPage(webPageInfo.getPageNum(), webPageInfo.getPageSize(), false).setOrderBy(buildOrderBy(sortList, new HashSet<>()));
             } else if (WebPageInfo.hasSort(webPageInfo)) {
-                PageHelper.startPage(webPageInfo.getPageNum(), webPageInfo.getPageSize(), false).setOrderBy(webPageInfo.getSortSql());
+                PageHelper.startPage(webPageInfo.getPageNum(), webPageInfo.getPageSize(), false).setOrderBy(buildOrderBy(webPageInfo));
             } else {
                 PageHelper.startPage(webPageInfo.getPageNum(), webPageInfo.getPageSize(), false);
             }
@@ -179,7 +180,7 @@ public class MyPageHelper {
                 List<SortItem> sortList = JSONUtil.toList(JSONUtil.parseArray(sortListStr), SortItem.class);
                 return PageHelper.startPage(webPageInfo.getPageNum(), webPageInfo.getPageSize(), buildOrderBy(sortList, new HashSet<>())).count(false).doSelectPageInfo(querySupplier::get);
             } else if (WebPageInfo.hasSort(webPageInfo)) {
-                return PageHelper.startPage(webPageInfo.getPageNum(), webPageInfo.getPageSize(), webPageInfo.getSortSql()).count(false).doSelectPageInfo(querySupplier::get);
+                return PageHelper.startPage(webPageInfo.getPageNum(), webPageInfo.getPageSize(), buildOrderBy(webPageInfo)).count(false).doSelectPageInfo(querySupplier::get);
             } else {
                 return PageHelper.startPage(webPageInfo.getPageNum(), webPageInfo.getPageSize()).count(false).doSelectPageInfo(querySupplier::get);
             }
@@ -200,7 +201,7 @@ public class MyPageHelper {
                 List<SortItem> sortList = JSONUtil.toList(JSONUtil.parseArray(sortListStr), SortItem.class);
                 return PageHelper.startPage(webPageInfo.getPageNum(), webPageInfo.getPageSize(), buildOrderBy(sortList, new HashSet<>())).doSelectPageInfo(querySupplier::get);
             } else if (WebPageInfo.hasSort(webPageInfo)) {
-                return PageHelper.startPage(webPageInfo.getPageNum(), webPageInfo.getPageSize(), webPageInfo.getSortSql()).doSelectPageInfo(querySupplier::get);
+                return PageHelper.startPage(webPageInfo.getPageNum(), webPageInfo.getPageSize(), buildOrderBy(webPageInfo)).doSelectPageInfo(querySupplier::get);
             } else {
                 return PageHelper.startPage(webPageInfo.getPageNum(), webPageInfo.getPageSize()).doSelectPageInfo(querySupplier::get);
             }
@@ -249,6 +250,13 @@ public class MyPageHelper {
         if (!WebPageInfo.isSafeOrderBy(order)) {
             throw new ServiceException("order 不合法");
         }
-        PageHelper.orderBy(sortField + " " + order);
+        PageHelper.orderBy(SqlIdentifierQuoter.quoteField(sortField) + " " + order);
+    }
+
+    private static String buildOrderBy(WebPageInfo webPageInfo) {
+        if (!WebPageInfo.isSafeOrderBy(webPageInfo.getOrder())) {
+            throw new ServiceException("order 涓嶅悎娉?");
+        }
+        return SqlIdentifierQuoter.quoteField(webPageInfo.getSortField()) + " " + webPageInfo.getOrder();
     }
 }
