@@ -640,19 +640,31 @@ public class BaseMapperImpl implements BaseMapper {
         condition = condition.toCreatCriteria(DataMap.builder().tableName(tableName).build()).build();
         if (webPageInfo.isEnableCache()) {
             Condition finalCondition = condition;
-            return MyPageHelper.start(webPageInfo, condition.getSql(), () -> selectList(finalCondition, tableName));
+            return MyPageHelper.start(webPageInfo, condition.getSql(), () -> {
+                List<Map<String, Object>> maps = selectList(finalCondition, tableName);
+                removePageHelperRowId(maps);
+                return maps;
+            });
         }
         MyPageHelper.start(webPageInfo);
-        return new PageInfo<>(selectListAllKey(condition, tableName));
+        List<Map<String,Object>> pageData = selectListAllKey(condition, tableName);
+        removePageHelperRowId(pageData);
+        return new PageInfo<>(pageData);
     }
 
     @Override
     public PageInfo<Map<String, Object>> selectByCondition(Condition condition, WebPageInfo webPageInfo) {
         MyPageHelper.start(webPageInfo);
         if (webPageInfo.isEnableCache()) {
-            return MyPageHelper.start(webPageInfo, condition.getSql(), () -> selectList(condition, condition.getSelectCondition().getTableName()));
+            return MyPageHelper.start(webPageInfo, condition.getSql(), () -> {
+                List<Map<String, Object>> maps = selectList(condition, condition.getSelectCondition().getTableName());
+                removePageHelperRowId(maps);
+                return maps;
+            });
         }
-        return new PageInfo<>(selectList(condition, condition.getSelectCondition().getTableName()));
+        List<Map<String,Object>> pageData = selectList(condition, condition.getSelectCondition().getTableName());
+        removePageHelperRowId(pageData);
+        return new PageInfo<>(pageData);
     }
 
     @Override
@@ -661,10 +673,16 @@ public class BaseMapperImpl implements BaseMapper {
         condition = condition.toCreatCriteria(dataMap).build();
         if (webPageInfo.isEnableCache()) {
             Condition finalCondition = condition;
-            return MyPageHelper.start(webPageInfo, condition.getSql(), () -> selectList(finalCondition, dataMap.getTableName()));
+            return MyPageHelper.start(webPageInfo, condition.getSql(), () -> {
+                List<Map<String, Object>> maps = selectList(finalCondition, dataMap.getTableName());
+                removePageHelperRowId(maps);
+                return maps;
+            });
         }
         MyPageHelper.start(webPageInfo);
-        return new PageInfo<>(selectList(condition, dataMap.getTableName()));
+        List<Map<String,Object>> pageData = selectList(condition, dataMap.getTableName());
+        removePageHelperRowId(pageData);
+        return new PageInfo<>(pageData);
     }
 
     @Override
@@ -673,10 +691,15 @@ public class BaseMapperImpl implements BaseMapper {
         condition = condition.toCreatCriteria(DataMap.builder().tableName(tableName).build()).build();
         if (webPageInfo.isEnableCache()) {
             Condition finalCondition = condition;
-            return MyPageHelper.start(webPageInfo, condition.getSql(), () -> selectList(finalCondition, tableName));
+            return MyPageHelper.start(webPageInfo, condition.getSql(), () -> {
+                List<Map<String, Object>> maps = selectList(finalCondition, tableName);
+                removePageHelperRowId(maps);
+                return maps;
+            });
         }
-        MyPageHelper.start(webPageInfo);
-        return new PageInfo<>(selectList(condition, tableName));
+        List<Map<String,Object>> pageData = selectList(condition, tableName);
+        removePageHelperRowId(pageData);
+        return new PageInfo<>(pageData);
     }
 
     @Override
@@ -685,10 +708,16 @@ public class BaseMapperImpl implements BaseMapper {
         condition = condition.toCreatCriteria(DataMap.builder().tableName(tableName).fieldList(fieldList).build()).build();
         if (webPageInfo.isEnableCache()) {
             Condition finalCondition = condition;
-            return MyPageHelper.start(webPageInfo, condition.getSql(), () -> selectList(finalCondition, tableName));
+            return MyPageHelper.start(webPageInfo, condition.getSql(), () -> {
+                List<Map<String, Object>> maps = selectList(finalCondition, tableName);
+                removePageHelperRowId(maps);
+                return maps;
+            });
         }
         MyPageHelper.start(webPageInfo);
-        return new PageInfo<>(selectList(condition, tableName));
+        List<Map<String,Object>> pageData = selectList(condition, tableName);
+        removePageHelperRowId(pageData);
+        return new PageInfo<>(pageData);
     }
 
     @Override
@@ -697,10 +726,25 @@ public class BaseMapperImpl implements BaseMapper {
         condition = condition.toCreatCriteria(DataMap.builder().tableName(tableName).fields(fieldList).build()).build();
         if (webPageInfo.isEnableCache()) {
             Condition finalCondition = condition;
-            return MyPageHelper.start(webPageInfo, condition.getSql(), () -> selectList(finalCondition, tableName));
+            return MyPageHelper.start(webPageInfo, condition.getSql(), () -> {
+                List<Map<String, Object>> maps = selectList(finalCondition, tableName);
+                removePageHelperRowId(maps);
+                return maps;
+            });
         }
         MyPageHelper.start(webPageInfo);
-        return new PageInfo<>(selectList(condition, tableName));
+        List<Map<String,Object>> pageData = selectList(condition, tableName);
+        removePageHelperRowId(pageData);
+        return new PageInfo<>(pageData);
+    }
+
+    private void removePageHelperRowId(List<Map<String, Object>> dataList){
+        if(dataList == null || dataList.isEmpty()){
+            return;
+        }
+        for (Map<String, Object> map : dataList) {
+            map.remove("PAGEHELPER_ROW_ID");
+        }
     }
 
     @Override
