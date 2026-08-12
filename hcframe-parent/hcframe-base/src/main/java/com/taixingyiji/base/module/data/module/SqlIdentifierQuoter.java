@@ -1,6 +1,7 @@
 package com.taixingyiji.base.module.data.module;
 
 import com.alibaba.druid.pool.DruidDataSource;
+import com.taixingyiji.base.common.config.FrameConfig;
 import com.taixingyiji.base.common.utils.SpringContextUtil;
 import com.taixingyiji.base.module.datasource.dynamic.DBContextHolder;
 import com.taixingyiji.base.module.datasource.entity.DatasourceConfig;
@@ -299,21 +300,74 @@ public final class SqlIdentifierQuoter {
     }
 
     private static DataSource findDataSource(String dataSourceKey) {
+        Boolean multiDataSource = findMultiDataSourceSetting();
+        if (Boolean.FALSE.equals(multiDataSource)) {
+            DataSource applicationDataSource = findApplicationDataSource();
+            if (applicationDataSource != null) {
+                return applicationDataSource;
+            }
+        }
+
         String lookupKey = dataSourceKey == null ? DataUnit.MASTER : dataSourceKey;
         Object configuredDataSource = DataSourceUtil.dataSourceMap.get(lookupKey);
         if (configuredDataSource instanceof DataSource dataSource) {
             return dataSource;
         }
 
+        if (!Boolean.TRUE.equals(multiDataSource)) {
+            DataSource applicationDataSource = findApplicationDataSource();
+            if (applicationDataSource != null) {
+                return applicationDataSource;
+            }
+        }
+
+        return findNamedDataSource(DataUnit.MASTERBEAN);
+    }
+
+    private static Boolean findMultiDataSourceSetting() {
         try {
             if (SpringContextUtil.getApplicationContext() != null) {
-                Object masterDataSource = SpringContextUtil.getBean(DataUnit.MASTERBEAN);
-                if (masterDataSource instanceof DataSource dataSource) {
-                    return dataSource;
+                Object frameConfig = SpringContextUtil.getBean(FrameConfig.class);
+                if (frameConfig instanceof FrameConfig config) {
+                    return config.getMultiDataSource();
                 }
             }
         } catch (RuntimeException ignored) {
-            // The ANSI quote is used when the Spring context is not ready.
+            // The legacy lookup path is used when the Spring context is not ready.
+        }
+        return null;
+    }
+
+    private static DataSource findApplicationDataSource() {
+        try {
+            if (SpringContextUtil.getApplicationContext() != null) {
+                Object dataSource = SpringContextUtil.getBean(DataSource.class);
+                if (dataSource instanceof DataSource applicationDataSource) {
+                    return applicationDataSource;
+                }
+            }
+        } catch (RuntimeException ignored) {
+            // Fall through to common bean names when more than one DataSource bean exists.
+        }
+
+        DataSource dataSource = findNamedDataSource("druidDataSource");
+        if (dataSource != null) {
+            return dataSource;
+        }
+        dataSource = findNamedDataSource("dataSource");
+        return dataSource != null ? dataSource : findNamedDataSource(DataUnit.MASTERBEAN);
+    }
+
+    private static DataSource findNamedDataSource(String beanName) {
+        try {
+            if (SpringContextUtil.getApplicationContext() != null) {
+                Object dataSource = SpringContextUtil.getBean(beanName);
+                if (dataSource instanceof DataSource namedDataSource) {
+                    return namedDataSource;
+                }
+            }
+        } catch (RuntimeException ignored) {
+            // No matching DataSource bean is available.
         }
         return null;
     }
