@@ -1,7 +1,9 @@
 package com.taixingyiji.base.module.log;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializeConfig;
 import com.taixingyiji.base.common.config.FrameConfig;
+import com.taixingyiji.base.module.log.annotation.SkipRequestLog;
 import com.taixingyiji.base.module.log.model.RequestErrorInfo;
 import com.taixingyiji.base.module.log.model.RequestInfo;
 import org.aspectj.lang.JoinPoint;
@@ -13,13 +15,16 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.aop.support.AopUtils;
+import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -30,6 +35,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @Aspect
 public class RequestLogAspect {
     private final static Logger LOGGER = LoggerFactory.getLogger(RequestLogAspect.class);
+    private final SerializeConfig logSerializeConfig = new RequestLogSerializeConfig();
 
     public RequestLogAspect(FrameConfig frameConfig) {
         this.frameConfig = frameConfig;
@@ -44,13 +50,20 @@ public class RequestLogAspect {
 
     @Around("requestServer()")
     public Object doAround(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
+        if (shouldSkipLog(proceedingJoinPoint)) {
+            return proceedingJoinPoint.proceed();
+        }
 
         long start = System.currentTimeMillis();
         Object result = proceedingJoinPoint.proceed();
         long timeCost = System.currentTimeMillis() - start;
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (attributes != null && Boolean.TRUE.equals(frameConfig.getShowControllerLog())) {
-            logRequest(proceedingJoinPoint, attributes.getRequest(), result, timeCost);
+            try {
+                logRequest(proceedingJoinPoint, attributes.getRequest(), result, timeCost);
+            } catch (Exception logException) {
+                LOGGER.warn("Failed to write controller request log", logException);
+            }
         }
 
         return result;
@@ -58,21 +71,42 @@ public class RequestLogAspect {
 
     @AfterThrowing(pointcut = "requestServer()", throwing = "e")
     public void doAfterThrow(JoinPoint joinPoint, RuntimeException e) {
+        if (shouldSkipLog(joinPoint)) {
+            return;
+        }
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (attributes != null) {
-            HttpServletRequest request = attributes.getRequest();
-            RequestErrorInfo requestErrorInfo = new RequestErrorInfo();
-            requestErrorInfo.setIp(request.getRemoteAddr());
-            requestErrorInfo.setUrl(request.getRequestURL().toString());
-            requestErrorInfo.setHttpMethod(request.getMethod());
-            requestErrorInfo.setClassMethod(String.format("%s.%s", joinPoint.getSignature().getDeclaringTypeName(),
-                    joinPoint.getSignature().getName()));
-            if (Boolean.TRUE.equals(frameConfig.getControllerLogParams())) {
-                requestErrorInfo.setRequestParams(getRequestParamsByJoinPoint(joinPoint));
+            try {
+                logErrorRequest(joinPoint, e, attributes.getRequest());
+            } catch (Exception logException) {
+                LOGGER.warn("Failed to write controller error request log", logException);
+                LOGGER.error("Controller request failed", e);
             }
-            requestErrorInfo.setException(e);
-            LOGGER.error("Error Request Info      : {}", JSON.toJSONString(requestErrorInfo));
         }
+    }
+
+    private boolean shouldSkipLog(JoinPoint joinPoint) {
+        Method method = ((MethodSignature) joinPoint.getSignature()).getMethod();
+        Object target = joinPoint.getTarget();
+        Class<?> targetClass = target != null ? AopUtils.getTargetClass(target) : method.getDeclaringClass();
+        Method targetMethod = AopUtils.getMostSpecificMethod(method, targetClass);
+        return AnnotatedElementUtils.findMergedAnnotation(targetClass, SkipRequestLog.class) != null
+                || AnnotatedElementUtils.findMergedAnnotation(targetMethod, SkipRequestLog.class) != null
+                || AnnotatedElementUtils.findMergedAnnotation(method, SkipRequestLog.class) != null;
+    }
+
+    private void logErrorRequest(JoinPoint joinPoint, RuntimeException e, HttpServletRequest request) {
+        RequestErrorInfo requestErrorInfo = new RequestErrorInfo();
+        requestErrorInfo.setIp(request.getRemoteAddr());
+        requestErrorInfo.setUrl(request.getRequestURL().toString());
+        requestErrorInfo.setHttpMethod(request.getMethod());
+        requestErrorInfo.setClassMethod(String.format("%s.%s", joinPoint.getSignature().getDeclaringTypeName(),
+                joinPoint.getSignature().getName()));
+        if (Boolean.TRUE.equals(frameConfig.getControllerLogParams())) {
+            requestErrorInfo.setRequestParams(getRequestParamsByJoinPoint(joinPoint));
+        }
+        requestErrorInfo.setException(e);
+        LOGGER.error("Error Request Info      : {}", trimValue(JSON.toJSONString(requestErrorInfo, logSerializeConfig)));
     }
 
     private void logRequest(ProceedingJoinPoint proceedingJoinPoint, HttpServletRequest request, Object result, long timeCost) {
@@ -93,7 +127,7 @@ public class RequestLogAspect {
                 requestInfo.setResult(result.getClass().getName());
             }
             requestInfo.setTimeCost(timeCost);
-            LOGGER.info("Request Info      : {}", trimValue(JSON.toJSONString(requestInfo)));
+            LOGGER.info("Request Info      : {}", trimValue(JSON.toJSONString(requestInfo, logSerializeConfig)));
             return;
         }
         LOGGER.info("Request Summary   : ip={}, method={}, url={}, classMethod={}, timeCost={}ms, resultType={}",
@@ -134,28 +168,23 @@ public class RequestLogAspect {
 
     private Map<String, Object> buildRequestParam(String[] paramNames, Object[] paramValues) {
         Map<String, Object> requestParams = new HashMap<>();
-        for (int i = 0; i < paramNames.length; i++) {
+        for (int i = 0; i < paramValues.length; i++) {
             Object value = paramValues[i];
-            if ((value instanceof HttpServletRequest) || (value instanceof HttpServletResponse)) {
+            if ((value instanceof ServletRequest) || (value instanceof ServletResponse)) {
                 continue;
             }
-            //如果是文件对象
-            if (value instanceof MultipartFile) {
-                MultipartFile file = (MultipartFile) value;
-                // 获取文件名
-                value = file.getOriginalFilename();
-            }
-            requestParams.put(paramNames[i], trimValue(value));
+            String paramName = paramNames != null && i < paramNames.length ? paramNames[i] : "arg" + i;
+            requestParams.put(paramName, trimValue(value));
         }
         return requestParams;
     }
 
     private Object trimValue(Object value) {
         Integer maxLength = frameConfig.getControllerLogMaxValueLength();
-        if (value == null || maxLength == null || maxLength < 0) {
+        // Calling a DTO/collection's toString can itself traverse files and streams.
+        if (!(value instanceof String text) || maxLength == null || maxLength < 0) {
             return value;
         }
-        String text = String.valueOf(value);
         if (text.length() <= maxLength) {
             return value;
         }
