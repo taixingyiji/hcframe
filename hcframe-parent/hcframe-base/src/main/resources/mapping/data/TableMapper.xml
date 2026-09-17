@@ -316,6 +316,18 @@
             </trim>
         </foreach>
     </insert>
+    <update id="executeSql" parameterType="map">
+        ${sql}
+    </update>
+    <insert id="insertSql" parameterType="map">
+        ${sql}
+    </insert>
+    <update id="updateSql" parameterType="map">
+        ${sql}
+    </update>
+    <delete id="deleteSql" parameterType="map">
+        ${sql}
+    </delete>
     <update id="updateBatchByPk" parameterType="map">
         ${sql}
     </update>

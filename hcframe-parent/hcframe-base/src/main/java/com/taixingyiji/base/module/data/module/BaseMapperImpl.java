@@ -847,6 +847,68 @@ public class BaseMapperImpl implements BaseMapper {
     }
 
     @Override
+    public int executeSql(String sql) {
+        return executeSql(sql, null);
+    }
+
+    @Override
+    public int executeSql(String sql, Map<String, Object> params) {
+        return sqlSessionTemplate.update(TABLE_MAPPER_PACKAGE + "executeSql", prepareSqlParams(sql, params));
+    }
+
+    @Override
+    public int insertSql(String sql) {
+        return insertSql(sql, null);
+    }
+
+    @Override
+    public int insertSql(String sql, Map<String, Object> params) {
+        return sqlSessionTemplate.insert(TABLE_MAPPER_PACKAGE + "insertSql", prepareSqlParams(sql, params));
+    }
+
+    @Override
+    public int updateSql(String sql) {
+        return updateSql(sql, null);
+    }
+
+    @Override
+    public int updateSql(String sql, Map<String, Object> params) {
+        return sqlSessionTemplate.update(TABLE_MAPPER_PACKAGE + "updateSql", prepareSqlParams(sql, params));
+    }
+
+    @Override
+    public int deleteSql(String sql) {
+        return deleteSql(sql, null);
+    }
+
+    @Override
+    public int deleteSql(String sql, Map<String, Object> params) {
+        return sqlSessionTemplate.delete(TABLE_MAPPER_PACKAGE + "deleteSql", prepareSqlParams(sql, params));
+    }
+
+    @Override
+    public Long countSql(String sql) {
+        return countSql(sql, null);
+    }
+
+    @Override
+    public Long countSql(String sql, Map<String, Object> params) {
+        return sqlSessionTemplate.selectOne(TABLE_MAPPER_PACKAGE + "countBySql", prepareSqlParams(sql, params));
+    }
+
+    private Map<String, Object> prepareSqlParams(String sql, Map<String, Object> params) {
+        if (sql == null || sql.isBlank()) {
+            throw new BaseMapperException("sql can not be blank!");
+        }
+        Map<String, Object> sqlParams = new LinkedHashMap<>();
+        if (params != null) {
+            sqlParams.putAll(params);
+        }
+        sqlParams.put("sql", sql);
+        return sqlParams;
+    }
+
+    @Override
     public PageInfo<Map<String, Object>> selectSqlByPage(String sql, WebPageInfo webPageInfo) {
         if (webPageInfo.isEnableCache()) {
             return MyPageHelper.start(webPageInfo, sql, () -> (tableMapper.useSql(sql)));
