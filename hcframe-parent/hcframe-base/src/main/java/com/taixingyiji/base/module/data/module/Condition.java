@@ -30,6 +30,7 @@ public class Condition implements Serializable {
     public static String OneEq = "1=1";
     public static String LIKE = "LIKE";
     public static String IN = "IN";
+    public static String IS_NULL = "IS NULL";
     public static String AND = "AND";
     public static String OR = "OR";
     public static String NOT_EQUAL = "!=";
@@ -340,6 +341,21 @@ public class Condition implements Serializable {
 
         public ConditionBuilder orEqual(String key, Object value) {
             this.or().equal(key, value);
+            return this;
+        }
+
+        public ConditionBuilder isNull(String key) {
+            this.conditionSql += " " + SqlIdentifierQuoter.quote(key) + " " + IS_NULL;
+            return this;
+        }
+
+        public ConditionBuilder andIsNull(String key) {
+            this.and().isNull(key);
+            return this;
+        }
+
+        public ConditionBuilder orIsNull(String key) {
+            this.or().isNull(key);
             return this;
         }
 

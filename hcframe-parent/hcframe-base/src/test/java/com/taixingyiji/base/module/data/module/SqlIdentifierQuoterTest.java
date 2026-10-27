@@ -7,6 +7,8 @@ import com.taixingyiji.base.module.datasource.utils.DataSourceUtil;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.StaticApplicationContext;
 
@@ -125,6 +127,46 @@ class SqlIdentifierQuoterTest {
         assertTrue(sql.contains(quote + "T" + quote + "." + quote + "KEY" + quote + " LIKE"));
         assertTrue(sql.contains(quote + "GROUP" + quote + " IN"));
         assertTrue(sql.contains("GROUP BY " + quote + "GROUP" + quote));
+    }
+
+    @ParameterizedTest(name = "{0} IS NULL conditions")
+    @CsvSource(value = {
+            "mysql-null-test | ` | false | false | WHERE 1=1 AND ( `T`.`ORDER` IS NULL OR `T`.`MiXeD` IS NULL ) AND `VALUE` IS NULL",
+            "oracle-null-test | \" | false | true | WHERE 1=1 AND ( \"T\".\"ORDER\" IS NULL OR \"T\".\"MiXeD\" IS NULL ) AND \"VALUE\" IS NULL",
+            "dameng-null-test | \" | false | true | WHERE 1=1 AND ( \"T\".\"ORDER\" IS NULL OR \"T\".\"MiXeD\" IS NULL ) AND \"VALUE\" IS NULL",
+            "postgres-null-test | \" | true | false | WHERE 1=1 AND ( \"t\".\"order\" IS NULL OR \"t\".\"MiXeD\" IS NULL ) AND \"value\" IS NULL",
+            "highgo-null-test | \" | true | false | WHERE 1=1 AND ( \"t\".\"order\" IS NULL OR \"t\".\"MiXeD\" IS NULL ) AND \"value\" IS NULL"
+    }, delimiter = '|')
+    void nullConditionsUseCurrentDatabaseIdentifierRules(String dataSourceKey, String quote,
+                                                        boolean storesLowerCaseIdentifiers,
+                                                        boolean storesUpperCaseIdentifiers,
+                                                        String expectedSql) throws Exception {
+        DataSource dataSource = mockDataSource(quote, storesLowerCaseIdentifiers, storesUpperCaseIdentifiers);
+        installApplicationContext(true, dataSource);
+        DataSourceUtil.dataSourceMap.put(dataSourceKey, dataSource);
+
+        try {
+            DBContextHolder.setDataSource(dataSourceKey);
+            Condition condition = Condition.creatCriteria()
+                    .and().leftCurves()
+                    .isNull("T.ORDER")
+                    .orIsNull("T.\"MiXeD\"")
+                    .rightCurves()
+                    .andIsNull("VALUE")
+                    .build();
+
+            assertEquals(expectedSql, condition.getSql().replaceAll("\\s+", " ").trim());
+            assertTrue(condition.getParamMap().isEmpty());
+            assertTrue(condition.getParamColumnMap().isEmpty());
+
+            Condition extended = condition.toCreatCriteria().andEqual("STATE", 1).build();
+            assertTrue(extended.getSql().replaceAll("\\s+", " ").trim().startsWith(expectedSql + " AND "));
+            assertEquals(List.of(1), List.copyOf(extended.getParamMap().values()));
+            assertEquals(List.of("STATE"), List.copyOf(extended.getParamColumnMap().values()));
+        } finally {
+            DBContextHolder.clearDataSource();
+            DataSourceUtil.dataSourceMap.remove(dataSourceKey);
+        }
     }
 
     private void assertQuoteFromMetadata(String dataSourceKey, String quote,
