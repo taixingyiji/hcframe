@@ -1,7 +1,7 @@
 package com.taixingyiji.base.module.log;
 
-import com.alibaba.fastjson.serializer.ObjectSerializer;
-import com.alibaba.fastjson.serializer.SerializeConfig;
+import com.alibaba.fastjson2.modules.ObjectWriterModule;
+import com.alibaba.fastjson2.writer.ObjectWriter;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.Part;
@@ -12,26 +12,22 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
+import java.lang.reflect.Type;
 
 /**
  * Log-only serializers: never inspect upload contents or request-bound streams.
  * Runtime type checks also cover files nested in arrays, collections, maps and beans.
  */
-final class RequestLogSerializeConfig extends SerializeConfig {
-    private static final ObjectSerializer MULTIPART_FILE = (serializer, object, name, type, features) ->
-            serializer.write(((MultipartFile) object).getOriginalFilename());
-    private static final ObjectSerializer PART = (serializer, object, name, type, features) ->
-            serializer.write(((Part) object).getSubmittedFileName());
-    private static final ObjectSerializer OMITTED = (serializer, object, name, type, features) ->
-            serializer.write("[omitted: " + object.getClass().getSimpleName() + "]");
-
-    RequestLogSerializeConfig() {
-        // Keep nested bean fields on the same runtime serializer lookup path.
-        setAsmEnable(false);
-    }
+final class RequestLogSerializeConfig implements ObjectWriterModule {
+    private static final ObjectWriter<Object> MULTIPART_FILE = (writer, object, name, type, features) ->
+            writer.writeString(((MultipartFile) object).getOriginalFilename());
+    private static final ObjectWriter<Object> PART = (writer, object, name, type, features) ->
+            writer.writeString(((Part) object).getSubmittedFileName());
+    private static final ObjectWriter<Object> OMITTED = (writer, object, name, type, features) ->
+            writer.writeString("[omitted: " + object.getClass().getSimpleName() + "]");
 
     @Override
-    public ObjectSerializer getObjectWriter(Class<?> clazz) {
+    public ObjectWriter<?> getObjectWriter(Type type, Class clazz) {
         if (MultipartFile.class.isAssignableFrom(clazz)) {
             return MULTIPART_FILE;
         }
@@ -47,6 +43,6 @@ final class RequestLogSerializeConfig extends SerializeConfig {
                 || Writer.class.isAssignableFrom(clazz)) {
             return OMITTED;
         }
-        return super.getObjectWriter(clazz);
+        return null;
     }
 }

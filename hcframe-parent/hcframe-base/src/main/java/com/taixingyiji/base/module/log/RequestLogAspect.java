@@ -1,7 +1,8 @@
 package com.taixingyiji.base.module.log;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.serializer.SerializeConfig;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONFactory;
+import com.alibaba.fastjson2.writer.ObjectWriterProvider;
 import com.taixingyiji.base.common.config.FrameConfig;
 import com.taixingyiji.base.module.log.annotation.SkipRequestLog;
 import com.taixingyiji.base.module.log.model.RequestErrorInfo;
@@ -35,10 +36,11 @@ import java.util.concurrent.ThreadLocalRandom;
 @Aspect
 public class RequestLogAspect {
     private final static Logger LOGGER = LoggerFactory.getLogger(RequestLogAspect.class);
-    private final SerializeConfig logSerializeConfig = new RequestLogSerializeConfig();
+    private final ObjectWriterProvider logWriters = new ObjectWriterProvider();
 
     public RequestLogAspect(FrameConfig frameConfig) {
         this.frameConfig = frameConfig;
+        logWriters.register(new RequestLogSerializeConfig());
     }
 
     @Pointcut("execution(public * com..*.controller..*(..))")
@@ -106,7 +108,7 @@ public class RequestLogAspect {
             requestErrorInfo.setRequestParams(getRequestParamsByJoinPoint(joinPoint));
         }
         requestErrorInfo.setException(e);
-        LOGGER.error("Error Request Info      : {}", trimValue(JSON.toJSONString(requestErrorInfo, logSerializeConfig)));
+        LOGGER.error("Error Request Info      : {}", serializeLog(requestErrorInfo));
     }
 
     private void logRequest(ProceedingJoinPoint proceedingJoinPoint, HttpServletRequest request, Object result, long timeCost) {
@@ -127,12 +129,16 @@ public class RequestLogAspect {
                 requestInfo.setResult(result.getClass().getName());
             }
             requestInfo.setTimeCost(timeCost);
-            LOGGER.info("Request Info      : {}", trimValue(JSON.toJSONString(requestInfo, logSerializeConfig)));
+            LOGGER.info("Request Info      : {}", serializeLog(requestInfo));
             return;
         }
         LOGGER.info("Request Summary   : ip={}, method={}, url={}, classMethod={}, timeCost={}ms, resultType={}",
                 request.getRemoteAddr(), request.getMethod(), request.getRequestURI(), classMethod, timeCost,
                 result == null ? null : result.getClass().getName());
+    }
+
+    private Object serializeLog(Object info) {
+        return trimValue(JSON.toJSONString(info, JSONFactory.createWriteContext(logWriters)));
     }
 
     private boolean shouldWriteDetailLog(long timeCost) {

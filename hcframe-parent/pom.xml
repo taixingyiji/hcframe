@@ -32,6 +32,7 @@
         <spring-cloud.version>Hoxton.SR7</spring-cloud.version>
         <spring-boot.version>4.0.2</spring-boot.version>
         <java.cas.client.version>3.5.0</java.cas.client.version>
+        <skipTests>true</skipTests>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -145,7 +146,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
-                    <skipTests>true</skipTests>
+                    <skipTests>${skipTests}</skipTests>
                 </configuration>
             </plugin>
             <plugin>
